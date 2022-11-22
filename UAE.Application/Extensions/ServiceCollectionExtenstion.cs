@@ -8,6 +8,6 @@ public static class ServiceCollectionExtenstion
 {
     public static void AddServices(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IOrderService, OrderService>();
+        serviceCollection.AddScoped<IAnnouncementService, AnnouncementService>();
     }
 }

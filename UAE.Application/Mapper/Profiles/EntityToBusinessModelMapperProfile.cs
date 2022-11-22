@@ -8,7 +8,7 @@ public class EntityToBusinessModelMapperProfile : Profile
 {
     public EntityToBusinessModelMapperProfile()
     {
-        CreateMap<Order, OrderModel>()
+        CreateMap<Announcement, AnnouncementModel>()
             .ReverseMap();
     }
 }

@@ -3,7 +3,7 @@ using UAE.Core.Repositories.Base;
 
 namespace UAE.Infrastructure.Repositories.Base;
 
-public class RepositoryBase<TEntity> : IRepositoryBase<Entity>
+public class RepositoryBase : IRepositoryBase<Entity>
 {
     public Task Save(Entity entity)
     {

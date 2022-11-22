@@ -6,8 +6,4 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="MongoDB.Entities" Version="21.0.1" />
-    </ItemGroup>
-
 </Project>
