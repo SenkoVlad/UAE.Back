@@ -24,7 +24,7 @@ public class _001_seed_init_data : IMigration
             .ExecuteSingleAsync();
 
         var user = await DB.Find<User>()
-            .Match(s => s.Name == "vlad")
+            .Match(s => s.Email == "vlad")
             .ExecuteSingleAsync();
         
         var announcement = new Announcement
@@ -59,7 +59,7 @@ public class _001_seed_init_data : IMigration
 
         var user = new User
         {
-            Name = "vlad",
+            Email = "vlad",
         };
         
         await user.SaveAsync();

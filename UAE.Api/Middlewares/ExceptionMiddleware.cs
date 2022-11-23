@@ -1,6 +1,8 @@
+using System;
 using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Diagnostics;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using UAE.Api.Logging;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.Base;
@@ -25,16 +27,16 @@ internal sealed class ExceptionMiddleware  : IMiddleware
         catch (Exception e)
         {
             _loggerManager.LogError($"Something went wrong: {e}");
-            await HandleExceptionAsync(httpContext);
+            await HandleExceptionAsync(httpContext, e);
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext httpContext)
+    private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
         httpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
         httpContext.Response.ContentType = "application/json";
 
-        var response = GetResponse(httpContext);
+        var response = GetResponse(exception);
 
         await httpContext.Response.WriteAsync(new ErrorDetailsViewModel
         {
@@ -43,14 +45,9 @@ internal sealed class ExceptionMiddleware  : IMiddleware
         }.ToString());
     }
 
-    private static ApiResult<string> GetResponse(HttpContext httpContext)
+    private static ApiResult<string> GetResponse(Exception exception)
     {
-        var exception = httpContext.Features.Get<IExceptionHandlerFeature>();
-
-        var errorMessage = exception != null
-            ? exception.Error.Message
-            : "Internal server error";
-
+        var errorMessage = $"{exception.GetType()} | {exception.Message}";
         var response = ApiResult<string>.Failure(new[] {errorMessage});
         return response;
     }

@@ -1,4 +1,4 @@
-namespace UAE.Api.Settings;
+namespace UAE.Shared.Settings;
 
 public sealed class DatabaseSettings
 {

@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Entities;
-using UAE.Core.Repositories.Base;
-using UAE.Infrastructure.Repositories.Base;
+using UAE.Core.Repositories;
+using UAE.Infrastructure.Repositories;
 
 namespace UAE.Infrastructure.Extensions;
 
@@ -9,6 +8,7 @@ public static class ServiceCollectionExtenstion
 {
     public static void AddRepositories(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IRepositoryBase<Entity>, RepositoryBase>();
+        // serviceCollection.AddScoped<IRepositoryBase<User>, RepositoryBase<User>>();
+        serviceCollection.AddScoped<IUserRepository,UserRepository>();
     }
 }

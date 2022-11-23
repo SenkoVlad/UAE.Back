@@ -1,6 +1,8 @@
-﻿namespace UAE.Application.Services.Interfaces;
+﻿using UAE.Application.Models.User;
 
-public interface TokenService 
+namespace UAE.Application.Services.Interfaces;
+
+public interface ITokenService
 {
-        
+    bool IsUserLoggedAndTokenValid(LoginUserModel loginUserModel);
 }

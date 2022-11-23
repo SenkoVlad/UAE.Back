@@ -1,4 +1,6 @@
-﻿namespace UAE.Infrastructure.Exceptions;
+﻿using System;
+
+namespace UAE.Infrastructure.Exceptions;
 
 public class ApplicationException : Exception
 {

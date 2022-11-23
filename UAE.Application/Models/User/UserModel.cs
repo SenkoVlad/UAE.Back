@@ -1,6 +1,8 @@
-﻿namespace UAE.Application.Models.User;
+﻿using System;
 
-public class LoginUserResult
+namespace UAE.Application.Models.User;
+
+public class UserModel
 {
     public string Email { get; set; }
 

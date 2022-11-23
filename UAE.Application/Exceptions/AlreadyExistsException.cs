@@ -1,3 +1,5 @@
+using System;
+
 namespace UAE.Application.Exceptions;
 
 internal sealed class AlreadyExistsException : ApplicationException

@@ -1,4 +1,5 @@
-﻿using MongoDB.Entities;
+﻿using System.Threading.Tasks;
+using MongoDB.Entities;
 using UAE.Core.Entities;
 
 namespace UAE.Infrastructure.Data.Init;

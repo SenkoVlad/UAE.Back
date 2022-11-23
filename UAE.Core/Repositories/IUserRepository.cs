@@ -1,6 +1,9 @@
 ﻿using UAE.Core.Entities;
 using UAE.Core.Repositories.Base;
 
-namespace UAE.Infrastructure.Repositories;
+namespace UAE.Core.Repositories;
 
-public interface IUserRepository : IRepositoryBase<User> { }
+public interface IUserRepository : IRepositoryBase<User>
+{
+    Task<User?> GetByEmailAsync(string email);
+}

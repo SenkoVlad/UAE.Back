@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace UAE.Application.Models.Base;
 
 public sealed class ApiResult<T>

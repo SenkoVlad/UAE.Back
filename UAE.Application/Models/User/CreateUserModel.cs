@@ -1,7 +1,8 @@
-﻿namespace UAE.Application.Models.User
+﻿namespace UAE.Application.Models.User;
+
+public class CreateUserModel
 {
-    public class CreateUserModel
-    {
-        
-    }
+    public string Email { get; set; }
+
+    public string Password { get; set; }
 }
