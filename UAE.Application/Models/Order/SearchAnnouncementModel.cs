@@ -2,9 +2,9 @@
 
 namespace UAE.Application.Models.Order;
 
-public class SearchAnnouncementModel : PagedRequest
-{
-    public string Description { get; set; }
-
-    public string CategoryId { get; set; }
-}
+public sealed record SearchAnnouncementModel(
+        string Description,
+        string CategoryId,
+        int PageNumber,
+        int PageSize,
+        string SortedBy) : PagedRequest(PageNumber, PageSize, SortedBy);

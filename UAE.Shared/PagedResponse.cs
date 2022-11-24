@@ -1,10 +1,6 @@
 ﻿namespace UAE.Shared;
 
-public class PagedResponse<T> where T : class
-{
-    public long TotalCount { get; init; }
-        
-    public int PageCount { get; init; }
-
-    public IReadOnlyList<T> Items { get; init; }
-}
+public record PagedResponse<T>(
+    long TotalCount, 
+    int PageCount, 
+    IReadOnlyList<T> Items) where T : class;

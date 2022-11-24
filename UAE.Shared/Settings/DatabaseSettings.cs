@@ -1,6 +1,6 @@
 namespace UAE.Shared.Settings;
 
-public sealed class DatabaseSettings
+public sealed record DatabaseSettings
 {
     public string Host { get; set; }
     

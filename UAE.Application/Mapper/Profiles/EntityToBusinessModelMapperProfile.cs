@@ -5,7 +5,7 @@ using UAE.Core.Entities;
 
 namespace UAE.Application.Mapper.Profiles;
 
-public class EntityToBusinessModelMapperProfile : Profile
+public sealed class EntityToBusinessModelMapperProfile : Profile
 {
     public EntityToBusinessModelMapperProfile()
     {

@@ -2,7 +2,7 @@ using System;
 
 namespace UAE.Application.Exceptions;
 
-public class ApplicationException : Exception
+internal class ApplicationException : Exception
 {
     internal ApplicationException(string businessMessage)
         : base(businessMessage)

@@ -55,11 +55,10 @@ internal sealed class AnnouncementService : IAnnouncementService
         var announcements = await query.ExecuteAsync();
         var result = ApplicationMapper.Mapper.Map<IReadOnlyList<AnnouncementModel>>(announcements.Results);
 
-        return new PagedResponse<AnnouncementModel>
-        {
-            PageCount = announcements.PageCount,
-            TotalCount = announcements.TotalCount,
-            Items = result
-        };
+        return new PagedResponse<AnnouncementModel>(
+            announcements.TotalCount,
+            announcements.PageCount,
+            result
+        );
     }
 }
