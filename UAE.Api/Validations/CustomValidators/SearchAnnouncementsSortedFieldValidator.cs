@@ -1,3 +1,4 @@
+using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 using UAE.Core.Entities;

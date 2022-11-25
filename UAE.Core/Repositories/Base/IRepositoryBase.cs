@@ -2,9 +2,9 @@
 
 public interface IRepositoryBase<T> where T : class 
 {
-    public Task Save(T entity);
+    public Task AddAsync(T entity);
     
-    public Task<T> GetById(string id);
+    public Task<T> GetByIdAsync(string id);
     
-    public Task<List<T>> GetAll();
+    public Task<List<T>> GetAllAsync();
 }

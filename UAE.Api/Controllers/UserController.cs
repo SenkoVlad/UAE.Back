@@ -1,28 +1,50 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
-using UAE.Core.Entities;
-using UAE.Core.Repositories;
-using UAE.Core.Repositories.Base;
+using UAE.Application.Models.Base;
+using UAE.Application.Models.User;
+using UAE.Application.Services.Interfaces;
 
 namespace UAE.Api.Controllers;
 
-[ApiController]
-[Route("[controller]")]
+[Authorize]
 public class UserController : ApiController
 {
-    private readonly ILogger<UserController> _logger;
-    private readonly IUserRepository _userRepository;
-
-    public UserController(ILogger<UserController> logger, 
-        IUserRepository userRepository)
+    private readonly IUserService _userService;
+    
+    public UserController(IUserService userService)
     {
-        _logger = logger;
-        _userRepository = userRepository;
+        _userService = userService;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
         return NotFound();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] CreateUserModel createUserModel)
+    {
+        await _userService.RegisterAsync(createUserModel);
+        return Ok();
+    }
+    
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginUserModel loginUserModel)
+    {
+        var loginResult = await _userService.LoginAsync(loginUserModel);
+
+        if (loginResult.IsSucceed)
+        {
+            HttpContext.Session.SetString("Token", loginResult.Result);
+            return Ok(ApiResult<string>.Success(loginResult.Result));
+        }
+
+        return Ok(ApiResult<string>.Failure(new[] {loginResult.Message}));
     }
 }

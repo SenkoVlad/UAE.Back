@@ -20,11 +20,11 @@ public class _001_seed_init_data : IMigration
         await DB.DeleteAsync<Announcement>(_ => true);
 
         var category = await DB.Find<Category>()
-            .Match(s => s.Name == "real estate")
+            .Match(s => s.Label == "real estate")
             .ExecuteSingleAsync();
 
         var user = await DB.Find<User>()
-            .Match(s => s.Name == "vlad")
+            .Match(s => s.Email == "vlad")
             .ExecuteSingleAsync();
         
         var announcement = new Announcement
@@ -59,7 +59,7 @@ public class _001_seed_init_data : IMigration
 
         var user = new User
         {
-            Name = "vlad",
+            Email = "vlad",
         };
         
         await user.SaveAsync();
@@ -71,29 +71,29 @@ public class _001_seed_init_data : IMigration
 
         var readEstateCategory = new Category
         {
-            Name = "real estate"
+            Label = "real estate"
         };
 
         var flatCategory = new Category
         {
-            Name = "flat",
+            Label = "flat",
             ID = ObjectId.GenerateNewId().ToString()
         };
 
         var villaCategory = new Category
         {
-            Name = "villa",
+            Label = "villa",
             ID = ObjectId.GenerateNewId().ToString()
         };
 
         var carCategory = new Category
         {
-            Name = "car"
+            Label = "car"
         };
 
         var sportCar = new Category
         {
-            Name = "sport car",
+            Label = "sport car",
             ID = ObjectId.GenerateNewId().ToString()
         };
 

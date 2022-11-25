@@ -1,3 +1,5 @@
+using System;
+
 namespace UAE.Application.Models.Order;
 
 public sealed record class AnnouncementModel(
