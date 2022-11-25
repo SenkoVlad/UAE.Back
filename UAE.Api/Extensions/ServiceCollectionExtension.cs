@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Logging;
 using UAE.Api.Middlewares;
+using UAE.Api.Validations;
 
 namespace UAE.Api.Extensions;
 
@@ -26,7 +27,10 @@ public static class ServiceCollectionExtension
             options.SuppressModelStateInvalidFilter = true;
         });
 
-        services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
+        services.AddControllers(options =>
+            {
+                options.Filters.Add(typeof(ValidateModelStateActionFilter));
+            })
+            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
     }
 }

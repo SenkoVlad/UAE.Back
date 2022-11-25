@@ -1,6 +1,6 @@
 namespace UAE.Core.Exceptions;
 
-public class CoreException : Exception
+public sealed class CoreException : Exception
 {
     internal CoreException(string businessMessage)
         : base(businessMessage)

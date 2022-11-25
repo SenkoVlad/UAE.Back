@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\UAE.Core\UAE.Core.csproj" />
+      <ProjectReference Include="..\UAE.Shared\UAE.Shared.csproj" />
     </ItemGroup>
 
 </Project>

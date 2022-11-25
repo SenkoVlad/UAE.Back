@@ -1,15 +1,14 @@
 using AutoMapper;
-using UAE.Api.ViewModels.OrderViewModels;
+using UAE.Api.ViewModels.AnnouncementViewModels;
 using UAE.Application.Models.Order;
 
-namespace UAE.Api.Mapper.Profiles
+namespace UAE.Api.Mapper.Profiles;
+
+public class ApiToBusinessModelMapperProfile : Profile
 {
-    public class ApiToBusinessModelMapperProfile : Profile
+    public ApiToBusinessModelMapperProfile()
     {
-        public ApiToBusinessModelMapperProfile()
-        {
-            CreateMap<OrderViewModel, OrderModel>()
-                .ReverseMap();            
-        }
+        CreateMap<AnnouncementViewModel, AnnouncementModel>()
+            .ReverseMap();            
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace UAE.Infrastructure.Exceptions;
 
-public class ApplicationException : Exception
+public sealed class ApplicationException : Exception
 {
     internal ApplicationException(string businessMessage)
         : base(businessMessage)
