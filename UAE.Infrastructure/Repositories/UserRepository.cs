@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using MongoDB.Entities;
+﻿using MongoDB.Entities;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
 using UAE.Infrastructure.Repositories.Base;

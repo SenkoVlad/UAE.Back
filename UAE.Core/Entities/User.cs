@@ -13,4 +13,6 @@ public class User : Entity
     public DateTime LastLoginDateTime { get; set; }
 
     public Many<Announcement> Announcements { get; set; }
+
+    public string RefreshToken { get; set; }
 }

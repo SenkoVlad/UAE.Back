@@ -23,22 +23,50 @@ public static class ServiceCollectionExtension
 
     public static void AddJwtAuth(this IServiceCollection services, ConfigurationManager builderConfiguration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
+        services
+            .AddAuthentication(i =>
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = builderConfiguration["Settings:Jwt:Issuer"],
-                ValidAudience = builderConfiguration["Settings:Jwt:Issuer"],
-                IssuerSigningKey = new
-                    SymmetricSecurityKey
-                    (Encoding.UTF8.GetBytes
-                        (builderConfiguration["Settings:Jwt:SecretKey"]!))
-            };
-        });
+                i.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                i.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                i.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                i.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builderConfiguration["Settings:Jwt:Issuer"],
+                    ValidAudience = builderConfiguration["Settings:Jwt:Issuer"],
+                    IssuerSigningKey = new
+                        SymmetricSecurityKey
+                        (Encoding.UTF8.GetBytes
+                            (builderConfiguration["Settings:Jwt:SecretKey"]!))
+                };
+
+                options.SaveToken = true;
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+                        {
+                            context.Token = context.Request.Cookies["X-Access-Token"];
+                        }
+                    
+                        return Task.CompletedTask;
+                    }
+                };
+            })
+            .AddCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.IsEssential = true;
+            });
     }
 
     public static void AddAuthSwaggerGen(this IServiceCollection services)

@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
+using UAE.Core.Entities;
+using UAE.Core.Repositories;
 using UAE.Shared.Settings;
 
 namespace UAE.Application.Services.Implementations;
@@ -15,13 +17,15 @@ public class TokenService : ITokenService
 {
     private readonly IOptions<Settings> _settings;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    
+    private IUserRepository _userRepository;
+
     public TokenService(IOptions<Settings> settings,
-        IHttpContextAccessor httpContextAccessor
-        )
+        IHttpContextAccessor httpContextAccessor,
+        IUserRepository userRepository)
     {
         _settings = settings;
         _httpContextAccessor = httpContextAccessor;
+        _userRepository = userRepository;
     }
 
     public bool IsUserLoggedAndTokenValid(LoginUserModel loginUserModel)
@@ -41,11 +45,83 @@ public class TokenService : ITokenService
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Value.Jwt.SecretKey))
         };
 
-        var principal = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out _);
-        var emailClaim = principal.Claims.FirstOrDefault(s => s.Type == ClaimTypes.Email)?.Value;
+        try
+        {
+            var principal = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out _);
+            var emailClaim = principal.Claims.FirstOrDefault(s => s.Type == ClaimTypes.Email)?.Value;
             
-        return !string.IsNullOrWhiteSpace(emailClaim) && 
-               emailClaim == loginUserModel.Email;
+            return !string.IsNullOrWhiteSpace(emailClaim) && 
+                   emailClaim == loginUserModel.Email;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    public async Task RefreshAsync()
+    {
+        var (userEmail, refreshToken) = GetUserEmailAndRefreshTokenFromCookies();
+
+        if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(refreshToken))
+        {
+            return;
+        }
+
+        var user = await _userRepository.GetByQuery(u => u.Email == userEmail && u.RefreshToken == refreshToken);
+
+        if (user == null)
+        {
+            return;
+        }
+
+        var token = CreateToken(user);
+        user.RefreshToken = Guid.NewGuid().ToString();
+        AddTokenCookiesToResponse(token, user);
+        
+        await _userRepository.SaveAsync(user);
+    }
+
+    public string CreateToken(User user)
+    {
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Email, user.Email),
+        };
+        
+        var secretKeyBytes = Encoding.UTF8.GetBytes(_settings.Value.Jwt.SecretKey);
+        var key = new SymmetricSecurityKey(secretKeyBytes);
+
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            audience: _settings.Value.Jwt.Issuer,
+            issuer: _settings.Value.Jwt.Issuer,
+            expires: DateTime.Now.AddDays(1),
+            signingCredentials: credentials);
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return jwt;
+    }
+
+    public void AddTokenCookiesToResponse(string token, User user)
+    {
+        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Access-Token", token,
+            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
+        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Username", user.Email,
+            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
+        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Refresh-Token", user.RefreshToken,
+            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
+    }
+
+    private (string userEmail, string refreshToken) GetUserEmailAndRefreshTokenFromCookies()
+    {
+        var userEmail = _httpContextAccessor.HttpContext.Request.Cookies["X-Username"];
+        var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies["X-Refresh-Token"];
+
+        return (userEmail, refreshToken);
     }
 
     private string GetRequestToken()

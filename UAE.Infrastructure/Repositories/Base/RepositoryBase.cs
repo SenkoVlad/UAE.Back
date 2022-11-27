@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using MongoDB.Entities;
 using UAE.Core.Repositories.Base;
+using MongoDB.Driver.Linq;
 
 namespace UAE.Infrastructure.Repositories.Base;
 
@@ -24,5 +24,20 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
         return DB.Find<T>()
             .Match(_ => true)
             .ExecuteAsync();
+    }
+
+    public async Task SaveAsync(T entity)
+    {
+        await DB.SaveAsync(entity);
+    }
+
+    public async Task<T?> GetByQuery(Expression<Func<T, bool>> expression)
+    {
+        var result = await DB
+            .Queryable<T>()
+            .Where(expression)
+            .FirstOrDefaultAsync();
+
+        return result;
     }
 }
