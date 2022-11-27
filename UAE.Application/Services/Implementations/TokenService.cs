@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
@@ -27,20 +28,20 @@ public class TokenService : ITokenService
         _userRepository = userRepository;
     }
 
-    public async Task RefreshAsync()
+    public async Task<RefreshTokensResult> RefreshAsync()
     {
         var (userEmail, refreshToken) = GetUserEmailAndRefreshTokenFromCookies();
 
         if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(refreshToken))
         {
-            return;
+            return RefreshTokensResult.UserEmailCookieOrRefreshTokenAreMessing();
         }
 
         var user = await _userRepository.GetByQuery(u => u.Email == userEmail && u.RefreshToken == refreshToken);
 
         if (user == null)
         {
-            return;
+            return RefreshTokensResult.UserEmailCookieOrRefreshTokenAreIncorrect();
         }
 
         var token = CreateToken(user);
@@ -48,6 +49,8 @@ public class TokenService : ITokenService
         AddTokenCookiesToResponse(token, user);
         
         await _userRepository.SaveAsync(user);
+
+        return RefreshTokensResult.Success();
     }
 
     public string CreateToken(User user)

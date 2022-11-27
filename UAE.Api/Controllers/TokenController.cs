@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
+using UAE.Application.Models.Base;
 using UAE.Application.Services.Interfaces;
 
 namespace UAE.Api.Controllers;
@@ -18,8 +19,12 @@ public class TokenController : ApiController
     [HttpGet("refresh")]
     public async Task<IActionResult> Refresh()
     {
-        await _tokenService.RefreshAsync();
+        var refreshTokensResult = await _tokenService.RefreshAsync();
 
-        return Ok();
+        var result = refreshTokensResult.IsSucceed
+            ? ApiResult<string>.Success(refreshTokensResult.ResultMessage)
+            : ApiResult<string>.Failure(new []{refreshTokensResult.ResultMessage});
+
+        return Ok(result);
     }
 }

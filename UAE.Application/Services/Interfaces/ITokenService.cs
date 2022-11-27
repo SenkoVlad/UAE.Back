@@ -1,10 +1,11 @@
-﻿using UAE.Core.Entities;
+﻿using UAE.Application.Models.User;
+using UAE.Core.Entities;
 
 namespace UAE.Application.Services.Interfaces;
 
 public interface ITokenService
 {
-    public Task RefreshAsync();
+    public Task<RefreshTokensResult> RefreshAsync();
 
     string CreateToken(User user);
 
