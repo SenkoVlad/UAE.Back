@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
@@ -26,37 +25,6 @@ public class TokenService : ITokenService
         _settings = settings;
         _httpContextAccessor = httpContextAccessor;
         _userRepository = userRepository;
-    }
-
-    public bool IsUserLoggedAndTokenValid(LoginUserModel loginUserModel)
-    {
-        var token = GetRequestToken();
-
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            return false;
-        }
-        
-        var validationParameters = new TokenValidationParameters
-        {
-            ValidateLifetime = true,
-            ValidAudience = _settings.Value.Jwt.Issuer,
-            ValidIssuer = _settings.Value.Jwt.Issuer,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Value.Jwt.SecretKey))
-        };
-
-        try
-        {
-            var principal = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out _);
-            var emailClaim = principal.Claims.FirstOrDefault(s => s.Type == ClaimTypes.Email)?.Value;
-            
-            return !string.IsNullOrWhiteSpace(emailClaim) && 
-                   emailClaim == loginUserModel.Email;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
     }
 
     public async Task RefreshAsync()
@@ -122,15 +90,5 @@ public class TokenService : ITokenService
         var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies["X-Refresh-Token"];
 
         return (userEmail, refreshToken);
-    }
-
-    private string GetRequestToken()
-    {
-        var authBearerString = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
-        var token = string.IsNullOrWhiteSpace(authBearerString)
-            ? string.Empty
-            : authBearerString.Split(" ").Last();
-        
-        return token;
     }
 }
