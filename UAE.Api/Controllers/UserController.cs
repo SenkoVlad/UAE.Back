@@ -41,7 +41,6 @@ public class UserController : ApiController
 
         if (loginResult.IsSucceed)
         {
-            HttpContext.Session.SetString("Token", loginResult.Result);
             return Ok(ApiResult<string>.Success(loginResult.Result));
         }
 

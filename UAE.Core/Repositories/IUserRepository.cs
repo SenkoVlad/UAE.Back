@@ -1,4 +1,5 @@
-﻿using UAE.Core.Entities;
+﻿using System.Linq.Expressions;
+using UAE.Core.Entities;
 using UAE.Core.Repositories.Base;
 
 namespace UAE.Core.Repositories;
