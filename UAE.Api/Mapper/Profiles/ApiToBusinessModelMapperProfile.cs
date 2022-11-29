@@ -1,6 +1,6 @@
 using AutoMapper;
 using UAE.Api.ViewModels.AnnouncementViewModels;
-using UAE.Application.Models.Order;
+using UAE.Application.Models.Announcement;
 
 namespace UAE.Api.Mapper.Profiles;
 

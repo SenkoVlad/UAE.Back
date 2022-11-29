@@ -74,6 +74,13 @@ public class UserService : IUserService
         return LoginUserResult.Succeded(token);
     }
 
+    public string GetCurrentUserId()
+    {
+        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("X-UserId", out var userId);
+
+        return userId;
+    }
+
     private bool IsPasswordCorrect(User user, string password)
     {
         var correctPasswordSalt = Convert.FromBase64String(user.PasswordSalt);

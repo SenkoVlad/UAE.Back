@@ -8,13 +8,13 @@ public class Announcement : Entity
     
     public string Title { get; set; }
 
-    public One<Category> Category { get; set; }
+    public One<Category> Category { get; set; } = new();
     
     public DateTime CreatedDateTime { get; set; }
 
     public Dictionary<string, string> Parameters { get; set; }
-    
-    public One<User> User { get; set; }
+
+    public One<User> User { get; set; } = new();
 
     public string AddressToTake { get; set; }
 

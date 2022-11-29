@@ -6,5 +6,5 @@ public class Category : Entity
 {
     public string Label { get; set; }
 
-    public List<Category> ChildrenCategories { get; set; } = new();
+    public List<Category> Children { get; set; } = new();
 }

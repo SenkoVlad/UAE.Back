@@ -98,10 +98,10 @@ public class _001_seed_init_data : IMigration
         };
 
 
-        carCategory.ChildrenCategories.Add(sportCar);
+        carCategory.Children.Add(sportCar);
         await carCategory.SaveAsync();
 
-        readEstateCategory.ChildrenCategories.AddRange(new[] {villaCategory, flatCategory});
+        readEstateCategory.Children.AddRange(new[] {villaCategory, flatCategory});
         readEstateCategory.SaveAsync();
     }
 }

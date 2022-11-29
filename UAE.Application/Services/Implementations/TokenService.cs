@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using UAE.Application.Models;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
@@ -28,20 +29,20 @@ public class TokenService : ITokenService
         _userRepository = userRepository;
     }
 
-    public async Task<RefreshTokensResult> RefreshAsync()
+    public async Task<OperationResult> RefreshAsync()
     {
         var (userEmail, refreshToken) = GetUserEmailAndRefreshTokenFromCookies();
 
         if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(refreshToken))
         {
-            return RefreshTokensResult.UserEmailCookieOrRefreshTokenAreMessing();
+            return new OperationResult(ResultMessage: "User Email cookie or refresh token are missing", IsSucceed: false); 
         }
 
         var user = await _userRepository.GetByQuery(u => u.Email == userEmail && u.RefreshToken == refreshToken);
 
         if (user == null)
         {
-            return RefreshTokensResult.UserEmailCookieOrRefreshTokenAreIncorrect();
+            return new OperationResult(ResultMessage: "User Email cookie or refresh token are incorrect", IsSucceed: false); 
         }
 
         var token = CreateToken(user);
@@ -49,8 +50,8 @@ public class TokenService : ITokenService
         AddTokenCookiesToResponse(token, user);
         
         await _userRepository.SaveAsync(user);
-
-        return RefreshTokensResult.Success();
+        
+        return new OperationResult(ResultMessage: "Token and refresh tokens are updated", IsSucceed: true);
     }
 
     public string CreateToken(User user)
@@ -69,7 +70,7 @@ public class TokenService : ITokenService
             claims: claims,
             audience: _settings.Value.Jwt.Issuer,
             issuer: _settings.Value.Jwt.Issuer,
-            expires: DateTime.Now.AddDays(1),
+            expires: DateTime.Now.AddDays(10),
             signingCredentials: credentials);
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
@@ -82,6 +83,8 @@ public class TokenService : ITokenService
         _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Access-Token", token,
             new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
         _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Username", user.Email,
+            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
+        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-UserId", user.ID,
             new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
         _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Refresh-Token", user.RefreshToken,
             new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});

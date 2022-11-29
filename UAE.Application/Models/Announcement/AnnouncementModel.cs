@@ -1,6 +1,4 @@
-using System;
-
-namespace UAE.Application.Models.Order;
+namespace UAE.Application.Models.Announcement;
 
 public sealed record class AnnouncementModel(
     string Title,

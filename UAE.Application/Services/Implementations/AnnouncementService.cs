@@ -3,18 +3,43 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Entities;
 using UAE.Application.Mapper;
-using UAE.Application.Models.Order;
+using UAE.Application.Models;
+using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
+using UAE.Core.Repositories;
 using UAE.Shared;
 
 namespace UAE.Application.Services.Implementations;
 
 internal sealed class AnnouncementService : IAnnouncementService
 {
-    public Task<AnnouncementModel> CreateAnnouncement(AnnouncementModel announcementModel)
+    private readonly IAnnouncementRepository _announcementRepository;
+    private readonly IUserService _userService;
+    
+    public AnnouncementService(IAnnouncementRepository announcementRepository, 
+        IUserService userService)
     {
-        throw new NotImplementedException();
+        _announcementRepository = announcementRepository;
+        _userService = userService;
+    }
+
+    public async Task<OperationResult> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel)
+    {
+        var userId = _userService.GetCurrentUserId();
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return new OperationResult(ResultMessage: "userId is not set in cookies", IsSucceed: true);
+        }
+        
+        var announcement = ApplicationMapper.Mapper.Map<Announcement>(createAnnouncementModel);
+        announcement.User.ID = userId;
+        announcement.CreatedDateTime = DateTime.Now;
+        
+        await _announcementRepository.SaveAsync(announcement);
+
+        return new OperationResult(ResultMessage: "Announcement is created", IsSucceed: true);
     }
 
     public Task UpdateAnnouncementAsync(AnnouncementModel announcement)

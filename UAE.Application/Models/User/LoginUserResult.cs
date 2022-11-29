@@ -1,6 +1,6 @@
 ﻿namespace UAE.Application.Models.User;
 
-public class LoginUserResult
+public sealed record LoginUserResult 
 {
     public bool IsSucceed { get; init; }
     

@@ -6,7 +6,7 @@ namespace UAE.Api.Validations.ValidationRules;
 public class CreateUserModelValidator : AbstractValidator<CreateUserModel>
 {
     public CreateUserModelValidator()
-    {
+    {   
         RuleFor(c => c.Email)
             .EmailAddress();
 

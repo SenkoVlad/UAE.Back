@@ -8,4 +8,6 @@ public interface IUserService
     Task RegisterAsync(CreateUserModel createUserModel);
 
     Task<LoginUserResult> LoginAsync(LoginUserModel loginUserModel);
+    
+    string GetCurrentUserId();
 }

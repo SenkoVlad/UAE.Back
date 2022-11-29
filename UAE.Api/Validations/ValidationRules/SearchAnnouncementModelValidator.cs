@@ -1,6 +1,6 @@
 using FluentValidation;
 using UAE.Api.Validations.CustomValidators;
-using UAE.Application.Models.Order;
+using UAE.Application.Models.Announcement;
 
 namespace UAE.Api.Validations.ValidationRules;
 

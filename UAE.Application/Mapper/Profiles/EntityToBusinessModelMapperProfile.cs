@@ -1,5 +1,6 @@
 using AutoMapper;
-using UAE.Application.Models.Order;
+using UAE.Application.Models.Announcement;
+using UAE.Application.Models.Category;
 using UAE.Application.Models.User;
 using UAE.Core.Entities;
 
@@ -13,6 +14,13 @@ public sealed class EntityToBusinessModelMapperProfile : Profile
             .ReverseMap();
         
         CreateMap<CreateUserModel, User>()
+            .ReverseMap();
+
+        CreateMap<CategoryModel, Category>()
+            .ReverseMap();
+
+        CreateMap<CreateAnnouncementModel, Announcement>()
+            .ForMember(c => c.Category, o => o.MapFrom(c => c.CategoryId))
             .ReverseMap();
     }
 }

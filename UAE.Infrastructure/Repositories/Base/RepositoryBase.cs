@@ -2,6 +2,7 @@
 using MongoDB.Entities;
 using UAE.Core.Repositories.Base;
 using MongoDB.Driver.Linq;
+using UAE.Core.Entities;
 
 namespace UAE.Infrastructure.Repositories.Base;
 
@@ -39,5 +40,13 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
             .FirstOrDefaultAsync();
 
         return result;
+    }
+
+    public async Task UpdateAsync(T entity)
+    {
+        await DB.Update<T>()
+            .MatchID(entity.ID)
+            .ModifyWith(entity)
+            .ExecuteAsync();
     }
 }
