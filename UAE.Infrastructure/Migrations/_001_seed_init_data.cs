@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using MongoDB.Entities;
 using UAE.Core.Entities;
 using UAE.Core.EntityDataParameters;
+using UAE.Core.EntityDataParameters.RealEstate;
 
 namespace UAE.Infrastructure.Data.Init;
 
@@ -10,12 +11,24 @@ public class _001_seed_init_data : IMigration
 {
     public async Task UpgradeAsync()
     {
-        await AddUsers();
-        await AddCategories();
-        await AddAnnouncements();
+        await AddCategoriesAsync();
+        await AddUser(); 
+        await AddAnnouncementsAsync();
     }
 
-    private async Task AddAnnouncements()
+    private async Task AddUser()
+    {
+        await DB.DeleteAsync<User>(_ => true);
+
+        var user = new User
+        {
+            Email = "vlad@vlad.com"
+        };
+
+        await user.SaveAsync();
+    }
+
+    private async Task AddAnnouncementsAsync()
     {
         await DB.DeleteAsync<Announcement>(_ => true);
 
@@ -24,7 +37,7 @@ public class _001_seed_init_data : IMigration
             .ExecuteSingleAsync();
 
         var user = await DB.Find<User>()
-            .Match(s => s.Email == "vlad")
+            .Match(s => s.Email == "vlad@vlad.com")
             .ExecuteSingleAsync();
         
         var announcement = new Announcement
@@ -34,13 +47,13 @@ public class _001_seed_init_data : IMigration
                 ID = category.ID
             },
             Description = "flat 1",
-            Parameters = new Dictionary<string, string>()
+            Fields = new Dictionary<string, object>()
             {
-                {RealEstateParameterNames.Floor, "2"},
-                {RealEstateParameterNames.NumberOfBedrooms, "2"},
-                {RealEstateParameterNames.Number, "23"},
-                {RealEstateParameterNames.BedroomType, "shower"},
-                {RealEstateParameterNames.YearOfBuilding, "2012"}
+                {Field.Floor.ToString(), 2},
+                {Field.NumberOfBedrooms.ToString(), 2},
+                {Field.Number.ToString(), 23},
+                {Field.BedroomType.ToString(), "shower"},
+                {Field.YearOfBuilding.ToString(), 2012}
             },
             Title = "flat super flat",
             User = new One<User>()
@@ -53,48 +66,221 @@ public class _001_seed_init_data : IMigration
         await announcement.SaveAsync();
     }
 
-    private static async Task AddUsers()
-    {
-        await DB.DeleteAsync<User>(_ => true);
-
-        var user = new User
-        {
-            Email = "vlad",
-        };
-        
-        await user.SaveAsync();
-    }
-
-    private static async Task AddCategories()
+    private static async Task AddCategoriesAsync()
     {
         await DB.DeleteAsync<Category>(_ => true);
 
         var readEstateCategory = new Category
         {
-            Label = "real estate"
+            Label = "real estate",
+            Parameters = new Dictionary<string, Dictionary<string, object>>
+            {
+                {
+                    Field.Floor.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.NumberOfBedrooms.ToString(),
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.Number.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.BedroomType.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(string).Name },
+                        { FieldParameter.MaxLength.ToString(), 20 },
+                        { FieldParameter.MinLength.ToString(), 3 },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.YearOfBuilding.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                }
+            }
         };
 
         var flatCategory = new Category
-        {
+        {            
+            ID = ObjectId.GenerateNewId().ToString(),
             Label = "flat",
-            ID = ObjectId.GenerateNewId().ToString()
+            Parameters = new Dictionary<string, Dictionary<string, object>>
+            {
+                {
+                    Field.Floor.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.NumberOfBedrooms.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.Number.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.BedroomType.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(string).Name },
+                        { FieldParameter.MaxLength.ToString(), 20 },
+                        { FieldParameter.MinLength.ToString(), 3 },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.YearOfBuilding.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                }
+            }
         };
 
         var villaCategory = new Category
-        {
+        {            
+            ID = ObjectId.GenerateNewId().ToString(),
             Label = "villa",
-            ID = ObjectId.GenerateNewId().ToString()
+            Parameters =  new Dictionary<string, Dictionary<string, object>>
+            {
+                {
+                    Field.NumberOfBedrooms.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.Number.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.BedroomType.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(string).Name },
+                        { FieldParameter.MaxLength.ToString(), 20 },
+                        { FieldParameter.MinLength.ToString(), 3 },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.YearOfBuilding.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                }
+            }
         };
 
         var carCategory = new Category
         {
-            Label = "car"
+            Label = "car",
+            Parameters = new Dictionary<string, Dictionary<string, object>>
+            {
+                {
+                    Field.MaxSpeed.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.Mileage.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.Brand.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(string).Name },
+                        { FieldParameter.MaxLength.ToString(), 20 },
+                        { FieldParameter.MinLength.ToString(), 3 },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                }
+            }
         };
 
         var sportCar = new Category
-        {
+        {          
+            ID = ObjectId.GenerateNewId().ToString(),
             Label = "sport car",
-            ID = ObjectId.GenerateNewId().ToString()
+            Parameters = new Dictionary<string, Dictionary<string, object>>
+            {
+                {
+                    Field.MaxSpeed.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.Mileage.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(int).Name },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                },
+                {
+                    Field.Brand.ToString(), 
+                    new Dictionary<string, object>
+                    {
+                        { FieldParameter.Type.ToString(), typeof(string).Name },
+                        { FieldParameter.MaxLength.ToString(), 20 },
+                        { FieldParameter.MinLength.ToString(), 3 },
+                        { FieldParameter.IsRequired.ToString(), true },
+                    }
+                }
+            }
         };
 
 

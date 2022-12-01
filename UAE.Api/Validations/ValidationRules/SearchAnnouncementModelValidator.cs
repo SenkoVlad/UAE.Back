@@ -13,6 +13,6 @@ public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnounce
             .MaximumLength(200);
 
         RuleFor(p => p.SortedBy)
-            .SetValidator(new SearchAnnouncementsSortedFieldValidator<SearchAnnouncementModel, string>());
+            .SetValidator(new AnnouncementFieldsValidator<SearchAnnouncementModel, string>());
     }
 }

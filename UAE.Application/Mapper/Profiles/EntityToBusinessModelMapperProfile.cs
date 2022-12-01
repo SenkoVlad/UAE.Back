@@ -20,7 +20,8 @@ public sealed class EntityToBusinessModelMapperProfile : Profile
             .ReverseMap();
 
         CreateMap<CreateAnnouncementModel, Announcement>()
-            .ForMember(c => c.Category, o => o.MapFrom(c => c.CategoryId))
+            .ForMember(dest => dest.Category, 
+                opt => opt.MapFrom(c => c.CategoryId))
             .ReverseMap();
     }
 }

@@ -22,17 +22,14 @@ namespace UAE.Application.Services.Implementations;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IOptions<Settings> _settings;
     private readonly ITokenService _tokenService;
-    private IHttpContextAccessor _httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     
     public UserService(IUserRepository userRepository, 
-        IOptions<Settings> settings, 
         ITokenService tokenService, 
         IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
-        _settings = settings;
         _tokenService = tokenService;
         _httpContextAccessor = httpContextAccessor;
     }

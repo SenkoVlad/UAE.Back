@@ -2,7 +2,6 @@
 using MongoDB.Entities;
 using UAE.Core.Repositories.Base;
 using MongoDB.Driver.Linq;
-using UAE.Core.Entities;
 
 namespace UAE.Infrastructure.Repositories.Base;
 
@@ -42,11 +41,17 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
         return result;
     }
 
-    public async Task UpdateAsync(T entity)
+    public async Task UpdateFieldsAsync(string entityId, Dictionary<Expression<Func<T, object>>, object>  fieldsToUpdates)
     {
-        await DB.Update<T>()
-            .MatchID(entity.ID)
-            .ModifyWith(entity)
-            .ExecuteAsync();
+        var updateCommand = DB.Update<T>()
+            .MatchID(entityId);
+
+        foreach (var field in fieldsToUpdates.Keys)
+        {
+            var newFieldValue = fieldsToUpdates[field];
+            updateCommand.Modify(field, newFieldValue);
+        }
+
+        await updateCommand.ExecuteAsync();
     }
 }

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
 using UAE.Shared;
@@ -9,7 +8,7 @@ public interface IAnnouncementService
 {
     Task<OperationResult> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel);
     
-    Task UpdateAnnouncementAsync(AnnouncementModel announcement);
+    Task<OperationResult> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel);
     
     Task DeleteAnnouncementAsync(int id);
     

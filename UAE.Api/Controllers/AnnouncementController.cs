@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
+using UAE.Application.Mapper;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Models.Base;
 using UAE.Application.Services.Interfaces;
@@ -12,7 +12,7 @@ namespace UAE.Api.Controllers;
 [Authorize]
 public class AnnouncementController : ApiController
 {
-    private IAnnouncementService _announcementService;
+    private readonly IAnnouncementService _announcementService;
 
     public AnnouncementController(IAnnouncementService announcementService)
     {
@@ -33,14 +33,17 @@ public class AnnouncementController : ApiController
     public async Task<IActionResult> Create([FromBody] CreateAnnouncementModel createAnnouncementModel)
     {
         var operationResult = await _announcementService.CreateAnnouncement(createAnnouncementModel);
+        var apiResult = ApplicationMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
 
-        if (operationResult.IsSucceed)
-        {
-            var succeedResult = ApiResult<string>.Success(operationResult.ResultMessage); 
-            return Ok(succeedResult);
-        }
+        return Ok(apiResult);
+    }
 
-        var failedResult = ApiResult<string>.Failure(new[] {operationResult.ResultMessage});
-        return Ok(failedResult);
+    [HttpPatch("update")]
+    public async Task<IActionResult> Update([FromBody] UpdateAnnouncementModel updateAnnouncementModel)
+    {
+        var operationResult = await _announcementService.UpdateAnnouncementAsync(updateAnnouncementModel);
+        var apiResult = ApplicationMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
+
+        return Ok(apiResult);
     }
 }

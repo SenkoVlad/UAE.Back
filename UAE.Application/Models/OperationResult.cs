@@ -1,5 +1,5 @@
 ﻿namespace UAE.Application.Models;
 
 public record OperationResult(
-    string ResultMessage,
+    IEnumerable<string> ResultMessages,
     bool IsSucceed);

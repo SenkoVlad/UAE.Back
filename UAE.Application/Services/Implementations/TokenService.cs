@@ -18,7 +18,7 @@ public class TokenService : ITokenService
 {
     private readonly IOptions<Settings> _settings;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private IUserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
     public TokenService(IOptions<Settings> settings,
         IHttpContextAccessor httpContextAccessor,
@@ -35,14 +35,14 @@ public class TokenService : ITokenService
 
         if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(refreshToken))
         {
-            return new OperationResult(ResultMessage: "User Email cookie or refresh token are missing", IsSucceed: false); 
+            return new OperationResult(new[] {"User Email cookie or refresh token are missing"}, IsSucceed: false); 
         }
 
         var user = await _userRepository.GetByQuery(u => u.Email == userEmail && u.RefreshToken == refreshToken);
 
         if (user == null)
         {
-            return new OperationResult(ResultMessage: "User Email cookie or refresh token are incorrect", IsSucceed: false); 
+            return new OperationResult(new[] { "User Email cookie or refresh token are incorrect"}, IsSucceed: false); 
         }
 
         var token = CreateToken(user);
@@ -51,7 +51,7 @@ public class TokenService : ITokenService
         
         await _userRepository.SaveAsync(user);
         
-        return new OperationResult(ResultMessage: "Token and refresh tokens are updated", IsSucceed: true);
+        return new OperationResult(new[] {"Token and refresh tokens are updated"}, IsSucceed: true);
     }
 
     public string CreateToken(User user)

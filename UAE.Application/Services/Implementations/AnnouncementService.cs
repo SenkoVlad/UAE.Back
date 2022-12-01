@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using MongoDB.Entities;
 using UAE.Application.Mapper;
 using UAE.Application.Models;
@@ -30,21 +28,37 @@ internal sealed class AnnouncementService : IAnnouncementService
 
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return new OperationResult(ResultMessage: "userId is not set in cookies", IsSucceed: true);
+            return new OperationResult(new[] {"userId is not set in cookies"}, IsSucceed: true);
         }
         
         var announcement = ApplicationMapper.Mapper.Map<Announcement>(createAnnouncementModel);
         announcement.User.ID = userId;
-        announcement.CreatedDateTime = DateTime.Now;
+        announcement.CreatedDateTime = DateTime.UtcNow;
         
         await _announcementRepository.SaveAsync(announcement);
 
-        return new OperationResult(ResultMessage: "Announcement is created", IsSucceed: true);
+        return new OperationResult(new[] { "Announcement is created"}, IsSucceed: true);
     }
 
-    public Task UpdateAnnouncementAsync(AnnouncementModel announcement)
+    public async Task<OperationResult> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel)
     {
-        throw new NotImplementedException();
+        var fieldsToUpdate = BuildFieldsToUpdateExpression(updateAnnouncementModel);
+        await _announcementRepository.UpdateFieldsAsync(updateAnnouncementModel.EntityId, fieldsToUpdate);
+
+        return new OperationResult(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true);
+    }
+
+    private Dictionary<Expression<Func<Announcement,object>>,object> BuildFieldsToUpdateExpression(UpdateAnnouncementModel updateAnnouncementModel)
+    {
+        var fieldsToUpdates = new Dictionary<Expression<Func<Announcement, object>>, object>();
+        foreach (var field in updateAnnouncementModel.FieldsValuesToUpdate.Keys)
+        {
+            var propertyToUpdate = typeof(Announcement).GetProperty(field)!;
+            var newFiledValue = updateAnnouncementModel.FieldsValuesToUpdate[field];
+            fieldsToUpdates.Add(f => propertyToUpdate, newFiledValue);
+        }
+
+        return fieldsToUpdates;
     }
 
     public Task DeleteAnnouncementAsync(int id)

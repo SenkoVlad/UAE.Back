@@ -1,5 +1,7 @@
+using AutoMapper.Execution;
 using Microsoft.Extensions.Options;
 using UAE.Api.Extensions;
+using UAE.Api.Validations.CustomValidators;
 using UAE.Application.Extensions;
 using UAE.Infrastructure.Data.Init;
 using UAE.Infrastructure.Extensions;
@@ -26,7 +28,7 @@ builder.Services.AddJwtAuth(builder.Configuration);
 var app = builder.Build();
 var settings = app.Services.GetRequiredService<IOptions<Settings>>().Value;
 
-await InitDatabase.InitAsync(settings.Database.Name, settings.Database.Host);
+await app.UseMongoDb(settings.Database.Name, settings.Database.Host);
 
 if (!app.Environment.IsProduction())
 {
@@ -42,3 +44,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+

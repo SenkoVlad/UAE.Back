@@ -14,5 +14,5 @@ public interface IRepositoryBase<T> where T : class
     
     Task<T?> GetByQuery(Expression<Func<T, bool>> expression);
 
-    Task UpdateAsync(T entity);
+    Task UpdateFieldsAsync(string entityId, Dictionary<Expression<Func<T, object>>, object>  fieldsToUpdates);
 }

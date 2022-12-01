@@ -22,8 +22,8 @@ public class TokenController : ApiController
         var refreshTokensResult = await _tokenService.RefreshAsync();
 
         var result = refreshTokensResult.IsSucceed
-            ? ApiResult<string>.Success(refreshTokensResult.ResultMessage)
-            : ApiResult<string>.Failure(new []{refreshTokensResult.ResultMessage});
+            ? ApiResult<IEnumerable<string>>.Success(refreshTokensResult.ResultMessages)
+            : ApiResult<IEnumerable<string>>.Failure(refreshTokensResult.ResultMessages);
 
         return Ok(result);
     }
