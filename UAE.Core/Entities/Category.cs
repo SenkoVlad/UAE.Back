@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.Options;
-using MongoDB.Entities;
-using UAE.Core.EntityDataParameters;
+﻿using MongoDB.Entities;
 
 namespace UAE.Core.Entities;
 
@@ -11,6 +8,5 @@ public class Category : Entity
 
     public List<Category> Children { get; set; } = new();
     
-    // [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfDocuments)]
-    public Dictionary<string, Dictionary<string, object>> Parameters { get; set; }
+    public Dictionary<string, Dictionary<string, object>> Fields { get; set; }
 }

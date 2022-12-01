@@ -3,4 +3,5 @@
 public sealed record CategoryModel(
     string Id,
     string Label,
-    List<CategoryModel> Children);
+    List<CategoryModel> Children,
+    Dictionary<string, Dictionary<string, object>> Fields);

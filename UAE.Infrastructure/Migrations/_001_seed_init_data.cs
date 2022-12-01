@@ -73,7 +73,7 @@ public class _001_seed_init_data : IMigration
         var readEstateCategory = new Category
         {
             Label = "real estate",
-            Parameters = new Dictionary<string, Dictionary<string, object>>
+            Fields = new Dictionary<string, Dictionary<string, object>>
             {
                 {
                     Field.Floor.ToString(), 
@@ -124,7 +124,7 @@ public class _001_seed_init_data : IMigration
         {            
             ID = ObjectId.GenerateNewId().ToString(),
             Label = "flat",
-            Parameters = new Dictionary<string, Dictionary<string, object>>
+            Fields = new Dictionary<string, Dictionary<string, object>>
             {
                 {
                     Field.Floor.ToString(), 
@@ -175,7 +175,7 @@ public class _001_seed_init_data : IMigration
         {            
             ID = ObjectId.GenerateNewId().ToString(),
             Label = "villa",
-            Parameters =  new Dictionary<string, Dictionary<string, object>>
+            Fields =  new Dictionary<string, Dictionary<string, object>>
             {
                 {
                     Field.NumberOfBedrooms.ToString(), 
@@ -217,7 +217,7 @@ public class _001_seed_init_data : IMigration
         var carCategory = new Category
         {
             Label = "car",
-            Parameters = new Dictionary<string, Dictionary<string, object>>
+            Fields = new Dictionary<string, Dictionary<string, object>>
             {
                 {
                     Field.MaxSpeed.ToString(), 
@@ -252,7 +252,7 @@ public class _001_seed_init_data : IMigration
         {          
             ID = ObjectId.GenerateNewId().ToString(),
             Label = "sport car",
-            Parameters = new Dictionary<string, Dictionary<string, object>>
+            Fields = new Dictionary<string, Dictionary<string, object>>
             {
                 {
                     Field.MaxSpeed.ToString(), 
