@@ -21,24 +21,24 @@
         "ASPNETCORE_ENVIRONMENT": "Vlad.Development"
       }
     },
-    "http.Vadim.Dev": {
+    "http.Vadym.Dev": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5090",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Vadim.Development"
+        "ASPNETCORE_ENVIRONMENT": "Vadym.Development"
       }
     },
-    "https.Vadim.Dev": {
+    "https.Vadym.Dev": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:5190;http://localhost:5090",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Vadim.Development"
+        "ASPNETCORE_ENVIRONMENT": "Vadym.Development"
       }
     }
   }
