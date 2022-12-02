@@ -8,11 +8,11 @@ public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnounce
 {
     public SearchAnnouncementModelValidator()
     {
-        RuleFor(p => p.Description)
+        /*RuleFor(p => p.Description)
             .NotNull()
             .MaximumLength(200);
 
         RuleFor(p => p.SortedBy)
-            .SetValidator(new AnnouncementFieldsValidator<SearchAnnouncementModel, string>());
+            .SetValidator(new AnnouncementFieldsValidator<SearchAnnouncementModel, string>());*/
     }
 }

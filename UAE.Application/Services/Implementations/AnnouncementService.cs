@@ -92,7 +92,10 @@ internal sealed class AnnouncementService : IAnnouncementService
              .PageNumber(searchAnnouncementModel.PageNumber);
         
         var announcements = await query.ExecuteAsync();
-        var result = ApplicationMapper.Mapper.Map<IReadOnlyList<AnnouncementModel>>(announcements.Results);
+
+        var result = announcements.Results.Select(x => new AnnouncementModel(x.Title, x.Description, x.CreatedDateTime.Ticks/10000)).ToList();
+
+        //var result = ApplicationMapper.Mapper.Map<IReadOnlyList<AnnouncementModel>>(announcements.Results);
 
         return new PagedResponse<AnnouncementModel>(
             announcements.TotalCount,
