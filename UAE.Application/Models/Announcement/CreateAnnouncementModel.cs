@@ -4,7 +4,7 @@ public sealed record CreateAnnouncementModel(
     string Description,
     string Title,
     string CategoryId,
-    Dictionary<string, string> Parameters,
+    Dictionary<string, object> Fields,
     string AddressToTake,
     string Address
 );

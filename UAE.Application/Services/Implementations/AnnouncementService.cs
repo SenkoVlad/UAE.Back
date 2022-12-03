@@ -40,25 +40,22 @@ internal sealed class AnnouncementService : IAnnouncementService
         return new OperationResult(new[] { "Announcement is created"}, IsSucceed: true);
     }
 
-    public async Task<OperationResult> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel)
+    public async Task<OperationResult> UpdateAnnouncementAsync(AnnouncementModel announcementModel)
     {
-        var fieldsToUpdate = BuildFieldsToUpdateExpression(updateAnnouncementModel);
-        await _announcementRepository.UpdateFieldsAsync(updateAnnouncementModel.EntityId, fieldsToUpdate);
+        var userId = _userService.GetCurrentUserId();
 
-        return new OperationResult(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true);
-    }
-
-    private Dictionary<Expression<Func<Announcement,object>>,object> BuildFieldsToUpdateExpression(UpdateAnnouncementModel updateAnnouncementModel)
-    {
-        var fieldsToUpdates = new Dictionary<Expression<Func<Announcement, object>>, object>();
-        foreach (var field in updateAnnouncementModel.FieldsValuesToUpdate.Keys)
+        if (string.IsNullOrWhiteSpace(userId))
         {
-            var propertyToUpdate = typeof(Announcement).GetProperty(field)!;
-            var newFiledValue = updateAnnouncementModel.FieldsValuesToUpdate[field];
-            fieldsToUpdates.Add(f => propertyToUpdate, newFiledValue);
+            return new OperationResult(new[] {"userId is not set in cookies"}, IsSucceed: true);
         }
+        
+        var announcement = ApplicationMapper.Mapper.Map<Announcement>(announcementModel);
+        announcement.User.ID = userId;
+        announcement.LastUpdateDateTime = DateTime.UtcNow;
 
-        return fieldsToUpdates;
+        await _announcementRepository.UpdateAsync(announcement);
+
+        return new OperationResult(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true});
     }
 
     public Task DeleteAnnouncementAsync(int id)
@@ -66,7 +63,7 @@ internal sealed class AnnouncementService : IAnnouncementService
         throw new NotImplementedException();
     }
 
-    public Task<AnnouncementModel> GetAnnouncementByIdAsync(int id)
+    public Task<AnnouncementModel> GetAnnouncementByIdAsync()
     {
         throw new NotImplementedException();
     }

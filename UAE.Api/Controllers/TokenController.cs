@@ -16,7 +16,7 @@ public class TokenController : ApiController
         _tokenService = tokenService;
     }
 
-    [HttpGet("refresh")]
+    [HttpGet(nameof(Refresh))]
     public async Task<IActionResult> Refresh()
     {
         var refreshTokensResult = await _tokenService.RefreshAsync();

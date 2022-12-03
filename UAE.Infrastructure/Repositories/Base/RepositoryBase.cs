@@ -54,4 +54,12 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
 
         await updateCommand.ExecuteAsync();
     }
+
+    public async Task UpdateAsync(T entity)
+    {
+        await DB.Update<T>()
+            .MatchID(entity.ID)
+            .ModifyWith(entity)
+            .ExecuteAsync();
+    }
 }

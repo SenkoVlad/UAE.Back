@@ -7,9 +7,8 @@ namespace UAE.Application.Services.Interfaces;
 public interface IAnnouncementService
 {
     Task<OperationResult> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel);
-    
-    Task<OperationResult> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel);
-    
+
+    Task<OperationResult> UpdateAnnouncementAsync(AnnouncementModel announcementModel);    
     Task DeleteAnnouncementAsync(int id);
     
     Task<AnnouncementModel> GetAnnouncementByIdAsync(int id);

@@ -24,7 +24,7 @@ public class CreateAnnouncementModelValidator : AbstractValidator<CreateAnnounce
             .NotNull()
             .NotEmpty();
         
-        RuleFor(c => c.Parameters)
+        RuleFor(c => c.Fields)
             .NotNull()
             .NotEmpty();
         

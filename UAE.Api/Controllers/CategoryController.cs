@@ -17,7 +17,7 @@ public class CategoryController : ApiController
         _categoryRepository = categoryRepository;
     }
 
-    [HttpGet("getall")]
+    [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll()
     {
         var categories = await _categoryRepository.GetAllAsync();

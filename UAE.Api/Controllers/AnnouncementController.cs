@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
+using UAE.Api.Mapper;
 using UAE.Application.Mapper;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Models.Base;
@@ -20,7 +21,7 @@ public class AnnouncementController : ApiController
     }
 
     [AllowAnonymous]
-    [HttpPost("search")]
+    [HttpPost(nameof(Search))]
     public async Task<IActionResult> Search([FromBody] SearchAnnouncementModel searchAnnouncementModel)
     {
          var pagedResponse = await _announcementService.SearchAnnouncement(searchAnnouncementModel);
@@ -29,20 +30,20 @@ public class AnnouncementController : ApiController
          return Ok(apiResult);
     }
 
-    [HttpPost("create")]
+    [HttpPost(nameof(Create))]
     public async Task<IActionResult> Create([FromBody] CreateAnnouncementModel createAnnouncementModel)
     {
         var operationResult = await _announcementService.CreateAnnouncement(createAnnouncementModel);
-        var apiResult = ApplicationMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
+        var apiResult = ApiMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
 
         return Ok(apiResult);
     }
 
-    [HttpPatch("update")]
-    public async Task<IActionResult> Update([FromBody] UpdateAnnouncementModel updateAnnouncementModel)
+    [HttpPatch(nameof(Update))]
+    public async Task<IActionResult> Update([FromBody] AnnouncementModel announcementModel)
     {
-        var operationResult = await _announcementService.UpdateAnnouncementAsync(updateAnnouncementModel);
-        var apiResult = ApplicationMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
+        var operationResult = await _announcementService.UpdateAnnouncementAsync(announcementModel);
+        var apiResult = ApiMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
 
         return Ok(apiResult);
     }

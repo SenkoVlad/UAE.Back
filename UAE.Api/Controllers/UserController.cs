@@ -26,7 +26,7 @@ public class UserController : ApiController
     }
 
     [AllowAnonymous]
-    [HttpPost("register")]
+    [HttpPost(nameof(Register))]
     public async Task<IActionResult> Register([FromBody] CreateUserModel createUserModel)
     {
         await _userService.RegisterAsync(createUserModel);
@@ -34,7 +34,7 @@ public class UserController : ApiController
     }
     
     [AllowAnonymous]
-    [HttpPost("login")]
+    [HttpPost(nameof(Login))]
     public async Task<IActionResult> Login([FromBody] LoginUserModel loginUserModel)
     {
         var loginResult = await _userService.LoginAsync(loginUserModel);

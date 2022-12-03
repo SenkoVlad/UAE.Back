@@ -1,6 +1,12 @@
 namespace UAE.Application.Models.Announcement;
 
-public sealed record class AnnouncementModel(
+public sealed record AnnouncementModel(
+    string Id,
     string Title,
     string Description,
-    DateTime CreateDateTime);
+    string CategoryId,
+    DateTime CreatedDateTime,
+    DateTime LastUpdateDateTime,
+    Dictionary<string, object> Fields, 
+    string AddressToTake, 
+    string Address);
