@@ -10,23 +10,18 @@ public class CreateAnnouncementModelValidator : AbstractValidator<CreateAnnounce
     public CreateAnnouncementModelValidator()
     {
         RuleFor(c => c.Title)
-            .NotNull()
             .NotEmpty();
         
         RuleFor(c => c.Description)
-            .NotNull()
             .NotEmpty();
         
         RuleFor(c => c.Address)
-            .NotNull()
             .NotEmpty();
         
         RuleFor(c => c.CategoryId)
-            .NotNull()
             .NotEmpty();
         
         RuleFor(c => c.Fields)
-            .NotNull()
             .NotEmpty();
     }
 }
