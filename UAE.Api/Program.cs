@@ -1,9 +1,6 @@
-using AutoMapper.Execution;
 using Microsoft.Extensions.Options;
 using UAE.Api.Extensions;
-using UAE.Api.Validations.CustomValidators;
 using UAE.Application.Extensions;
-using UAE.Infrastructure.Data.Init;
 using UAE.Infrastructure.Extensions;
 using UAE.Shared.Settings;
 
@@ -35,6 +32,8 @@ if (!app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+await app.InitCategoriesInMemory();
 
 app.UseCustomException();
 app.UseSession();

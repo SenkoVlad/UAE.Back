@@ -1,6 +1,5 @@
-using System.Linq.Expressions;
 using MongoDB.Entities;
-using UAE.Application.Mapper;
+using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
@@ -31,7 +30,7 @@ internal sealed class AnnouncementService : IAnnouncementService
             return new OperationResult(new[] {"userId is not set in cookies"}, IsSucceed: true);
         }
         
-        var announcement = ApplicationMapper.Mapper.Map<Announcement>(createAnnouncementModel);
+        var announcement = createAnnouncementModel.ToEntity();
         announcement.User.ID = userId;
         announcement.CreatedDateTime = DateTime.UtcNow;
         
@@ -49,13 +48,13 @@ internal sealed class AnnouncementService : IAnnouncementService
             return new OperationResult(new[] {"userId is not set in cookies"}, IsSucceed: true);
         }
         
-        var announcement = ApplicationMapper.Mapper.Map<Announcement>(announcementModel);
+        var announcement = announcementModel.ToEntity();
         announcement.User.ID = userId;
         announcement.LastUpdateDateTime = DateTime.UtcNow;
 
         await _announcementRepository.UpdateAsync(announcement);
 
-        return new OperationResult(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true});
+        return new OperationResult(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true);
     }
 
     public Task DeleteAnnouncementAsync(int id)
@@ -63,7 +62,7 @@ internal sealed class AnnouncementService : IAnnouncementService
         throw new NotImplementedException();
     }
 
-    public Task<AnnouncementModel> GetAnnouncementByIdAsync()
+    public Task<AnnouncementModel> GetAnnouncementByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
@@ -89,7 +88,9 @@ internal sealed class AnnouncementService : IAnnouncementService
              .PageNumber(searchAnnouncementModel.PageNumber);
         
         var announcements = await query.ExecuteAsync();
-        var result = ApplicationMapper.Mapper.Map<IReadOnlyList<AnnouncementModel>>(announcements.Results);
+        var result = (IReadOnlyList<AnnouncementModel>)announcements.Results
+            .Select(c => c.ToBusinessModel())
+            .ToList();
 
         return new PagedResponse<AnnouncementModel>(
             announcements.TotalCount,

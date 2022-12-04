@@ -12,5 +12,6 @@ public class CreateUserModelValidator : AbstractValidator<CreateUserModel>
 
         RuleFor(c => c.Password)
             .MinimumLength(8);
+        
     }
 }

@@ -1,6 +1,7 @@
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Options;
 using UAE.Api.Middlewares;
+using UAE.Application.Services.Interfaces;
 using UAE.Infrastructure.Data.Init;
 using UAE.Infrastructure.MongoConvention;
 using UAE.Shared.Settings;

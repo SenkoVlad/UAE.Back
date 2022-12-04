@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Entities;
 using UAE.Application.Mapper;
+using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
@@ -38,7 +39,7 @@ public class UserService : IUserService
     {
         var (hash, salt) = CreateHashAndSalt(createUserModel.Password);
         
-        var user = ApplicationMapper.Mapper.Map<User>(createUserModel);
+        var user = createUserModel.ToEntity();
         user.PasswordHash = hash;
         user.PasswordSalt = salt;
 

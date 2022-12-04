@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using UAE.Api.Validations.CustomValidators;
 using UAE.Application.Models.Announcement;
 using UAE.Core.Entities;
 
@@ -27,6 +28,5 @@ public class CreateAnnouncementModelValidator : AbstractValidator<CreateAnnounce
         RuleFor(c => c.Fields)
             .NotNull()
             .NotEmpty();
-        
     }
 }

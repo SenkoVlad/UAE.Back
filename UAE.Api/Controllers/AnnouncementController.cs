@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
-using UAE.Api.Mapper;
-using UAE.Application.Mapper;
+using UAE.Api.Mapper.Profiles;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Models.Base;
 using UAE.Application.Services.Interfaces;
+using UAE.Application.Validation;
 using UAE.Shared;
 
 namespace UAE.Api.Controllers;
@@ -14,37 +14,62 @@ namespace UAE.Api.Controllers;
 public class AnnouncementController : ApiController
 {
     private readonly IAnnouncementService _announcementService;
-
-    public AnnouncementController(IAnnouncementService announcementService)
+    private readonly CategoryFieldsValidationService _categoryFieldsValidationService;
+    
+    public AnnouncementController(IAnnouncementService announcementService,
+        CategoryFieldsValidationService categoryFieldsValidationService)
     {
         _announcementService = announcementService;
+        _categoryFieldsValidationService = categoryFieldsValidationService;
     }
 
     [AllowAnonymous]
     [HttpPost(nameof(Search))]
     public async Task<IActionResult> Search([FromBody] SearchAnnouncementModel searchAnnouncementModel)
     {
-         var pagedResponse = await _announcementService.SearchAnnouncement(searchAnnouncementModel);
-         var apiResult = ApiResult<PagedResponse<AnnouncementModel>>.Success(pagedResponse);
+        var pagedResponse = await _announcementService.SearchAnnouncement(searchAnnouncementModel);
+        var apiResult = ApiResult<PagedResponse<AnnouncementModel>>.Success(pagedResponse);
 
-         return Ok(apiResult);
+        return Ok(apiResult);
     }
 
     [HttpPost(nameof(Create))]
     public async Task<IActionResult> Create([FromBody] CreateAnnouncementModel createAnnouncementModel)
     {
-        var operationResult = await _announcementService.CreateAnnouncement(createAnnouncementModel);
-        var apiResult = ApiMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
+        var isModelValid = _categoryFieldsValidationService.ValidateByCategory(createAnnouncementModel.Fields.Keys.ToArray(),
+            createAnnouncementModel.CategoryId);
 
-        return Ok(apiResult);
+        if (isModelValid)
+        {
+            var operationResult = await _announcementService.CreateAnnouncement(createAnnouncementModel);
+            var apiResult = operationResult.ToApiResult();
+
+            return Ok(apiResult);
+        }
+        else
+        {
+            var apiResult = ApiResult<string>.Failure(new[] {"Model is not valid"});
+            return Ok(apiResult);
+        }
     }
 
-    [HttpPatch(nameof(Update))]
+    [HttpPost(nameof(Update))]
     public async Task<IActionResult> Update([FromBody] AnnouncementModel announcementModel)
     {
-        var operationResult = await _announcementService.UpdateAnnouncementAsync(announcementModel);
-        var apiResult = ApiMapper.Mapper.Map<ApiResult<IEnumerable<string>>>(operationResult);
+        var isModelValid = _categoryFieldsValidationService.ValidateByCategory(announcementModel.Fields.Keys.ToArray(),
+            announcementModel.CategoryId);
 
-        return Ok(apiResult);
+        if (isModelValid)
+        {
+            var operationResult = await _announcementService.UpdateAnnouncementAsync(announcementModel);
+            var apiResult = operationResult.ToApiResult();
+
+            return Ok(apiResult);
+        }
+        else
+        {
+            var apiResult = ApiResult<string>.Failure(new[] {"Model is not valid"});
+            return Ok(apiResult);
+        }
     }
 }
