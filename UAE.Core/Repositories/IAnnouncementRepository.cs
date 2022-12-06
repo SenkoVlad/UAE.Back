@@ -3,4 +3,7 @@ using UAE.Core.Repositories.Base;
 
 namespace UAE.Core.Repositories;
 
-public interface IAnnouncementRepository : IRepositoryBase<Announcement> {}
+public interface IAnnouncementRepository : IRepositoryBase<Announcement>
+{
+    Task UpdateFieldsAsync(Announcement announcement);
+}

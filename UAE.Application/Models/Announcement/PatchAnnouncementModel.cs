@@ -4,7 +4,7 @@ public sealed record PatchAnnouncementModel(
     string Id,
     string? Title,
     string? Description,
-    string? CategoryId,
+    string CategoryId,
     Dictionary<string, object>? Fields, 
     string? AddressToTake, 
     string? Address);

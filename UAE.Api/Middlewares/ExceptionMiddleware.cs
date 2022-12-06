@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using UAE.Api.Logging;
 using UAE.Api.ViewModels.Base;
-using UAE.Application.Models.Base;
 
 namespace UAE.Api.Middlewares;
 

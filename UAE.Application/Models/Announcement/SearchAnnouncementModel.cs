@@ -7,4 +7,5 @@ public sealed record SearchAnnouncementModel(
         string CategoryId,
         int PageNumber,
         int PageSize,
+        Dictionary<string, object>? Fields,
         string SortedBy) : PagedRequest(PageNumber, PageSize, SortedBy);

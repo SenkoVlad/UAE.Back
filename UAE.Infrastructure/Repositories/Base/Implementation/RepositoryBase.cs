@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+using MongoDB.Driver.Linq;
 using MongoDB.Entities;
 using UAE.Core.Repositories.Base;
-using MongoDB.Driver.Linq;
+using UAE.Infrastructure.Repositories.Base.Interfaces;
 
-namespace UAE.Infrastructure.Repositories.Base;
+namespace UAE.Infrastructure.Repositories.Base.Implementation;
 
 public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
 {
@@ -39,20 +40,6 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
             .FirstOrDefaultAsync();
 
         return result;
-    }
-
-    public async Task UpdateFieldsAsync(string entityId, Dictionary<Expression<Func<T, object>>, object>  fieldsToUpdates)
-    {
-        var updateCommand = DB.Update<T>()
-            .MatchID(entityId);
-
-        foreach (var field in fieldsToUpdates.Keys)
-        {
-            var newFieldValue = fieldsToUpdates[field];
-            updateCommand.Modify(field, newFieldValue);
-        }
-
-        await updateCommand.ExecuteAsync();
     }
 
     public async Task UpdateAsync(T entity)

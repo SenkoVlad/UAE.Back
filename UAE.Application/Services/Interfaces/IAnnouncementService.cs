@@ -9,6 +9,9 @@ public interface IAnnouncementService
     Task<OperationResult> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel);
 
     Task<OperationResult> UpdateAnnouncementAsync(AnnouncementModel announcementModel);    
+    
+    Task<OperationResult> PatchAnnouncementAsync(PatchAnnouncementModel patchAnnouncementModel);    
+    
     Task DeleteAnnouncementAsync(int id);
     
     Task<AnnouncementModel> GetAnnouncementByIdAsync(int id);

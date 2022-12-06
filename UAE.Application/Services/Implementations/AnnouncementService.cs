@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using MongoDB.Entities;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
@@ -32,7 +33,7 @@ internal sealed class AnnouncementService : IAnnouncementService
         
         var announcement = createAnnouncementModel.ToEntity();
         announcement.User.ID = userId;
-        announcement.CreatedDateTime = DateTime.UtcNow;
+        announcement.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         
         await _announcementRepository.SaveAsync(announcement);
 
@@ -50,11 +51,21 @@ internal sealed class AnnouncementService : IAnnouncementService
         
         var announcement = announcementModel.ToEntity();
         announcement.User.ID = userId;
-        announcement.LastUpdateDateTime = DateTime.UtcNow;
+        announcement.LastUpdateDateTime = DateTime.UtcNow.Millisecond;
 
         await _announcementRepository.UpdateAsync(announcement);
 
         return new OperationResult(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true);
+    }
+
+    public async Task<OperationResult> PatchAnnouncementAsync(PatchAnnouncementModel patchAnnouncementModel)
+    {
+        var announcement = patchAnnouncementModel.ToEntity();
+        announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        
+        await _announcementRepository.UpdateFieldsAsync(announcement);
+
+        return new OperationResult(ResultMessages: new[] {"Success"}, IsSucceed: true);
     }
 
     public Task DeleteAnnouncementAsync(int id)

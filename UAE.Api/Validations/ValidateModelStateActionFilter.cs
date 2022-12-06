@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using UAE.Application.Models.Base;
+using UAE.Api.ViewModels.Base;
 
 namespace UAE.Api.Validations;
 
