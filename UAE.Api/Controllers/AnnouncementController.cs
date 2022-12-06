@@ -25,7 +25,7 @@ public class AnnouncementController : ApiController
 
     [AllowAnonymous]
     [HttpPost(nameof(Search))]
-    public async Task<IActionResult> Search([FromBody] SearchAnnouncementModel searchAnnouncementModel)
+    public async Task<IActionResult> Search([FromQuery] SearchAnnouncementModel searchAnnouncementModel)
     {
         var pagedResponse = await _announcementService.SearchAnnouncement(searchAnnouncementModel);
         var apiResult = ApiResult<PagedResponse<AnnouncementModel>>.Success(pagedResponse);
