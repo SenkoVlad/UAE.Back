@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Options;
 using UAE.Api.Extensions;
 using UAE.Application.Extensions;
-using UAE.Infrastructure.Data.Init;
 using UAE.Infrastructure.Extensions;
 using UAE.Shared.Settings;
 
@@ -26,13 +25,15 @@ builder.Services.AddJwtAuth(builder.Configuration);
 var app = builder.Build();
 var settings = app.Services.GetRequiredService<IOptions<Settings>>().Value;
 
-await InitDatabase.InitAsync(settings.Database.Name, settings.Database.Host);
+await app.UseMongoDb(settings.Database.Name, settings.Database.Host);
 
 if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+await app.InitCategoriesInMemory();
 
 app.UseCustomException();
 app.UseSession();
@@ -42,3 +43,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+

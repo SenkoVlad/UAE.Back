@@ -1,6 +1,6 @@
 using FluentValidation;
 using UAE.Api.Validations.CustomValidators;
-using UAE.Application.Models.Order;
+using UAE.Application.Models.Announcement;
 
 namespace UAE.Api.Validations.ValidationRules;
 
@@ -9,10 +9,9 @@ public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnounce
     public SearchAnnouncementModelValidator()
     {
         RuleFor(p => p.Description)
-            .NotNull()
             .MaximumLength(200);
 
         RuleFor(p => p.SortedBy)
-            .SetValidator(new SearchAnnouncementsSortedFieldValidator<SearchAnnouncementModel, string>());
+            .SetValidator(new AnnouncementFieldsValidator<SearchAnnouncementModel, string>());
     }
 }

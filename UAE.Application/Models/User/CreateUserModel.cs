@@ -1,8 +1,5 @@
 ﻿namespace UAE.Application.Models.User;
 
-public class CreateUserModel
-{
-    public string Email { get; set; }
-
-    public string Password { get; set; }
-}
+public sealed record CreateUserModel(
+    string Email,
+    string Password);

@@ -40,4 +40,26 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
 
         return result;
     }
+
+    public async Task UpdateFieldsAsync(string entityId, Dictionary<Expression<Func<T, object>>, object>  fieldsToUpdates)
+    {
+        var updateCommand = DB.Update<T>()
+            .MatchID(entityId);
+
+        foreach (var field in fieldsToUpdates.Keys)
+        {
+            var newFieldValue = fieldsToUpdates[field];
+            updateCommand.Modify(field, newFieldValue);
+        }
+
+        await updateCommand.ExecuteAsync();
+    }
+
+    public async Task UpdateAsync(T entity)
+    {
+        await DB.Update<T>()
+            .MatchID(entity.ID)
+            .ModifyWith(entity)
+            .ExecuteAsync();
+    }
 }

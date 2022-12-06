@@ -16,14 +16,14 @@ public class TokenController : ApiController
         _tokenService = tokenService;
     }
 
-    [HttpGet("refresh")]
+    [HttpGet(nameof(Refresh))]
     public async Task<IActionResult> Refresh()
     {
         var refreshTokensResult = await _tokenService.RefreshAsync();
 
         var result = refreshTokensResult.IsSucceed
-            ? ApiResult<string>.Success(refreshTokensResult.ResultMessage)
-            : ApiResult<string>.Failure(new []{refreshTokensResult.ResultMessage});
+            ? ApiResult<IEnumerable<string>>.Success(refreshTokensResult.ResultMessages)
+            : ApiResult<IEnumerable<string>>.Failure(refreshTokensResult.ResultMessages);
 
         return Ok(result);
     }

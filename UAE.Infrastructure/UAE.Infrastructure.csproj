@@ -15,4 +15,8 @@
       <PackageReference Include="MongoDB.Entities" Version="21.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    </ItemGroup>
+
 </Project>

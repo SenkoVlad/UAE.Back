@@ -11,9 +11,13 @@ public sealed class ApiResult<T>
         Errors = errors;
     }
 
-    public bool Succeeded { get; }
+    public ApiResult()
+    {
+    }
 
-    public T Result { get; }
+    public bool Succeeded { get; set; }
+
+    public T Result { get; set; }
 
     public IEnumerable<string> Errors { get; set; }
 

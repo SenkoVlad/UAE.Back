@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Entities;
 using UAE.Application.Mapper;
+using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
@@ -22,17 +23,14 @@ namespace UAE.Application.Services.Implementations;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IOptions<Settings> _settings;
     private readonly ITokenService _tokenService;
-    private IHttpContextAccessor _httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     
     public UserService(IUserRepository userRepository, 
-        IOptions<Settings> settings, 
         ITokenService tokenService, 
         IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
-        _settings = settings;
         _tokenService = tokenService;
         _httpContextAccessor = httpContextAccessor;
     }
@@ -41,7 +39,7 @@ public class UserService : IUserService
     {
         var (hash, salt) = CreateHashAndSalt(createUserModel.Password);
         
-        var user = ApplicationMapper.Mapper.Map<User>(createUserModel);
+        var user = createUserModel.ToEntity();
         user.PasswordHash = hash;
         user.PasswordSalt = salt;
 
@@ -72,6 +70,13 @@ public class UserService : IUserService
         await _userRepository.SaveAsync(user);
         
         return LoginUserResult.Succeded(token);
+    }
+
+    public string GetCurrentUserId()
+    {
+        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("X-UserId", out var userId);
+
+        return userId;
     }
 
     private bool IsPasswordCorrect(User user, string password)

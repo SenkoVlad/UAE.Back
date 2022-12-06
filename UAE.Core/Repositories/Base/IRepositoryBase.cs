@@ -4,13 +4,17 @@ namespace UAE.Core.Repositories.Base;
 
 public interface IRepositoryBase<T> where T : class 
 {
-    public Task AddAsync(T entity);
-    
-    public Task<T> GetByIdAsync(string id);
-    
-    public Task<List<T>> GetAllAsync();
+    Task AddAsync(T entity);
 
-    public Task SaveAsync(T entity);
+    Task UpdateAsync(T entity);
+
+    Task<T> GetByIdAsync(string id);
+    
+    Task<List<T>> GetAllAsync();
+
+    Task SaveAsync(T entity);
     
     Task<T?> GetByQuery(Expression<Func<T, bool>> expression);
+
+    Task UpdateFieldsAsync(string entityId, Dictionary<Expression<Func<T, object>>, object>  fieldsToUpdates);
 }

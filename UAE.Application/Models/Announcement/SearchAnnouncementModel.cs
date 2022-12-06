@@ -1,6 +1,6 @@
 ﻿using UAE.Shared;
 
-namespace UAE.Application.Models.Order;
+namespace UAE.Application.Models.Announcement;
 
 public sealed record SearchAnnouncementModel(
         string Description,
