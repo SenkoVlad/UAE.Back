@@ -72,4 +72,32 @@ public class AnnouncementController : ApiController
             return Ok(apiResult);
         }
     }
+    
+    [HttpPatch(nameof(Patch))]
+    public async Task<IActionResult> Patch([FromBody] PatchAnnouncementModel announcementModel)
+    {
+        if (announcementModel.Fields != null)
+        {
+            var isModelValid = _categoryFieldsValidationService.ValidateByCategory(announcementModel.Fields.Keys.ToArray(),
+                announcementModel.CategoryId!);
+        }
+                
+        
+        //
+        // if (isModelValid)
+        // {
+        //     var operationResult = await _announcementService.UpdateAnnouncementAsync(announcementModel);
+        //     var apiResult = operationResult.ToApiResult();
+        //
+        //     return Ok(apiResult);
+        // }
+        // else
+        // {
+        //     var apiResult = ApiResult<string>.Failure(new[] {"Model is not valid"});
+        //     return Ok(apiResult);
+        // }
+
+        return Ok();
+    }
+
 }
