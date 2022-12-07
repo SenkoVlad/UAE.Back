@@ -1,15 +1,8 @@
 using System.Text;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using UAE.Api.Logging;
 using UAE.Api.Middlewares;
-using UAE.Api.Validations;
-using UAE.Api.Validations.ValidationRules;
-using UAE.Application.Models.Announcement;
-using UAE.Application.Models.User;
 
 namespace UAE.Api.Extensions;
 
@@ -97,27 +90,4 @@ public static class ServiceCollectionExtension
             });
         });
     }
-
-    public static void AddFluentValidation(this IServiceCollection services)
-    {
-        services.AddScoped<IValidator<SearchAnnouncementModel>, SearchAnnouncementModelValidator>();
-        services.AddScoped<IValidator<CreateUserModel>, CreateUserModelValidator>();
-        services.AddScoped<IValidator<CreateAnnouncementModel>, CreateAnnouncementModelValidator>();
-        
-        services.AddSingleton<IValidationFactory, ValidationFactory>();
-        // services.AddMvcCore();
-        //
-        // services.Configure<ApiBehaviorOptions>(options =>
-        // {
-        //     options.SuppressModelStateInvalidFilter = true;
-        // });
-        //
-        // services.AddControllers(options =>
-        //     {
-        //         options.Filters.Add(typeof(ValidateModelStateActionFilter));
-        //     })
-        //     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
-    }
-    
-    
 }

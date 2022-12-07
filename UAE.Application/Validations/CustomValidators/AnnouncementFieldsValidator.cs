@@ -2,7 +2,7 @@ using FluentValidation;
 using FluentValidation.Validators;
 using UAE.Core.Entities;
 
-namespace UAE.Api.Validations.CustomValidators;
+namespace UAE.Application.Validations.CustomValidators;
 
 public class AnnouncementFieldsValidator<T, TProperty> : PropertyValidator<T, TProperty> 
 {

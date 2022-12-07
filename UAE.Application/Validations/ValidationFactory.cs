@@ -1,6 +1,7 @@
 using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace UAE.Api.Validations;
+namespace UAE.Application.Validations;
 
 public class ValidationFactory : IValidationFactory
 {

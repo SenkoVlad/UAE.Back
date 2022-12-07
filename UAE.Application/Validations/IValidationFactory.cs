@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace UAE.Api.Validations;
+namespace UAE.Application.Validations;
 
 public interface IValidationFactory
 {

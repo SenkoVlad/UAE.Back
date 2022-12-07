@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using UAE.Application.Models.User;
 
-namespace UAE.Api.Validations.ValidationRules;
+namespace UAE.Application.Validations.ValidationRules;
 
 public class CreateUserModelValidator : AbstractValidator<CreateUserModel>
 {

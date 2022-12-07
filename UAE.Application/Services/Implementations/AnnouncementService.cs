@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using MongoDB.Entities;
+using UAE.Application.Extensions;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
@@ -88,6 +89,15 @@ internal sealed class AnnouncementService : IAnnouncementService
             query.Match(a => a.Category.ID == searchAnnouncementModel.CategoryId);
         }
 
+        if (searchAnnouncementModel.Fields != null)
+        {
+            var fields = searchAnnouncementModel.Fields.ToDictionaryWithCheckingForValueKind();
+            foreach (var field in fields.Keys)
+            {
+                query.Match(a => a.Fields![field] == fields[field]);
+            }
+        }
+        
         if (!string.IsNullOrWhiteSpace(searchAnnouncementModel.Description))
         {
             query.Match( a=> a.Description.Contains(searchAnnouncementModel.Description));

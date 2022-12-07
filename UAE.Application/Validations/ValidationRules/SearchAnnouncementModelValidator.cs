@@ -1,9 +1,9 @@
 using FluentValidation;
-using UAE.Api.Validations.CustomValidators;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Validation;
+using UAE.Application.Validations.CustomValidators;
 
-namespace UAE.Api.Validations.ValidationRules;
+namespace UAE.Application.Validations.ValidationRules;
 
 public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnouncementModel>
 {

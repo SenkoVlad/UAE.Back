@@ -1,12 +1,10 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
-using UAE.Api.Validations;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
+using UAE.Application.Validations;
 
 namespace UAE.Api.Controllers;
 

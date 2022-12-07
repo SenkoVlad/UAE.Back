@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
 using UAE.Api.Mapper.Profiles;
-using UAE.Api.Validations;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
-using UAE.Application.Validation;
+using UAE.Application.Validations;
 using UAE.Shared;
 
 namespace UAE.Api.Controllers;
@@ -15,15 +14,12 @@ namespace UAE.Api.Controllers;
 public class AnnouncementController : ApiController
 {
     private readonly IAnnouncementService _announcementService;
-    private readonly CategoryFieldsValidationService _categoryFieldsValidationService;
     private readonly IValidationFactory _validationFactory;
     
     public AnnouncementController(IAnnouncementService announcementService,
-        CategoryFieldsValidationService categoryFieldsValidationService, 
         IValidationFactory validationFactory)
     {
         _announcementService = announcementService;
-        _categoryFieldsValidationService = categoryFieldsValidationService;
         _validationFactory = validationFactory;
     }
 
@@ -50,70 +46,49 @@ public class AnnouncementController : ApiController
     {
         var validator = _validationFactory.GetValidator<CreateAnnouncementModel>();
         var validationResult = await validator.ValidateAsync(createAnnouncementModel);
-        
-        var isModelValid = _categoryFieldsValidationService.ValidateByCategory(createAnnouncementModel.Fields.Keys.ToArray(),
-            createAnnouncementModel.CategoryId);
 
-        if (isModelValid)
+        if (validationResult.IsValid)
         {
             var operationResult = await _announcementService.CreateAnnouncement(createAnnouncementModel);
             var apiResult = operationResult.ToApiResult();
 
             return Ok(apiResult);
         }
-        else
-        {
-            var apiResult = ApiResult<string>.Failure(new[] {"Model is not valid"});
-            return Ok(apiResult);
-        }
+
+        return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
     }
 
     [HttpPut(nameof(Update))]
     public async Task<IActionResult> Update([FromBody] AnnouncementModel announcementModel)
     {
-        var isModelValid = _categoryFieldsValidationService.ValidateByCategory(announcementModel.Fields.Keys.ToArray(),
-            announcementModel.CategoryId);
-
-        if (isModelValid)
+        var validator = _validationFactory.GetValidator<AnnouncementModel>();
+        var validationResult = await validator.ValidateAsync(announcementModel);
+        
+        if (validationResult.IsValid)
         {
             var operationResult = await _announcementService.UpdateAnnouncementAsync(announcementModel);
             var apiResult = operationResult.ToApiResult();
 
             return Ok(apiResult);
         }
-        else
-        {
-            var apiResult = ApiResult<string>.Failure(new[] {"Model is not valid"});
-            return Ok(apiResult);
-        }
+        
+        return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
     }
     
     [HttpPatch(nameof(Patch))]
     public async Task<IActionResult> Patch([FromBody] PatchAnnouncementModel announcementModel)
     {
-        var isModelValid = AreFieldsValid(announcementModel);
+        var validator = _validationFactory.GetValidator<PatchAnnouncementModel>();
+        var validationResult = await validator.ValidateAsync(announcementModel);
 
-        if (!isModelValid)
+        if (validationResult.IsValid)
         {
-            return Ok(ApiResult<string>.Failure(new[] {"Model is not valid"}));
-        }
-
-        var operationResult = await _announcementService.PatchAnnouncementAsync(announcementModel);
-        var apiResult = operationResult.ToApiResult();
+            var operationResult = await _announcementService.PatchAnnouncementAsync(announcementModel);
+            var apiResult = operationResult.ToApiResult();
             
-        return Ok(apiResult);
-    }
-
-    private bool AreFieldsValid(PatchAnnouncementModel announcementModel)
-    {
-        if (announcementModel.Fields != null)
-        {
-            var isModelValid = _categoryFieldsValidationService.ValidateByCategory(announcementModel.Fields.Keys.ToArray(),
-                announcementModel.CategoryId);
-
-            return isModelValid;
+            return Ok(apiResult);
         }
 
-        return true;
+        return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
     }
 }
