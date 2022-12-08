@@ -69,6 +69,13 @@ internal sealed class AnnouncementService : IAnnouncementService
         return new OperationResult(ResultMessages: new[] {"Success"}, IsSucceed: true);
     }
 
+    public async Task<OperationResult> DeleteAnnouncementAsync(string id)
+    {
+        await _announcementRepository.DeleteByIdAsync(id);
+
+        return new OperationResult(ResultMessages: new[] {"Success"}, IsSucceed: true);
+    }
+
     public Task DeleteAnnouncementAsync(int id)
     {
         throw new NotImplementedException();

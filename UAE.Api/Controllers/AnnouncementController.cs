@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
+using UAE.Api.Extensions;
 using UAE.Api.Mapper.Profiles;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.Announcement;
@@ -90,5 +91,14 @@ public class AnnouncementController : ApiController
         }
 
         return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
+    }
+
+    [HttpDelete()]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var operationResult = await _announcementService.DeleteAnnouncementAsync(id);
+        var apiResult = operationResult.ToApiResult();
+
+        return Ok(apiResult);
     }
 }

@@ -12,7 +12,7 @@ public interface IAnnouncementService
     
     Task<OperationResult> PatchAnnouncementAsync(PatchAnnouncementModel patchAnnouncementModel);    
     
-    Task DeleteAnnouncementAsync(int id);
+    Task<OperationResult> DeleteAnnouncementAsync(string id);
     
     Task<AnnouncementModel> GetAnnouncementByIdAsync(int id);
 
