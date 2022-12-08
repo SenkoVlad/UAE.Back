@@ -1,5 +1,5 @@
-﻿using UAE.Application.Models;
-using UAE.Application.Models.Base;
+﻿using UAE.Api.ViewModels.Base;
+using UAE.Application.Models;
 
 namespace UAE.Api.Mapper.Profiles;
 

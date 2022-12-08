@@ -1,9 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using UAE.Core.Entities;
 using UAE.Core.Repositories;
-using UAE.Core.Repositories.Base;
 using UAE.Infrastructure.Repositories;
-using UAE.Infrastructure.Repositories.Base;
 
 namespace UAE.Infrastructure.Extensions;
 

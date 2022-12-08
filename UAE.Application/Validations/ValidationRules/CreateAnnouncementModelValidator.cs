@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
-using UAE.Api.Validations.CustomValidators;
 using UAE.Application.Models.Announcement;
-using UAE.Core.Entities;
+using UAE.Application.Validation;
 
-namespace UAE.Api.Validations.ValidationRules;
+namespace UAE.Application.Validations.ValidationRules;
 
 public class CreateAnnouncementModelValidator : AbstractValidator<CreateAnnouncementModel>
 {
-    public CreateAnnouncementModelValidator()
+    public CreateAnnouncementModelValidator(CategoryFieldsValidationService categoryFieldsValidationService)
     {
         RuleFor(c => c.Title)
             .NotEmpty();
@@ -23,5 +22,8 @@ public class CreateAnnouncementModelValidator : AbstractValidator<CreateAnnounce
         
         RuleFor(c => c.Fields)
             .NotEmpty();
+        
+        RuleFor(p => new { p.Fields, p.CategoryId} )
+            .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Keys.ToArray(), x.CategoryId));
     }
 }

@@ -6,15 +6,13 @@ public interface IRepositoryBase<T> where T : class
 {
     Task AddAsync(T entity);
 
-    Task UpdateAsync(T entity);
+    Task DeleteByIdAsync(string id);
 
-    Task<T> GetByIdAsync(string id);
-    
+     Task UpdateAsync(T entity);
+
     Task<List<T>> GetAllAsync();
 
     Task SaveAsync(T entity);
     
     Task<T?> GetByQuery(Expression<Func<T, bool>> expression);
-
-    Task UpdateFieldsAsync(string entityId, Dictionary<Expression<Func<T, object>>, object>  fieldsToUpdates);
 }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using UAE.Api.Logging;
 using UAE.Api.ViewModels.Base;
-using UAE.Application.Models.Base;
 
 namespace UAE.Api.Middlewares;
 
@@ -33,16 +32,10 @@ internal sealed class ExceptionMiddleware  : IMiddleware
 
     private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
-        httpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+        httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         httpContext.Response.ContentType = "application/json";
-
         var response = GetResponse(exception);
-
-        await httpContext.Response.WriteAsync(new ErrorDetailsViewModel
-        {
-            Message = JsonSerializer.Serialize(response),
-            StatusCode = httpContext.Response.StatusCode
-        }.ToString());
+        await httpContext.Response.WriteAsync(response.ToString());
     }
 
     private static ApiResult<string> GetResponse(Exception exception)

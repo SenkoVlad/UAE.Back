@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
-using UAE.Application.Models.Base;
+using UAE.Api.ViewModels.Base;
 using UAE.Application.Services.Interfaces;
 
 namespace UAE.Api.Controllers;

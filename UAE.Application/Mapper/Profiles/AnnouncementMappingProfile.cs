@@ -32,6 +32,28 @@ public static class AnnouncementMappingProfile
             LastUpdateDateTime = model.LastUpdateDateTime
         };
     }
+    
+    public static Announcement ToEntity(this PatchAnnouncementModel model)
+    {
+        return new Announcement
+        {
+            ID = model.Id,
+            Address = string.IsNullOrWhiteSpace(model.Address)
+                ? null! 
+                : model.Address,
+            AddressToTake = string.IsNullOrWhiteSpace(model.AddressToTake)
+                ? null!
+                : model.AddressToTake,
+            Category = model.CategoryId,
+            Description = string.IsNullOrWhiteSpace(model.Description)
+                ? null! 
+                : model.Description,
+            Fields = model.Fields?.ToDictionaryWithCheckingForValueKind(),
+            Title = string.IsNullOrWhiteSpace(model.Title)
+                ? null! 
+                : model.Title,
+        };
+    }
 
     public static AnnouncementModel ToBusinessModel(this Announcement model)
     {
@@ -47,5 +69,4 @@ public static class AnnouncementMappingProfile
             AddressToTake: model.AddressToTake
         );
     }
-
 }

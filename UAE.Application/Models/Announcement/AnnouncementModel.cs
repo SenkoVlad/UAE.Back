@@ -5,8 +5,8 @@ public sealed record AnnouncementModel(
     string Title,
     string Description,
     string CategoryId,
-    DateTime CreatedDateTime,
-    DateTime LastUpdateDateTime,
+    long CreatedDateTime,
+    long LastUpdateDateTime,
     Dictionary<string, object> Fields, 
     string AddressToTake, 
     string Address);

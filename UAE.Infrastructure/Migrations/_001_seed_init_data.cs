@@ -60,7 +60,7 @@ public class _001_seed_init_data : IMigration
             {
                 ID = user.ID
             },
-            CreatedDateTime = DateTime.Now
+            CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
         };
 
         await announcement.SaveAsync();
