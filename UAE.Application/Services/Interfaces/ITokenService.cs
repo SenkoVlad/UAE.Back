@@ -1,5 +1,4 @@
 ﻿using UAE.Application.Models;
-using UAE.Application.Models.User;
 using UAE.Core.Entities;
 
 namespace UAE.Application.Services.Interfaces;

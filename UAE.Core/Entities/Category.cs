@@ -8,5 +8,5 @@ public class Category : Entity
 
     public List<Category> Children { get; set; } = new();
     
-    public Dictionary<string, Dictionary<string, object>> Fields { get; set; }
+    public List<Field> Fields { get; set; } = new();
 }

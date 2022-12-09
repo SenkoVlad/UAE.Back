@@ -1,12 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using UAE.Application.Models;
-using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;

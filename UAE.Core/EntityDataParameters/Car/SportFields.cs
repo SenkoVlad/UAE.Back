@@ -2,9 +2,9 @@
 
 public class SportFields
 {
-    public static readonly Field[] Fields = {
-        Field.MaxSpeed,
-        Field.Mileage,
-        Field.Brand
+    public static readonly ExtraFieldName[] Fields = {
+        ExtraFieldName.MaxSpeed,
+        ExtraFieldName.Mileage,
+        ExtraFieldName.Brand
     };
 }

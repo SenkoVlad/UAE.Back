@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Entities;
-using UAE.Application.Mapper;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
-using UAE.Shared.Settings;
 
 namespace UAE.Application.Services.Implementations;
 

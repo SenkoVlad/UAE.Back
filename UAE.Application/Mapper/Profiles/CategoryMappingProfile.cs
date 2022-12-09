@@ -11,7 +11,8 @@ public static class CategoryMappingProfile
         {
             Children = model.Children.Select(c => c.ToEntity())
                 .ToList(),
-            Fields = model.Fields,
+            Fields = model.Fields.Select(f => f.ToEntity())
+                .ToList(),
             Label = model.Label,
             ID = model.Id
         };
@@ -22,7 +23,8 @@ public static class CategoryMappingProfile
         return new CategoryModel(
             Children : entity.Children.Select(c => c.ToBusinessModel())
                 .ToList(),
-            Fields : entity.Fields,
+            Fields : entity.Fields.Select(f => f.ToBusinessModel())
+                .ToList(),
             Label : entity.Label,
             Id : entity.ID
         );

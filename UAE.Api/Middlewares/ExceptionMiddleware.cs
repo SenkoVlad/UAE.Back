@@ -1,8 +1,4 @@
-using System;
 using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using UAE.Api.Logging;
 using UAE.Api.ViewModels.Base;
 

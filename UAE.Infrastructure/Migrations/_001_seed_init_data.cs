@@ -4,6 +4,7 @@ using MongoDB.Entities;
 using UAE.Core.Entities;
 using UAE.Core.EntityDataParameters;
 using UAE.Core.EntityDataParameters.RealEstate;
+using UAE.Shared.Extensions;
 
 namespace UAE.Infrastructure.Data.Init;
 
@@ -49,11 +50,11 @@ public class _001_seed_init_data : IMigration
             Description = "flat 1",
             Fields = new Dictionary<string, object>()
             {
-                {Field.Floor.ToString(), 2},
-                {Field.NumberOfBedrooms.ToString(), 2},
-                {Field.Number.ToString(), 23},
-                {Field.BedroomType.ToString(), "shower"},
-                {Field.YearOfBuilding.ToString(), 2012}
+                {ExtraFieldName.Floor.GetDescription(), 2},
+                {ExtraFieldName.NumberOfBedrooms.GetDescription(), 2},
+                {ExtraFieldName.Number.GetDescription(), 23},
+                {ExtraFieldName.BedroomType.GetDescription(), "shower"},
+                {ExtraFieldName.YearOfBuilding.GetDescription(), 2012}
             },
             Title = "flat super flat",
             User = new One<User>()
@@ -73,50 +74,13 @@ public class _001_seed_init_data : IMigration
         var readEstateCategory = new Category
         {
             Label = "real estate",
-            Fields = new Dictionary<string, Dictionary<string, object>>
+            Fields = new List<Field>
             {
-                {
-                    Field.Floor.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.NumberOfBedrooms.ToString(),
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.Number.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.BedroomType.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(string).Name },
-                        { FieldParameter.MaxLength.ToString(), 20 },
-                        { FieldParameter.MinLength.ToString(), 3 },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.YearOfBuilding.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                }
+                new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.BedroomType.GetDescription(), typeof(int).Name)
             }
         };
 
@@ -124,50 +88,12 @@ public class _001_seed_init_data : IMigration
         {            
             ID = ObjectId.GenerateNewId().ToString(),
             Label = "flat",
-            Fields = new Dictionary<string, Dictionary<string, object>>
+            Fields = new List<Field>
             {
-                {
-                    Field.Floor.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.NumberOfBedrooms.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.Number.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.BedroomType.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(string).Name },
-                        { FieldParameter.MaxLength.ToString(), 20 },
-                        { FieldParameter.MinLength.ToString(), 3 },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.YearOfBuilding.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                }
+                new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
             }
         };
 
@@ -175,76 +101,26 @@ public class _001_seed_init_data : IMigration
         {            
             ID = ObjectId.GenerateNewId().ToString(),
             Label = "villa",
-            Fields =  new Dictionary<string, Dictionary<string, object>>
+            Fields = new List<Field>
             {
-                {
-                    Field.NumberOfBedrooms.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.Number.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.BedroomType.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(string).Name },
-                        { FieldParameter.MaxLength.ToString(), 20 },
-                        { FieldParameter.MinLength.ToString(), 3 },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.YearOfBuilding.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                }
+                new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.BedroomType.GetDescription(), typeof(int).Name),
             }
         };
 
         var carCategory = new Category
         {
             Label = "car",
-            Fields = new Dictionary<string, Dictionary<string, object>>
+            Fields = new List<Field>
             {
-                {
-                    Field.MaxSpeed.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.Mileage.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.Brand.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(string).Name },
-                        { FieldParameter.MaxLength.ToString(), 20 },
-                        { FieldParameter.MinLength.ToString(), 3 },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                }
+                new Field(ExtraFieldName.Mileage.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.MaxSpeed.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.Brand.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.BedroomType.GetDescription(), typeof(int).Name),
             }
         };
 
@@ -252,37 +128,13 @@ public class _001_seed_init_data : IMigration
         {          
             ID = ObjectId.GenerateNewId().ToString(),
             Label = "sport car",
-            Fields = new Dictionary<string, Dictionary<string, object>>
+            Fields = new List<Field>
             {
-                {
-                    Field.MaxSpeed.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.Mileage.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(int).Name },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                },
-                {
-                    Field.Brand.ToString(), 
-                    new Dictionary<string, object>
-                    {
-                        { FieldParameter.Type.ToString(), typeof(string).Name },
-                        { FieldParameter.MaxLength.ToString(), 20 },
-                        { FieldParameter.MinLength.ToString(), 3 },
-                        { FieldParameter.IsRequired.ToString(), true },
-                    }
-                }
+                new Field(ExtraFieldName.Mileage.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.MaxSpeed.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.Brand.GetDescription(), typeof(int).Name)
             }
         };
-
 
         carCategory.Children.Add(sportCar);
         await carCategory.SaveAsync();

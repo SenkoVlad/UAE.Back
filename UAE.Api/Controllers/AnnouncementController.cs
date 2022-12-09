@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
-using UAE.Api.Extensions;
 using UAE.Api.Mapper.Profiles;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.Announcement;

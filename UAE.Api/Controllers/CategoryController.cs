@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
 using UAE.Api.ViewModels.Base;
-using UAE.Application.Mapper;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Category;
 using UAE.Application.Validation;
-using UAE.Core.Entities;
 using UAE.Core.Repositories;
 
 namespace UAE.Api.Controllers;

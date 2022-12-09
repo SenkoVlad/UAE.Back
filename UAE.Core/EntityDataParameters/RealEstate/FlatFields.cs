@@ -2,11 +2,11 @@
 
 public class FlatFields
 {
-    public static readonly Field[] Fields = {
-        Field.Floor,
-        Field.NumberOfBedrooms,
-        Field.Number,
-        Field.BedroomType,
-        Field.YearOfBuilding
+    public static readonly ExtraFieldName[] Fields = {
+        ExtraFieldName.Floor,
+        ExtraFieldName.NumberOfBedrooms,
+        ExtraFieldName.Number,
+        ExtraFieldName.BedroomType,
+        ExtraFieldName.YearOfBuilding
     };
 }
