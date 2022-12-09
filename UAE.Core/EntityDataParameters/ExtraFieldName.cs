@@ -4,7 +4,7 @@ namespace UAE.Core.EntityDataParameters;
 
 public enum ExtraFieldName
 {
-    [Description("Floot")]
+    [Description("Floor")]
     Floor,
 
     [Description("Year")]
