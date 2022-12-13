@@ -1,4 +1,5 @@
-﻿using UAE.Shared;
+﻿using MongoDB.Bson;
+using UAE.Shared;
 
 namespace UAE.Application.Models.Announcement;
 
@@ -7,5 +8,5 @@ public sealed record SearchAnnouncementModel(
         string CategoryId,
         int PageNumber,
         int PageSize,
-        Dictionary<string, object>? Fields,
+        BsonDocument Filters,
         string SortedBy) : PagedRequest(PageNumber, PageSize, SortedBy);

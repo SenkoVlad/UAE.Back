@@ -39,13 +39,10 @@ public class AnnouncementRepository :  RepositoryBase<Announcement>, IAnnounceme
 
         updateCommand.Modify(a => a.Set(an => an.LastUpdateDateTime, announcement.LastUpdateDateTime));
 
-        if (announcement.Fields != null)
+        foreach (var field in announcement.Fields.Names)
         {
-            foreach (var field in announcement.Fields.Keys)
-            {
-                var fieldValue = announcement.Fields[field];
-                updateCommand.Modify(a => a.Set(an => an.Fields![field], fieldValue));
-            }
+            var fieldValue = announcement.Fields[field];
+            updateCommand.Modify(a => a.Set(an => an.Fields![field], fieldValue));
         }
 
         await updateCommand.ExecuteAsync();

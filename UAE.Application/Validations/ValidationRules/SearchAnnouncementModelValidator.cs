@@ -20,10 +20,10 @@ public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnounce
             })
             .SetValidator(new AnnouncementFieldsValidator<SearchAnnouncementModel, AnnouncementSortByParameter>(categoryFieldsValidationService));
         
-        When(model => model.Fields != null, () =>
+        When(model => model.Filters.Elements.Any(), () =>
         {
-            RuleFor(p => new { p.Fields, p.CategoryId} )
-                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Keys.ToArray(), x.CategoryId));
+            RuleFor(p => new { Fields = p.Filters.Names.ToArray(), p.CategoryId} )
+                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields, x.CategoryId));
         });
     }
 }

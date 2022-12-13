@@ -8,13 +8,11 @@ public interface IAnnouncementService
 {
     Task<OperationResult> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel);
 
-    Task<OperationResult> UpdateAnnouncementAsync(AnnouncementModel announcementModel);    
+    Task<OperationResult> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel);    
     
     Task<OperationResult> PatchAnnouncementAsync(PatchAnnouncementModel patchAnnouncementModel);    
     
     Task<OperationResult> DeleteAnnouncementAsync(string id);
     
-    Task<AnnouncementModel> GetAnnouncementByIdAsync(int id);
-
     Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(SearchAnnouncementModel searchAnnouncementModel);
 }

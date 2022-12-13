@@ -6,10 +6,8 @@ public class CategoryFieldsValidationService
 {
     private readonly ICategoryInMemory _categoryInMemory;
 
-    public CategoryFieldsValidationService(ICategoryInMemory categoryInMemory)
-    {
+    public CategoryFieldsValidationService(ICategoryInMemory categoryInMemory) => 
         _categoryInMemory = categoryInMemory;
-    }
 
     public bool ValidateByCategory(string[] fields, string categoryId)
     {
@@ -17,7 +15,7 @@ public class CategoryFieldsValidationService
             .SingleOrDefault(c => c.Id == categoryId && c.Fields
                 .Select(a => a.Name)
                 .Any(f => fields.Contains(
-                    f.ToString().ToLower(), 
+                    f.ToString(), 
                     StringComparer.OrdinalIgnoreCase)));
 
         return categoryFlatModel != null;

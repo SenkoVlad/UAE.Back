@@ -1,3 +1,5 @@
+using MongoDB.Bson;
+
 namespace UAE.Application.Models.Announcement;
 
 public sealed record PatchAnnouncementModel(
@@ -5,6 +7,6 @@ public sealed record PatchAnnouncementModel(
     string? Title,
     string? Description,
     string CategoryId,
-    Dictionary<string, object>? Fields, 
+    BsonDocument? Fields, 
     string? AddressToTake, 
     string? Address);

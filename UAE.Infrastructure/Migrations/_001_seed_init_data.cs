@@ -48,7 +48,7 @@ public class _001_seed_init_data : IMigration
                 ID = category.ID
             },
             Description = "flat 1",
-            Fields = new Dictionary<string, object>()
+            Fields = new BsonDocument
             {
                 {ExtraFieldName.Floor.GetDescription(), 2},
                 {ExtraFieldName.NumberOfBedrooms.GetDescription(), 2},

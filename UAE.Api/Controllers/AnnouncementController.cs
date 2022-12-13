@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
 using UAE.Api.Mapper.Profiles;
+using UAE.Api.ViewModels.Announcement;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
@@ -25,15 +26,20 @@ public class AnnouncementController : ApiController
 
     [AllowAnonymous]
     [HttpPost(nameof(Search))]
-    public async Task<IActionResult> Search([FromBody] SearchAnnouncementModel searchAnnouncementModel)
+    public async Task<IActionResult> Search([FromBody] SearchAnnouncementViewModel searchAnnouncementViewModelModel)
     {
+        var searchAnnouncementModel = searchAnnouncementViewModelModel.ToBusinessModel();
         var validator = _validationFactory.GetValidator<SearchAnnouncementModel>();
         var validationResult = await validator.ValidateAsync(searchAnnouncementModel);
 
         if (validationResult.IsValid)
         {
             var pagedResponse = await _announcementService.SearchAnnouncement(searchAnnouncementModel);
-            var apiResult = ApiResult<PagedResponse<AnnouncementModel>>.Success(pagedResponse);
+            var pagedViewModelResponse = new PagedResponse<AnnouncementViewModel>(
+                pagedResponse.TotalCount,
+                pagedResponse.PageCount,
+                pagedResponse.Items.Select(a => a.ToViewModel()).ToList());
+            var apiResult = ApiResult<PagedResponse<AnnouncementViewModel>>.Success(pagedViewModelResponse);
 
             return Ok(apiResult);
         }
@@ -42,8 +48,9 @@ public class AnnouncementController : ApiController
     }
 
     [HttpPost(nameof(Create))]
-    public async Task<IActionResult> Create([FromBody] CreateAnnouncementModel createAnnouncementModel)
+    public async Task<IActionResult> Create([FromBody] CreateAnnouncementViewModel createAnnouncementViewModel)
     {
+        var createAnnouncementModel = createAnnouncementViewModel.ToBusinessModel();
         var validator = _validationFactory.GetValidator<CreateAnnouncementModel>();
         var validationResult = await validator.ValidateAsync(createAnnouncementModel);
 
@@ -59,14 +66,15 @@ public class AnnouncementController : ApiController
     }
 
     [HttpPut(nameof(Update))]
-    public async Task<IActionResult> Update([FromBody] AnnouncementModel announcementModel)
+    public async Task<IActionResult> Update([FromBody] UpdateAnnouncementViewModel announcementViewModel)
     {
-        var validator = _validationFactory.GetValidator<AnnouncementModel>();
-        var validationResult = await validator.ValidateAsync(announcementModel);
+        var updateAnnouncementModel = announcementViewModel.ToBusinessModel();
+        var validator = _validationFactory.GetValidator<UpdateAnnouncementModel>();
+        var validationResult = await validator.ValidateAsync(updateAnnouncementModel);
         
         if (validationResult.IsValid)
         {
-            var operationResult = await _announcementService.UpdateAnnouncementAsync(announcementModel);
+            var operationResult = await _announcementService.UpdateAnnouncementAsync(updateAnnouncementModel);
             var apiResult = operationResult.ToApiResult();
 
             return Ok(apiResult);
@@ -76,8 +84,9 @@ public class AnnouncementController : ApiController
     }
     
     [HttpPatch(nameof(Patch))]
-    public async Task<IActionResult> Patch([FromBody] PatchAnnouncementModel announcementModel)
+    public async Task<IActionResult> Patch([FromBody] PatchAnnouncementViewModel announcementViewModel)
     {
+        var announcementModel = announcementViewModel.ToBusinessModel();
         var validator = _validationFactory.GetValidator<PatchAnnouncementModel>();
         var validationResult = await validator.ValidateAsync(announcementModel);
 
