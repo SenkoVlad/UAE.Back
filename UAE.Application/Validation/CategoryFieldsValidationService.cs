@@ -14,7 +14,11 @@ public class CategoryFieldsValidationService
     public bool ValidateByCategory(string[] fields, string categoryId)
     {
         var categoryFlatModel = _categoryInMemory.CategoryFlatModels
-            .SingleOrDefault(c => c.Id == categoryId && c.Fields.Keys.Any(f => fields.Contains(f.ToLower(), StringComparer.OrdinalIgnoreCase)));
+            .SingleOrDefault(c => c.Id == categoryId && c.Fields
+                .Select(a => a.Name)
+                .Any(f => fields.Contains(
+                    f.ToString().ToLower(), 
+                    StringComparer.OrdinalIgnoreCase)));
 
         return categoryFlatModel != null;
     }

@@ -2,10 +2,10 @@
 
 public class VillaFields
 {
-    public static readonly Field[] Fields = {
-        Field.NumberOfBedrooms,
-        Field.Number,
-        Field.BedroomType,
-        Field.YearOfBuilding
+    public static readonly ExtraFieldName[] Fields = {
+        ExtraFieldName.NumberOfBedrooms,
+        ExtraFieldName.Number,
+        ExtraFieldName.BedroomType,
+        ExtraFieldName.YearOfBuilding
     };
 }

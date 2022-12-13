@@ -1,5 +1,3 @@
-using System;
-
 namespace UAE.Application.Exceptions;
 
 internal class ApplicationException : Exception

@@ -1,7 +1,6 @@
 ﻿using MongoDB.Entities;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
-using UAE.Infrastructure.Repositories.Base;
 using UAE.Infrastructure.Repositories.Base.Implementation;
 
 namespace UAE.Infrastructure.Repositories;

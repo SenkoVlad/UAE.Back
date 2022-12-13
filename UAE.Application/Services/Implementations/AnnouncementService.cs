@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using MongoDB.Entities;
 using UAE.Application.Extensions;
 using UAE.Application.Mapper.Profiles;

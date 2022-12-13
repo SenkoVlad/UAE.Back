@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UAE.Infrastructure.Exceptions;
+﻿namespace UAE.Infrastructure.Exceptions;
 
 public sealed class ApplicationException : Exception
 {

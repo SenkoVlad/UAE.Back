@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using UAE.Application.Models.User;
+﻿using UAE.Application.Models.User;
 
 namespace UAE.Application.Services.Interfaces;
 
