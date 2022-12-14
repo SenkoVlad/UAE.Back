@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Entities;
 using UAE.Application.Extensions;
 using UAE.Application.Mapper.Profiles;
@@ -5,8 +6,10 @@ using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
+using UAE.Core.EntityDataParameters;
 using UAE.Core.Repositories;
 using UAE.Shared;
+using UAE.Shared.Extensions;
 
 namespace UAE.Application.Services.Implementations;
 
@@ -30,17 +33,17 @@ internal sealed class AnnouncementService : IAnnouncementService
         {
             return new OperationResult(new[] {"userId is not set in cookies"}, IsSucceed: true);
         }
-        
+
         var announcement = createAnnouncementModel.ToEntity();
         announcement.User.ID = userId;
         announcement.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        
+
         await _announcementRepository.SaveAsync(announcement);
 
         return new OperationResult(new[] { "Announcement is created"}, IsSucceed: true);
     }
 
-    public async Task<OperationResult> UpdateAnnouncementAsync(AnnouncementModel announcementModel)
+    public async Task<OperationResult> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel)
     {
         var userId = _userService.GetCurrentUserId();
 
@@ -49,9 +52,9 @@ internal sealed class AnnouncementService : IAnnouncementService
             return new OperationResult(new[] {"userId is not set in cookies"}, IsSucceed: true);
         }
         
-        var announcement = announcementModel.ToEntity();
+        var announcement = updateAnnouncementModel.ToEntity();
         announcement.User.ID = userId;
-        announcement.LastUpdateDateTime = DateTime.UtcNow.Millisecond;
+        announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
         await _announcementRepository.UpdateAsync(announcement);
 
@@ -62,7 +65,6 @@ internal sealed class AnnouncementService : IAnnouncementService
     {
         var announcement = patchAnnouncementModel.ToEntity();
         announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        
         await _announcementRepository.UpdateFieldsAsync(announcement);
 
         return new OperationResult(ResultMessages: new[] {"Success"}, IsSucceed: true);
@@ -75,16 +77,6 @@ internal sealed class AnnouncementService : IAnnouncementService
         return new OperationResult(ResultMessages: new[] {"Success"}, IsSucceed: true);
     }
 
-    public Task DeleteAnnouncementAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<AnnouncementModel> GetAnnouncementByIdAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(
         SearchAnnouncementModel searchAnnouncementModel)
     {
@@ -95,15 +87,11 @@ internal sealed class AnnouncementService : IAnnouncementService
             query.Match(a => a.Category.ID == searchAnnouncementModel.CategoryId);
         }
 
-        if (searchAnnouncementModel.Fields != null)
+        foreach (var field in searchAnnouncementModel.Filters)
         {
-            var fields = searchAnnouncementModel.Fields.ToDictionaryWithCheckingForValueKind();
-            foreach (var field in fields.Keys)
-            {
-                query.Match(a => a.Fields![field] == fields[field]);
-            }
+            query.Match(a => a.Fields[field.Name] == field.Value);
         }
-        
+
         if (!string.IsNullOrWhiteSpace(searchAnnouncementModel.Description))
         {
             query.Match( a=> a.Description.Contains(searchAnnouncementModel.Description));

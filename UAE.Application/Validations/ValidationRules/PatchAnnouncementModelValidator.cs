@@ -11,7 +11,7 @@ public class PatchAnnouncementModelValidator : AbstractValidator<PatchAnnounceme
         When(model => model.Fields != null, () =>
         {
             RuleFor(p => new { p.Fields, p.CategoryId} )
-                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Keys.ToArray(), x.CategoryId));
+                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId));
         });
     }
 }

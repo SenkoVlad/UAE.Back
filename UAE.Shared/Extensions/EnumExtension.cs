@@ -2,7 +2,7 @@ namespace UAE.Shared.Extensions;
 
 public static class EnumExtension
 {
-    public static string GetDescription(this Enum value)
+    public static string GetDescription(this System.Enum value)
     {
         var type = value.GetType();
         var member = type.GetMember(value.ToString());

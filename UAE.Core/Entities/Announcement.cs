@@ -1,4 +1,5 @@
-﻿using MongoDB.Entities;
+﻿using MongoDB.Bson;
+using MongoDB.Entities;
 
 namespace UAE.Core.Entities;
 
@@ -14,7 +15,7 @@ public class Announcement : Entity
     
     public long LastUpdateDateTime { get; set; }
 
-    public Dictionary<string, object>? Fields { get; set; }
+    public BsonDocument Fields { get; set; }
 
     public One<User> User { get; set; } = new();
 

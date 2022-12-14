@@ -1,10 +1,12 @@
-﻿namespace UAE.Application.Models.Announcement;
+﻿using MongoDB.Bson;
+
+namespace UAE.Application.Models.Announcement;
 
 public sealed record CreateAnnouncementModel(
     string Description,
     string Title,
     string CategoryId,
-    Dictionary<string, object> Fields,
+    BsonDocument Fields,
     string AddressToTake,
     string Address
 );

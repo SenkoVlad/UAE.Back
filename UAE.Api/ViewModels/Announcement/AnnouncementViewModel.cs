@@ -1,14 +1,12 @@
-using MongoDB.Bson;
+namespace UAE.Api.ViewModels.Announcement;
 
-namespace UAE.Application.Models.Announcement;
-
-public sealed record AnnouncementModel(
+public sealed record AnnouncementViewModel(
     string Id,
     string Title,
     string Description,
     string CategoryId,
     long CreatedDateTime,
     long LastUpdateDateTime,
-    BsonDocument Fields, 
+    string Fields, 
     string AddressToTake, 
     string Address);
