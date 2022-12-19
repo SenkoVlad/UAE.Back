@@ -53,7 +53,7 @@ public class _001_seed_init_data : IMigration
                 {ExtraFieldName.Floor.GetDescription(), 2},
                 {ExtraFieldName.NumberOfBedrooms.GetDescription(), 2},
                 {ExtraFieldName.Number.GetDescription(), 23},
-                {ExtraFieldName.BedroomType.GetDescription(), "shower"},
+                {ExtraFieldName.BathroomType.GetDescription(), "shower"},
                 {ExtraFieldName.YearOfBuilding.GetDescription(), 2012}
             },
             Title = "flat super flat",
@@ -80,7 +80,7 @@ public class _001_seed_init_data : IMigration
                 new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
                 new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
                 new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.BedroomType.GetDescription(), typeof(int).Name)
+                new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name)
             }
         };
 
@@ -107,7 +107,7 @@ public class _001_seed_init_data : IMigration
                 new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
                 new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
                 new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.BedroomType.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name),
             }
         };
 
@@ -120,7 +120,7 @@ public class _001_seed_init_data : IMigration
                 new Field(ExtraFieldName.MaxSpeed.GetDescription(), typeof(int).Name),
                 new Field(ExtraFieldName.Brand.GetDescription(), typeof(int).Name),
                 new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.BedroomType.GetDescription(), typeof(int).Name),
+                new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name),
             }
         };
 

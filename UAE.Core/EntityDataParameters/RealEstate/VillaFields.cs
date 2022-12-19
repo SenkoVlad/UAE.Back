@@ -5,7 +5,7 @@ public class VillaFields
     public static readonly ExtraFieldName[] Fields = {
         ExtraFieldName.NumberOfBedrooms,
         ExtraFieldName.Number,
-        ExtraFieldName.BedroomType,
+        ExtraFieldName.BathroomType,
         ExtraFieldName.YearOfBuilding
     };
 }

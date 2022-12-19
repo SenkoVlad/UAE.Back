@@ -1,7 +1,8 @@
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.Validators;
-using UAE.Application.Validation;
+using UAE.Application.Services.Validation.Implementation;
+using UAE.Application.Services.Validation.Interfaces;
 using UAE.Application.Validations.ValidationParameters;
 using UAE.Core.Entities;
 
@@ -9,9 +10,9 @@ namespace UAE.Application.Validations.CustomValidators;
 
 public class AnnouncementFieldsValidator<T, TProperty> : PropertyValidator<T, TProperty> 
 {
-    private readonly CategoryFieldsValidationService _categoryFieldsValidationService;
-
-    public AnnouncementFieldsValidator(CategoryFieldsValidationService categoryFieldsValidationService)
+    private readonly ICategoryFieldsValidationService _categoryFieldsValidationService;
+    
+    public AnnouncementFieldsValidator(ICategoryFieldsValidationService categoryFieldsValidationService)
     {
         _categoryFieldsValidationService = categoryFieldsValidationService;
     }
@@ -20,9 +21,7 @@ public class AnnouncementFieldsValidator<T, TProperty> : PropertyValidator<T, TP
     {
         var propertyInfos = typeof(Announcement).GetProperties();
 
-        var sortByParameter = value as AnnouncementSortByParameter;
-
-        if (sortByParameter == null)
+        if (value is not AnnouncementFieldParameter sortByParameter)
         {
             return false;
         }
@@ -31,15 +30,30 @@ public class AnnouncementFieldsValidator<T, TProperty> : PropertyValidator<T, TP
                DoesSortFieldExistInExtraAnnouncementFields(sortByParameter);
     }
 
-    private bool DoesSortFieldExistInExtraAnnouncementFields(AnnouncementSortByParameter field) => 
-        _categoryFieldsValidationService.ValidateByCategory(new[] {field.SortedBy}, field.CategoryId);
+    private bool DoesSortFieldExistInExtraAnnouncementFields(AnnouncementFieldParameter field)
+    {
+        var extraField = IsItExtraField(field.FieldName);
 
-    private static bool DoesSortFieldExistInAnnouncement(PropertyInfo[] extraFields, AnnouncementSortByParameter field) => 
-        extraFields.Any(fieldInfo => String.Equals(fieldInfo.Name, field.SortedBy, StringComparison.CurrentCultureIgnoreCase));
+        return !string.IsNullOrWhiteSpace(extraField) &&
+               _categoryFieldsValidationService.ValidateByCategory(new[] {extraField}, field.CategoryId);
+    }
+
+    private string IsItExtraField(string sortedBy)
+    {
+        //Fields.Floor
+        var doesItContainTwoWords = sortedBy.Split('.').Length == 2;
+
+        if (doesItContainTwoWords)
+        {
+            return sortedBy.Split('.').Last();
+        }
+
+        return string.Empty;
+    }
+
+    private static bool DoesSortFieldExistInAnnouncement(PropertyInfo[] extraFields, AnnouncementFieldParameter field) => 
+        extraFields.Any(fieldInfo => String.Equals(fieldInfo.Name, field.FieldName, StringComparison.CurrentCultureIgnoreCase));
 
     public override string Name =>
         GetType().ToString();
-
-    protected override string GetDefaultMessageTemplate(string errorCode) =>
-        "Input property must match with entity property";
 }

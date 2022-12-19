@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using UAE.Application.Models.Announcement;
-using UAE.Application.Validation;
+using UAE.Application.Services.Validation.Implementation;
 
 namespace UAE.Application.Validations.ValidationRules;
 

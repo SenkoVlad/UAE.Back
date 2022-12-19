@@ -1,9 +1,11 @@
 using UAE.Shared;
+using UAE.Shared.Enum;
+using UAE.Shared.Filtering.Announcement;
 
 namespace UAE.Api.ViewModels.Announcement;
 
 public sealed record SearchAnnouncementViewModel(
-    string? Description,
+    FilterParameter<string>? Description,
     string CategoryId,
     int PageNumber,
     int PageSize,

@@ -1,15 +1,12 @@
-using MongoDB.Bson;
 using MongoDB.Entities;
-using UAE.Application.Extensions;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
-using UAE.Core.EntityDataParameters;
 using UAE.Core.Repositories;
 using UAE.Shared;
-using UAE.Shared.Extensions;
+using UAE.Shared.Enum;
 
 namespace UAE.Application.Services.Implementations;
 
@@ -17,12 +14,15 @@ internal sealed class AnnouncementService : IAnnouncementService
 {
     private readonly IAnnouncementRepository _announcementRepository;
     private readonly IUserService _userService;
+    private readonly IPagedQueryBuilderService<Announcement> _searchPagedQueryBuilder;
     
     public AnnouncementService(IAnnouncementRepository announcementRepository, 
-        IUserService userService)
+        IUserService userService, 
+        IPagedQueryBuilderService<Announcement> searchPagedQueryBuilder)
     {
         _announcementRepository = announcementRepository;
         _userService = userService;
+        _searchPagedQueryBuilder = searchPagedQueryBuilder;
     }
 
     public async Task<OperationResult> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel)
@@ -80,29 +80,10 @@ internal sealed class AnnouncementService : IAnnouncementService
     public async Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(
         SearchAnnouncementModel searchAnnouncementModel)
     {
-        var query = DB.PagedSearch<Announcement>();
-        
-        if (!string.IsNullOrWhiteSpace(searchAnnouncementModel.CategoryId))
-        {
-            query.Match(a => a.Category.ID == searchAnnouncementModel.CategoryId);
-        }
-
-        foreach (var field in searchAnnouncementModel.Filters)
-        {
-            query.Match(a => a.Fields[field.Name] == field.Value);
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchAnnouncementModel.Description))
-        {
-            query.Match( a=> a.Description.Contains(searchAnnouncementModel.Description));
-        }
-        
-        query.Sort(a => a.Ascending(searchAnnouncementModel.SortedBy));
-
-        query.PageSize(searchAnnouncementModel.PageSize)
-             .PageNumber(searchAnnouncementModel.PageNumber);
-        
+        _searchPagedQueryBuilder.BuildSearchQuery(searchAnnouncementModel);
+        var query = _searchPagedQueryBuilder.GetQuery();
         var announcements = await query.ExecuteAsync();
+        
         var result = (IReadOnlyList<AnnouncementModel>)announcements.Results
             .Select(c => c.ToBusinessModel())
             .ToList();

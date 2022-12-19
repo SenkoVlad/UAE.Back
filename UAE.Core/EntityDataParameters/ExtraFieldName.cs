@@ -25,8 +25,8 @@ public enum ExtraFieldName
     [Description("Number")]
     Number,
     
-    [Description("Bedroom type")]
-    BedroomType,
+    [Description("Bathroom type")]
+    BathroomType,
     
     [Description("Year of building")]
     YearOfBuilding

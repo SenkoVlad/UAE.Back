@@ -1,8 +1,9 @@
 ﻿using UAE.Application.Services.Interfaces;
+using UAE.Application.Services.Validation.Interfaces;
 
-namespace UAE.Application.Validation;
+namespace UAE.Application.Services.Validation.Implementation;
 
-public class CategoryFieldsValidationService
+public class CategoryFieldsValidationService : ICategoryFieldsValidationService
 {
     private readonly ICategoryInMemory _categoryInMemory;
 
