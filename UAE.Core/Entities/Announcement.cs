@@ -22,4 +22,7 @@ public class Announcement : Entity
     public string AddressToTake { get; set; }
 
     public string Address { get; set; }
+
+    public string FieldsName => 
+        nameof(Fields);
 }

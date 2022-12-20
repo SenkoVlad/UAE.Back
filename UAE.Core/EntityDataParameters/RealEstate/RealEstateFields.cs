@@ -6,7 +6,7 @@ public static class RealEstateFields
         ExtraFieldName.Floor,
         ExtraFieldName.NumberOfBedrooms,
         ExtraFieldName.Number,
-        ExtraFieldName.BedroomType,
+        ExtraFieldName.BathroomType,
         ExtraFieldName.YearOfBuilding
     };
 }
