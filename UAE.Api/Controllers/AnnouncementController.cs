@@ -4,9 +4,11 @@ using UAE.Api.Controllers.Base;
 using UAE.Api.Mapper.Profiles;
 using UAE.Api.ViewModels.Announcement;
 using UAE.Api.ViewModels.Base;
+using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Application.Validations;
+using UAE.Core.Entities;
 using UAE.Shared;
 
 namespace UAE.Api.Controllers;
@@ -39,7 +41,7 @@ public class AnnouncementController : ApiController
                 pagedResponse.TotalCount,
                 pagedResponse.PageCount,
                 pagedResponse.Items.Select(a => a.ToViewModel()).ToList());
-            var apiResult = ApiResult<PagedResponse<AnnouncementViewModel>>.Success(pagedViewModelResponse);
+            var apiResult = ApiResult<PagedResponse<AnnouncementViewModel>>.Success(result: pagedViewModelResponse, resultMessage: new []{ "Success" });
 
             return Ok(apiResult);
         }
@@ -48,7 +50,7 @@ public class AnnouncementController : ApiController
     }
 
     [HttpPost(nameof(Create))]
-    public async Task<IActionResult> Create([FromBody] CreateAnnouncementViewModel createAnnouncementViewModel)
+    public async Task<IActionResult> Create([FromForm] CreateAnnouncementViewModel createAnnouncementViewModel)
     {
         var createAnnouncementModel = createAnnouncementViewModel.ToBusinessModel();
         var validator = _validationFactory.GetValidator<CreateAnnouncementModel>();
@@ -57,7 +59,7 @@ public class AnnouncementController : ApiController
         if (validationResult.IsValid)
         {
             var operationResult = await _announcementService.CreateAnnouncement(createAnnouncementModel);
-            var apiResult = operationResult.ToApiResult();
+            var apiResult = operationResult.ToApiResult(() => operationResult.Result?.ToViewModel());
 
             return Ok(apiResult);
         }
@@ -75,7 +77,7 @@ public class AnnouncementController : ApiController
         if (validationResult.IsValid)
         {
             var operationResult = await _announcementService.UpdateAnnouncementAsync(updateAnnouncementModel);
-            var apiResult = operationResult.ToApiResult();
+            var apiResult = operationResult.ToApiResult(() => operationResult.Result?.ToViewModel());
 
             return Ok(apiResult);
         }
@@ -84,7 +86,7 @@ public class AnnouncementController : ApiController
     }
     
     [HttpPatch(nameof(Patch))]
-    public async Task<IActionResult> Patch([FromBody] PatchAnnouncementViewModel announcementViewModel)
+    public async Task<IActionResult> Patch([FromForm] PatchAnnouncementViewModel announcementViewModel)
     {
         var announcementModel = announcementViewModel.ToBusinessModel();
         var validator = _validationFactory.GetValidator<PatchAnnouncementModel>();
@@ -93,7 +95,7 @@ public class AnnouncementController : ApiController
         if (validationResult.IsValid)
         {
             var operationResult = await _announcementService.PatchAnnouncementAsync(announcementModel);
-            var apiResult = operationResult.ToApiResult();
+            var apiResult = operationResult.ToApiResult(() => operationResult.Result.ToViewModel());
             
             return Ok(apiResult);
         }
@@ -101,11 +103,11 @@ public class AnnouncementController : ApiController
         return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
     }
 
-    [HttpDelete()]
+    [HttpDelete(nameof(Delete))]
     public async Task<IActionResult> Delete(string id)
     {
         var operationResult = await _announcementService.DeleteAnnouncementAsync(id);
-        var apiResult = operationResult.ToApiResult();
+        var apiResult = operationResult.ToApiResult(() => operationResult.Result);
 
         return Ok(apiResult);
     }

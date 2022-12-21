@@ -5,7 +5,7 @@ namespace UAE.Application.Services.Interfaces;
 
 public interface ITokenService
 {
-    public Task<OperationResult> RefreshAsync();
+    public Task<OperationResult<string>> RefreshAsync();
 
     string CreateToken(User user);
 

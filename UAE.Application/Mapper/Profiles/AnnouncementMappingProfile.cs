@@ -13,7 +13,7 @@ public static class AnnouncementMappingProfile
             Category = model.CategoryId,
             Description = model.Description,
             Fields = model.Fields,
-            Title = model.Title
+            Title = model.Title,
         };
     }
     
@@ -47,10 +47,12 @@ public static class AnnouncementMappingProfile
             Description = string.IsNullOrWhiteSpace(model.Description)
                 ? null! 
                 : model.Description,
-            Fields = model.Fields,
+            Fields = model.Fields != null 
+                ? model.Fields 
+                : null!,
             Title = string.IsNullOrWhiteSpace(model.Title)
                 ? null! 
-                : model.Title,
+                : model.Title
         };
     }
 

@@ -27,20 +27,20 @@ public class TokenService : ITokenService
         _userRepository = userRepository;
     }
 
-    public async Task<OperationResult> RefreshAsync()
+    public async Task<OperationResult<string>> RefreshAsync()
     {
         var (userEmail, refreshToken) = GetUserEmailAndRefreshTokenFromCookies();
 
         if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(refreshToken))
         {
-            return new OperationResult(new[] {"User Email cookie or refresh token are missing"}, IsSucceed: false); 
+            return new OperationResult<string>(new[] {"User Email cookie or refresh token are missing"}, IsSucceed: false); 
         }
 
         var user = await _userRepository.GetByQuery(u => u.Email == userEmail && u.RefreshToken == refreshToken);
 
         if (user == null)
         {
-            return new OperationResult(new[] { "User Email cookie or refresh token are incorrect"}, IsSucceed: false); 
+            return new OperationResult<string>(new[] { "User Email cookie or refresh token are incorrect"}, IsSucceed: false); 
         }
 
         var token = CreateToken(user);
@@ -49,7 +49,7 @@ public class TokenService : ITokenService
         
         await _userRepository.SaveAsync(user);
         
-        return new OperationResult(new[] {"Token and refresh tokens are updated"}, IsSucceed: true);
+        return new OperationResult<string>(new[] {"Token and refresh tokens are updated"}, IsSucceed: true, Result: token);
     }
 
     public string CreateToken(User user)

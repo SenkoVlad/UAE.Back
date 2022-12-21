@@ -4,7 +4,8 @@ public record PatchAnnouncementViewModel(
     string Id,
     string? Title,
     string? Description,
-    string CategoryId,
+    string? CategoryId,
     string? Fields, 
     string? AddressToTake, 
-    string? Address);
+    string? Address,
+    List<IFormFile>? Pictures);

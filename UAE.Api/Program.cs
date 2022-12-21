@@ -1,11 +1,7 @@
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using UAE.Api.Extensions;
 using UAE.Application.Extensions;
 using UAE.Infrastructure.Extensions;
-using UAE.Shared.Enum;
-using UAE.Shared.Filtering.Announcement;
 using UAE.Shared.Settings;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -27,7 +27,7 @@ public class CategoryController : ApiController
         var categoryModels = categories
             .Select(c => c.ToBusinessModel())
             .ToList();
-        var apiResult = ApiResult<List<CategoryModel>>.Success(categoryModels);
+        var apiResult = ApiResult<List<CategoryModel>>.Success(new []{"Success"}, categoryModels);
         
         return Ok(apiResult);
     }
