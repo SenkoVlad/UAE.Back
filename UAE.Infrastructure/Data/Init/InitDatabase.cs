@@ -8,9 +8,7 @@ public static class InitDatabase
     public static async Task InitAsync(string database, string host)
     {
         await DB.InitAsync(database, host);
-
         await AddIndexes();
-
         await DB.MigrateAsync();
     }
 

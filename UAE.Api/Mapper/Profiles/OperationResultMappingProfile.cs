@@ -1,14 +1,16 @@
-﻿using UAE.Api.ViewModels.Base;
+﻿using UAE.Api.ViewModels.Announcement;
+using UAE.Api.ViewModels.Base;
 using UAE.Application.Models;
 
 namespace UAE.Api.Mapper.Profiles;
 
 public static class OperationResultMappingProfile
 {
-    public static ApiResult<IEnumerable<string>> ToApiResult(this OperationResult operationResult)
+    public static ApiResult<TDest> ToApiResult<TSource, TDest>(this OperationResult<TSource> operationResult,
+        Func<TDest> mapperResultToApiResultFunc)
     {
         return operationResult.IsSucceed
-            ? ApiResult<IEnumerable<string>>.Success(operationResult.ResultMessages)
-            : ApiResult<IEnumerable<string>>.Failure(errors: operationResult.ResultMessages);
+            ? ApiResult<TDest>.Success(operationResult.ResultMessages, mapperResultToApiResultFunc.Invoke())
+            : ApiResult<TDest>.Failure(errors: operationResult.ResultMessages);
     }
 }

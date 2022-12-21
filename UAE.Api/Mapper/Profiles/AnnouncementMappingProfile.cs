@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using UAE.Api.ViewModels.Announcement;
 using UAE.Application.Models.Announcement;
-using UAE.Shared;
+using UAE.Core.Entities;
 
 namespace UAE.Api.Mapper.Profiles;
 
@@ -33,7 +33,8 @@ public static class AnnouncementMappingProfile
                 ? new BsonDocument()
                 : BsonDocument.Parse(model.Fields),
             AddressToTake: model.AddressToTake,
-            Address: model.Address
+            Address: model.Address,
+            Pictures: model.Pictures
         );
     }
     
@@ -55,6 +56,24 @@ public static class AnnouncementMappingProfile
         );
     }
     
+    public static AnnouncementViewModel ToViewModel(this Announcement model)
+    {
+        return new AnnouncementViewModel
+        (
+            Description: model.Description,
+            CategoryId: model.Category.ID,
+            Fields: model.Fields != null 
+                ? model.Fields.ToJson()
+                : string.Empty,
+            Id: model.ID,
+            Title: model.Title,
+            Address: model.Address,
+            AddressToTake: model.AddressToTake,
+            CreatedDateTime: model.CreatedDateTime,
+            LastUpdateDateTime: model.LastUpdateDateTime
+        );
+    }
+    
     public static PatchAnnouncementModel ToBusinessModel(this PatchAnnouncementViewModel model)
     {
         return new PatchAnnouncementModel
@@ -67,7 +86,8 @@ public static class AnnouncementMappingProfile
             Id: model.Id,
             Title: model.Title,
             Address: model.Address,
-            AddressToTake: model.AddressToTake
+            AddressToTake: model.AddressToTake,
+            Pictures: model.Pictures
         );
     }
 

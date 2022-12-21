@@ -16,8 +16,9 @@ public static class ServiceCollectionExtenstion
         serviceCollection.AddScoped<IAnnouncementService, AnnouncementService>();
         serviceCollection.AddScoped<IUserService, UserService>();
         serviceCollection.AddScoped<ITokenService, TokenService>();
+        serviceCollection.AddScoped<IFileService, FileService>();
         serviceCollection.AddScoped<IPagedQueryBuilderService<Announcement>, PagedQueryBuilderService<Announcement>>();
-
+        
         serviceCollection.AddSingleton<ICategoryFieldsValidationService, CategoryFieldsValidationService>(); 
         serviceCollection.AddSingleton<IFilterFieldsValidationService, FilterFieldsValidationService>(); 
         serviceCollection.AddSingleton<ICategoryInMemory, CategoryInMemory>();

@@ -10,7 +10,9 @@ public class User : Entity
     
     public string PasswordSalt { get; set; }
 
-    public DateTime LastLoginDateTime { get; set; }
+    public long LastLoginDateTime { get; set; }
+    
+    public long CreatedDateTime { get; set; }
 
     public Many<Announcement> Announcements { get; set; }
 

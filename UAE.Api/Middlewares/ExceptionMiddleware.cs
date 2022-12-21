@@ -31,7 +31,7 @@ internal sealed class ExceptionMiddleware  : IMiddleware
         httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         httpContext.Response.ContentType = "application/json";
         var response = GetResponse(exception);
-        await httpContext.Response.WriteAsync(response.ToString());
+        await httpContext.Response.WriteAsync(response.ToString() ?? string.Empty);
     }
 
     private static ApiResult<string> GetResponse(Exception exception)

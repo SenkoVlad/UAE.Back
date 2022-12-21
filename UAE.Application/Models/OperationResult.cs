@@ -1,5 +1,6 @@
 ﻿namespace UAE.Application.Models;
 
-public record OperationResult(
+public record OperationResult<T>(
     IEnumerable<string> ResultMessages,
-    bool IsSucceed);
+    bool IsSucceed,
+    T Result = default!);

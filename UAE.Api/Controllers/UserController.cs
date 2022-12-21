@@ -36,8 +36,8 @@ public class UserController : ApiController
 
         if (validationResult.IsValid)
         {
-            await _userService.RegisterAsync(createUserModel);
-            return Ok();
+            var registerUserResult = await _userService.RegisterAsync(createUserModel);
+            return Ok(ApiResult<string>.Failure(registerUserResult.ResultMessages));
         }
 
         return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
@@ -51,9 +51,9 @@ public class UserController : ApiController
 
         if (loginResult.IsSucceed)
         {
-            return Ok(ApiResult<string>.Success(loginResult.Result));
+            return Ok(ApiResult<LoginUserResult>.Success(resultMessage: new []{loginResult.Result}, loginResult));
         }
 
-        return Ok(ApiResult<string>.Failure(new[] {loginResult.Message}));
+        return Ok(ApiResult<LoginUserResult>.Failure(new[] {loginResult.Message}));
     }
 }

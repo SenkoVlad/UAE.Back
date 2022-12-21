@@ -2,6 +2,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using UAE.Application.Mapper.Profiles;
+using UAE.Application.Models;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
@@ -24,15 +25,25 @@ public class UserService : IUserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task RegisterAsync(CreateUserModel createUserModel)
+    public async Task<OperationResult<User>> RegisterAsync(CreateUserModel createUserModel)
     {
+        var userWithTheSameEmail = await _userRepository.GetByEmailAsync(createUserModel.Email);
+
+        if (userWithTheSameEmail != null)
+        {
+            return new OperationResult<User>(IsSucceed: false, ResultMessages: new[] {"User is already exists"});
+        }
+        
         var (hash, salt) = CreateHashAndSalt(createUserModel.Password);
         
         var user = createUserModel.ToEntity();
         user.PasswordHash = hash;
         user.PasswordSalt = salt;
+        user.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
         await _userRepository.AddAsync(user);
+
+        return new OperationResult<User>(IsSucceed: true, ResultMessages: new[] {"User is registered"});
     }
 
     public async Task<LoginUserResult> LoginAsync(LoginUserModel loginUserModel)
@@ -54,6 +65,7 @@ public class UserService : IUserService
         var token = _tokenService.CreateToken(user);
 
         user.RefreshToken = Guid.NewGuid().ToString();
+        user.LastLoginDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         _tokenService.AddTokenCookiesToResponse(token, user);
 
         await _userRepository.SaveAsync(user);

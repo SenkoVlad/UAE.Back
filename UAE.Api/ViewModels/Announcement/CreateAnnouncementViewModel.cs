@@ -6,5 +6,6 @@ public record CreateAnnouncementViewModel(
     string CategoryId,
     string Fields,
     string AddressToTake,
-    string Address
+    string Address,
+    List<IFormFile> Pictures
 );

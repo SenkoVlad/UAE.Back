@@ -8,10 +8,11 @@ public class PatchAnnouncementModelValidator : AbstractValidator<PatchAnnounceme
 {
     public PatchAnnouncementModelValidator(CategoryFieldsValidationService categoryFieldsValidationService)
     {
-        When(model => model.Fields != null, () =>
+        When(model => model.Fields != null && !string.IsNullOrWhiteSpace(model.CategoryId), () =>
         {
             RuleFor(p => new { p.Fields, p.CategoryId} )
-                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId));
+                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId))
+                .WithMessage("Some incorrect fields or category");
         });
     }
 }
