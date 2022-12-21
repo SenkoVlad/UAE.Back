@@ -403,6 +403,10 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+*.jpg
+*.jpeg
+*.png
+*.pdf
 
 # JetBrains Rider
 *.sln.iml
