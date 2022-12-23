@@ -10,4 +10,6 @@ public interface ICategoryInMemory
     List<Category> Categories { get; }
     
     List<CategoryFlatModel> CategoryFlatModels { get; }
+    
+    string[] GetCategoryPath(string categoryId);
 }

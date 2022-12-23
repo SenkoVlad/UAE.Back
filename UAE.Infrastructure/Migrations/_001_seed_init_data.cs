@@ -47,6 +47,7 @@ public class _001_seed_init_data : IMigration
             {
                 ID = category.ID
             },
+            CategoryPath = new string[] { "real estate", "flat" },
             Description = "flat 1",
             Fields = new BsonDocument
             {
@@ -140,6 +141,6 @@ public class _001_seed_init_data : IMigration
         await carCategory.SaveAsync();
 
         readEstateCategory.Children.AddRange(new[] {villaCategory, flatCategory});
-        readEstateCategory.SaveAsync();
+        await readEstateCategory.SaveAsync();
     }
 }

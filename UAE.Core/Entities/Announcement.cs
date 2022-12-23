@@ -11,6 +11,8 @@ public class Announcement : Entity
     public string Title { get; set; } = Empty;
 
     public One<Category> Category { get; set; } = new();
+
+    public string[] CategoryPath { get; set; } = { };
     
     public long CreatedDateTime { get; set; }
     

@@ -2,7 +2,7 @@
 
 namespace UAE.Application.Models.Category;
 
-public sealed record CategoryFlatModel(
-    string Id,
+public sealed record CategoryFlatModel(string Id,
     string Label,
-    List<Field> Fields);
+    List<Field> Fields,
+    string[]? ParentCategories = null);

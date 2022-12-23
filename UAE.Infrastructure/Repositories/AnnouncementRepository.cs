@@ -37,6 +37,11 @@ public class AnnouncementRepository :  RepositoryBase<Announcement>, IAnnounceme
             updateCommand.Modify(a => a.Set(an => an.User, announcement.User.ID));
         }
 
+        if (announcement.CategoryPath.Length > 0)
+        {
+            updateCommand.Modify(a => a.Set(an => an.CategoryPath, announcement.CategoryPath));
+        }
+        
         updateCommand.Modify(a => a.Set(an => an.LastUpdateDateTime, announcement.LastUpdateDateTime));
 
         foreach (var field in announcement.Fields.Names)

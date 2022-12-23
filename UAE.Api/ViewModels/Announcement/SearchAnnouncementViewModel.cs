@@ -6,8 +6,8 @@ namespace UAE.Api.ViewModels.Announcement;
 
 public sealed record SearchAnnouncementViewModel(
     FilterParameter<string>? Description,
-    string CategoryId,
+    string? CategoryId,
     int PageNumber,
     int PageSize,
     string? Filters,
-    string SortedBy) : PagedRequest(PageNumber, PageSize, SortedBy);
+    string? SortedBy) : PagedRequest(PageNumber, PageSize, SortedBy);

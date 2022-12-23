@@ -29,14 +29,16 @@ sealed class FileService : IFileService
             }
 
             var directoryPath = CreatePictureDirectoryIfNotExist();
-            var path = Path.Combine(directoryPath, picture.FileName);
+            var newFileName = string.Concat(Guid.NewGuid().ToString(), Path.GetExtension(picture.FileName)) ;
+            var path = Path.Combine(directoryPath, newFileName);
+            
             await using var stream = new FileStream(path, FileMode.Create);
             await picture.CopyToAsync(stream);
             stream.Close();
             savedPictures.Add(new Photo
             {
                 ID = ObjectId.GenerateNewId().ToString(),
-                Name = picture.FileName,
+                Name = newFileName,
                 Path = path
             });
         }

@@ -18,7 +18,7 @@ public static class AnnouncementMappingProfile
             Filters: string.IsNullOrWhiteSpace(model.Filters) 
                 ? new BsonDocument()
                 : BsonDocument.Parse(model.Filters),
-            SortedBy: model.SortedBy
+            SortedBy: model.SortedBy ?? nameof(AnnouncementModel.Description)
         );
     }
     
@@ -38,39 +38,20 @@ public static class AnnouncementMappingProfile
         );
     }
     
-    public static AnnouncementModel ToBusinessModel(this AnnouncementViewModel model)
-    {
-        return new AnnouncementModel
-        (
-            Description: model.Description,
-            CategoryId: model.CategoryId,
-            Fields: string.IsNullOrWhiteSpace(model.Fields) 
-                ? new BsonDocument()
-                : BsonDocument.Parse(model.Fields),
-            Id: model.Id,
-            Title: model.Title,
-            Address: model.Address,
-            AddressToTake: model.AddressToTake,
-            CreatedDateTime: model.CreatedDateTime,
-            LastUpdateDateTime: model.LastUpdateDateTime
-        );
-    }
-    
     public static AnnouncementViewModel ToViewModel(this Announcement model)
     {
         return new AnnouncementViewModel
         (
             Description: model.Description,
             CategoryId: model.Category.ID,
-            Fields: model.Fields != null 
-                ? model.Fields.ToJson()
-                : string.Empty,
+            Fields:model.Fields.ToJson(),
             Id: model.ID,
             Title: model.Title,
             Address: model.Address,
             AddressToTake: model.AddressToTake,
             CreatedDateTime: model.CreatedDateTime,
-            LastUpdateDateTime: model.LastUpdateDateTime
+            LastUpdateDateTime: model.LastUpdateDateTime,
+            CategoryPath: model.CategoryPath
         );
     }
     
@@ -103,7 +84,8 @@ public static class AnnouncementMappingProfile
             Address: model.Address,
             AddressToTake: model.AddressToTake,
             CreatedDateTime: model.CreatedDateTime,
-            LastUpdateDateTime: model.LastUpdateDateTime
+            LastUpdateDateTime: model.LastUpdateDateTime,
+            CategoryPath: model.CategoryPath
         );
     }
     
