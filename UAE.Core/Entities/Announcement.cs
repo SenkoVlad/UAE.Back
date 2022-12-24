@@ -12,10 +12,10 @@ public class Announcement : Entity
 
     public One<Category> Category { get; set; } = new();
 
-    public CategoryPath[] CategoryPath { get; set; } = { };
+    public CategoryPath[] CategoryPath { get; set; } = Array.Empty<CategoryPath>();
     
     public long CreatedDateTime { get; set; }
-    
+
     public long LastUpdateDateTime { get; set; }
 
     public BsonDocument Fields { get; set; } = new();
@@ -26,5 +26,5 @@ public class Announcement : Entity
 
     public string Address { get; set; } = Empty;
 
-    public List<Photo> Photos { get; set; } = new();
+    public Picture[] Pictures { get; set; } = Array.Empty<Picture>();
 }

@@ -2,7 +2,7 @@ using MongoDB.Entities;
 
 namespace UAE.Core.Entities;
 
-public class Photo : Entity
+public class Picture : Entity
 {
     public string Path { get; set; }
 

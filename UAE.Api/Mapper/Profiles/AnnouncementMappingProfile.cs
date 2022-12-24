@@ -54,6 +54,9 @@ public static class AnnouncementMappingProfile
             LastUpdateDateTime: model.LastUpdateDateTime,
             CategoryPath: model.CategoryPath
                 .Select(c => c.ToBusinessModel())
+                .ToArray(),
+            Pictures: model.Pictures
+                .Select(p => p.ToBusinessModel())
                 .ToArray()
         );
     }
@@ -88,7 +91,8 @@ public static class AnnouncementMappingProfile
             AddressToTake: model.AddressToTake,
             CreatedDateTime: model.CreatedDateTime,
             LastUpdateDateTime: model.LastUpdateDateTime,
-            CategoryPath: model.CategoryPath
+            CategoryPath: model.CategoryPath,
+            Pictures: model.Pictures
         );
     }
     

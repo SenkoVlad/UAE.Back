@@ -50,9 +50,9 @@ public class AnnouncementRepository :  RepositoryBase<Announcement>, IAnnounceme
             updateCommand.Modify(a => a.Set(an => an.Fields![field], fieldValue));
         }
 
-        foreach (var announcementPhoto in announcement.Photos)
+        foreach (var announcementPhoto in announcement.Pictures)
         {
-            updateCommand.Modify(a => a.AddToSet(f => f.Photos, announcementPhoto));
+            updateCommand.Modify(a => a.AddToSet(f => f.Pictures, announcementPhoto));
         }
 
         await updateCommand.ExecuteAsync();

@@ -17,21 +17,6 @@ public static class AnnouncementMappingProfile
         };
     }
     
-    public static Announcement ToEntity(this AnnouncementModel model)
-    {
-        return new Announcement
-        {
-            ID = model.Id,
-            Address = model.Address,
-            Category = model.CategoryId,
-            Description = model.Description,
-            Fields = model.Fields,
-            Title = model.Title,
-            CreatedDateTime = model.CreatedDateTime,
-            LastUpdateDateTime = model.LastUpdateDateTime
-        };
-    }
-    
     public static Announcement ToEntity(this PatchAnnouncementModel model)
     {
         return new Announcement
@@ -70,6 +55,9 @@ public static class AnnouncementMappingProfile
             AddressToTake: model.AddressToTake,
             CategoryPath: model.CategoryPath
                 .Select(c => c.ToBusinessModel())
+                .ToArray(),
+            Pictures: model.Pictures
+                .Select(p => p.ToBusinessModel())
                 .ToArray());
     }
 
