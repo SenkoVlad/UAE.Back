@@ -83,7 +83,7 @@ internal sealed class AnnouncementService : IAnnouncementService
 
         if (!string.IsNullOrWhiteSpace(patchAnnouncementModel.CategoryId))
         {
-            announcement.CategoryPath = _categoryInMemory.GetCategoryPath(patchAnnouncementModel.CategoryId);
+            announcement.CategoryPath =  _categoryInMemory.GetCategoryPath(patchAnnouncementModel.CategoryId);
         }
         
         announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

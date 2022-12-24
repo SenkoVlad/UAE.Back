@@ -1,4 +1,5 @@
 using MongoDB.Bson;
+using UAE.Application.Models.Category;
 
 namespace UAE.Application.Models.Announcement;
 
@@ -7,7 +8,7 @@ public sealed record AnnouncementModel(
     string Title,
     string? Description,
     string CategoryId,
-    string[] CategoryPath,
+    CategoryPathModel[] CategoryPath,
     long CreatedDateTime,
     long LastUpdateDateTime,
     BsonDocument? Fields, 

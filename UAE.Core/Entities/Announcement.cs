@@ -12,7 +12,7 @@ public class Announcement : Entity
 
     public One<Category> Category { get; set; } = new();
 
-    public string[] CategoryPath { get; set; } = { };
+    public CategoryPath[] CategoryPath { get; set; } = { };
     
     public long CreatedDateTime { get; set; }
     

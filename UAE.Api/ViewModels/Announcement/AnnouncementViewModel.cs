@@ -1,3 +1,5 @@
+using UAE.Application.Models.Category;
+
 namespace UAE.Api.ViewModels.Announcement;
 
 public sealed record AnnouncementViewModel(
@@ -5,7 +7,7 @@ public sealed record AnnouncementViewModel(
     string Title,
     string? Description,
     string CategoryId,
-    string[] CategoryPath,
+    CategoryPathModel[] CategoryPath,
     long CreatedDateTime,
     long LastUpdateDateTime,
     string? Fields, 

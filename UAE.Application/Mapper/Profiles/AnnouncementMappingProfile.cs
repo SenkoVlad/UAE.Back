@@ -59,19 +59,20 @@ public static class AnnouncementMappingProfile
     public static AnnouncementModel ToBusinessModel(this Announcement model)
     {
         return new AnnouncementModel(
-            Id : model.ID,
-            Address : model.Address,
-            CategoryId : model.Category.ID,
-            Description : model.Description,
-            Fields : model.Fields,
-            Title : model.Title,
-            CreatedDateTime : model.CreatedDateTime,
-            LastUpdateDateTime : model.LastUpdateDateTime,
+            Id: model.ID,
+            Address: model.Address,
+            CategoryId: model.Category.ID,
+            Description: model.Description,
+            Fields: model.Fields,
+            Title: model.Title,
+            CreatedDateTime: model.CreatedDateTime,
+            LastUpdateDateTime: model.LastUpdateDateTime,
             AddressToTake: model.AddressToTake,
             CategoryPath: model.CategoryPath
-        );
+                .Select(c => c.ToBusinessModel())
+                .ToArray());
     }
-    
+
     public static Announcement ToEntity(this UpdateAnnouncementModel model)
     {
         return new Announcement

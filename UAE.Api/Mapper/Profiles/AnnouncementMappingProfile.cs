@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using UAE.Api.ViewModels.Announcement;
+using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Announcement;
 using UAE.Core.Entities;
 
@@ -52,6 +53,8 @@ public static class AnnouncementMappingProfile
             CreatedDateTime: model.CreatedDateTime,
             LastUpdateDateTime: model.LastUpdateDateTime,
             CategoryPath: model.CategoryPath
+                .Select(c => c.ToBusinessModel())
+                .ToArray()
         );
     }
     
