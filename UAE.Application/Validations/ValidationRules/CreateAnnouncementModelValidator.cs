@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Validation.Implementation;
 
 namespace UAE.Application.Validations.ValidationRules;
 
+[UsedImplicitly]
 public class CreateAnnouncementModelValidator : AbstractValidator<CreateAnnouncementModel>
 {
     public CreateAnnouncementModelValidator(CategoryFieldsValidationService categoryFieldsValidationService)

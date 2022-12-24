@@ -1,4 +1,3 @@
-using MongoDB.Entities;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
@@ -6,7 +5,6 @@ using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
 using UAE.Shared;
-using UAE.Shared.Enum;
 
 namespace UAE.Application.Services.Implementations;
 
@@ -16,16 +14,18 @@ internal sealed class AnnouncementService : IAnnouncementService
     private readonly IUserService _userService;
     private readonly IPagedQueryBuilderService<Announcement> _searchPagedQueryBuilder;
     private readonly IFileService _fileService;
+    private readonly ICategoryInMemory _categoryInMemory;
     
     public AnnouncementService(IAnnouncementRepository announcementRepository, 
         IUserService userService, 
         IPagedQueryBuilderService<Announcement> searchPagedQueryBuilder,
-        IFileService fileService)
+        IFileService fileService, ICategoryInMemory categoryInMemory)
     {
         _announcementRepository = announcementRepository;
         _userService = userService;
         _searchPagedQueryBuilder = searchPagedQueryBuilder;
         _fileService = fileService;
+        _categoryInMemory = categoryInMemory;
     }
 
     public async Task<OperationResult<Announcement>> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel)
@@ -41,8 +41,9 @@ internal sealed class AnnouncementService : IAnnouncementService
         var announcement = createAnnouncementModel.ToEntity();
         announcement.User.ID = userId;
         announcement.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        announcement.CategoryPath = _categoryInMemory.GetCategoryPath(createAnnouncementModel.CategoryId);
         announcement.Photos = announcementPictures is {IsSucceed: true, Result: { }}
-            ? announcementPictures.Result!
+            ? announcementPictures.Result
             : new List<Photo>();
         await _announcementRepository.SaveAsync(announcement);
         
@@ -61,7 +62,8 @@ internal sealed class AnnouncementService : IAnnouncementService
         var announcement = updateAnnouncementModel.ToEntity();
         announcement.User.ID = userId;
         announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
+        announcement.CategoryPath = _categoryInMemory.GetCategoryPath(updateAnnouncementModel.CategoryId);
+        
         await _announcementRepository.UpdateAsync(announcement);
 
         return new OperationResult<Announcement>(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true);
@@ -77,6 +79,11 @@ internal sealed class AnnouncementService : IAnnouncementService
             announcement.Photos = announcementPictures.IsSucceed
                 ? announcementPictures.Result
                 : new List<Photo>();
+        }
+
+        if (!string.IsNullOrWhiteSpace(patchAnnouncementModel.CategoryId))
+        {
+            announcement.CategoryPath = _categoryInMemory.GetCategoryPath(patchAnnouncementModel.CategoryId);
         }
         
         announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

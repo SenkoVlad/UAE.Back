@@ -1,4 +1,5 @@
-﻿using UAE.Application.Models.Category;
+﻿using MongoDB.Driver.Linq;
+using UAE.Application.Models.Category;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
@@ -11,6 +12,14 @@ class CategoryInMemory : ICategoryInMemory
     public List<Category> Categories { get; private set; } = new();
 
     public List<CategoryFlatModel> CategoryFlatModels { get; } = new();
+    
+    public string[] GetCategoryPath(string categoryId)
+    {
+        var parents = CategoryFlatModels.SingleOrDefault(c => c.Id == categoryId)!
+            .ParentCategories;
+
+        return parents ?? Array.Empty<string>();
+    }
 
     public CategoryInMemory(ICategoryRepository categoryRepository)
     {
@@ -31,21 +40,26 @@ class CategoryInMemory : ICategoryInMemory
     private void FillFlatCategoriesFromCategories()
     {
         var categories = Categories;
-        FillFlatCategories(categories);
+        FillFlatCategories(categories, new List<string>());
     }
 
-    private void FillFlatCategories(List<Category> categories)
+    private void FillFlatCategories(List<Category> categories, List<string> parentLabels)
     {
         foreach (var category in categories)
         {
-            CategoryFlatModels.Add(new CategoryFlatModel
+            parentLabels.Add(category.Label);
+
+            var newCategory = new CategoryFlatModel
             (
+                ParentCategories: parentLabels.ToArray(),
                 Fields: category.Fields,
                 Id: category.ID,
                 Label: category.Label
-            ));
+            );
 
-            FillFlatCategories(category.Children);
+            CategoryFlatModels.Add(newCategory);
+            FillFlatCategories(category.Children, parentLabels);
+            parentLabels.Remove(category.Label);
         }
     }
 }

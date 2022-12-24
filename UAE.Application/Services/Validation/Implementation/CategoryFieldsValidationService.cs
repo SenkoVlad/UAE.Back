@@ -12,11 +12,30 @@ public class CategoryFieldsValidationService : ICategoryFieldsValidationService
 
     public bool ValidateByCategory(string[] fields, string categoryId)
     {
+        return string.IsNullOrWhiteSpace(categoryId) 
+            ? ValidateFieldsAmongAllCategories(fields)
+            : ValidateFieldsAmongParticularCategory(fields, categoryId);
+    }
+
+    private bool ValidateFieldsAmongAllCategories(string[] fields)
+    {
+        var categoryFlatModel = _categoryInMemory.CategoryFlatModels
+            .FirstOrDefault(c => c.Fields
+                .Select(a => a.Name)
+                .Any(f => fields.Contains(
+                    f.ToString(),
+                    StringComparer.OrdinalIgnoreCase)));
+
+        return categoryFlatModel != null;
+    }
+
+    private bool ValidateFieldsAmongParticularCategory(string[] fields, string categoryId)
+    {
         var categoryFlatModel = _categoryInMemory.CategoryFlatModels
             .SingleOrDefault(c => c.Id == categoryId && c.Fields
                 .Select(a => a.Name)
                 .Any(f => fields.Contains(
-                    f.ToString(), 
+                    f.ToString(),
                     StringComparer.OrdinalIgnoreCase)));
 
         return categoryFlatModel != null;

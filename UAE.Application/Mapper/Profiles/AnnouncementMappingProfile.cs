@@ -67,7 +67,8 @@ public static class AnnouncementMappingProfile
             Title : model.Title,
             CreatedDateTime : model.CreatedDateTime,
             LastUpdateDateTime : model.LastUpdateDateTime,
-            AddressToTake: model.AddressToTake
+            AddressToTake: model.AddressToTake,
+            CategoryPath: model.CategoryPath
         );
     }
     

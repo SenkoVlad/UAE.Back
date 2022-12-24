@@ -27,8 +27,8 @@ public class AnnouncementController : ApiController
     }
 
     [AllowAnonymous]
-    [HttpPost(nameof(Search))]
-    public async Task<IActionResult> Search([FromBody] SearchAnnouncementViewModel searchAnnouncementViewModelModel)
+    [HttpGet(nameof(Search))]
+    public async Task<IActionResult> Search([FromQuery] SearchAnnouncementViewModel searchAnnouncementViewModelModel)
     {
         var searchAnnouncementModel = searchAnnouncementViewModelModel.ToBusinessModel();
         var validator = _validationFactory.GetValidator<SearchAnnouncementModel>();
@@ -77,7 +77,7 @@ public class AnnouncementController : ApiController
         if (validationResult.IsValid)
         {
             var operationResult = await _announcementService.UpdateAnnouncementAsync(updateAnnouncementModel);
-            var apiResult = operationResult.ToApiResult(() => operationResult.Result?.ToViewModel());
+            var apiResult = operationResult.ToApiResult(() => operationResult.Result.ToViewModel());
 
             return Ok(apiResult);
         }
