@@ -7,6 +7,8 @@ public sealed record PatchAnnouncementModel(
     string Id,
     string? Title,
     string? Description,
+    string? CurrencyId,
+    decimal? Price,
     string? CategoryId,
     BsonDocument? Fields, 
     string? AddressToTake, 

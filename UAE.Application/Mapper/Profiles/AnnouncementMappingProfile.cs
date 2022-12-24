@@ -10,10 +10,13 @@ public static class AnnouncementMappingProfile
         return new Announcement
         {
             Address = model.Address,
+            AddressToTake = model.AddressToTake,
             Category = model.CategoryId,
             Description = model.Description,
             Fields = model.Fields,
             Title = model.Title,
+            Price = model.Price,
+            Currency = model.CurrencyId
         };
     }
     
@@ -37,7 +40,9 @@ public static class AnnouncementMappingProfile
                 : null!,
             Title = string.IsNullOrWhiteSpace(model.Title)
                 ? null! 
-                : model.Title
+                : model.Title,
+            Price = model.Price ?? default,
+            Currency = model.CurrencyId
         };
     }
 
@@ -58,7 +63,9 @@ public static class AnnouncementMappingProfile
                 .ToArray(),
             Pictures: model.Pictures
                 .Select(p => p.ToBusinessModel())
-                .ToArray());
+                .ToArray(),
+            CurrencyId: model.Currency.ID,
+            Price: model.Price);
     }
 
     public static Announcement ToEntity(this UpdateAnnouncementModel model)
@@ -72,7 +79,9 @@ public static class AnnouncementMappingProfile
             Fields = model.Fields,
             Title = model.Title,
             CreatedDateTime = model.CreatedDateTime,
-            AddressToTake = model.AddressToTake
+            AddressToTake = model.AddressToTake,
+            Price = model.Price,
+            Currency = model.CurrencyId
         };
     }
 }

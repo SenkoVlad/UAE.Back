@@ -4,7 +4,6 @@ using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
 using UAE.Shared.Enum;
-using UAE.Shared.Filtering.Announcement;
 
 namespace UAE.Application.Services.Implementations;
 
@@ -36,12 +35,47 @@ public class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where T 
             BuildSearchQueryForStringField(searchAnnouncementModel);
         }
 
+        if (searchAnnouncementModel.Price != null)
+        {
+            BuildSearchQueryForDoubleField(searchAnnouncementModel);
+        }
+
+        if (searchAnnouncementModel.CurrencyId != null)
+        {
+            _query.Match(a => a.Currency.ID == searchAnnouncementModel.CurrencyId);
+        }
+
         _query.Sort(a => a.Ascending(searchAnnouncementModel.SortedBy));
 
         _query.PageSize(searchAnnouncementModel.PageSize)
             .PageNumber(searchAnnouncementModel.PageNumber);
     }
-    
+
+    private void BuildSearchQueryForDoubleField(SearchAnnouncementModel searchAnnouncementModel)
+    {
+        switch (searchAnnouncementModel.Price!.FilterCriteria)
+        {
+            case FilterCriteria.Equals:
+                _query.Match( a=> a.Price.Equals(searchAnnouncementModel.Price!.FieldValue));
+                break;
+            case FilterCriteria.MoreAndEquals:
+                _query.Match( a=> a.Price >= searchAnnouncementModel.Price!.FieldValue);
+                break;
+            case FilterCriteria.LessAndEquals:
+                _query.Match( a=> a.Price <= searchAnnouncementModel.Price!.FieldValue);
+                break;
+            case FilterCriteria.More:
+                _query.Match( a=> a.Price > searchAnnouncementModel.Price!.FieldValue);
+                break;
+            case FilterCriteria.Less:
+                _query.Match( a=> a.Price < searchAnnouncementModel.Price!.FieldValue);
+                break;
+            default:
+                _query.Match( a=> a.Description.Equals(searchAnnouncementModel.Description.FieldValue));
+                break;
+        }
+    }
+
     private void BuildSearchQueryForField(BsonElement searchAnnouncementModel)
     {
         (BsonValue? value, FilterCriteria? criteria) = GetValueAndCriteria(searchAnnouncementModel);
@@ -97,6 +131,9 @@ public class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where T 
                 break;
             case FilterCriteria.Contains:
                 _query.Match( a=> a.Description.Contains(searchAnnouncementModel.Description.FieldValue));
+                break;
+            default:
+                _query.Match( a=> a.Description.Equals(searchAnnouncementModel.Description.FieldValue));
                 break;
         }
     }

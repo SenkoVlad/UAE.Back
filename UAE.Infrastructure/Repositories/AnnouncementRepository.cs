@@ -55,6 +55,16 @@ public class AnnouncementRepository :  RepositoryBase<Announcement>, IAnnounceme
             updateCommand.Modify(a => a.AddToSet(f => f.Pictures, announcementPhoto));
         }
 
+        if (!string.IsNullOrWhiteSpace(announcement.Currency.ID))
+        {
+            updateCommand.Modify(a => a.Set(an => an.Currency, announcement.Currency.ID));
+        }
+
+        if (announcement.Price != null)
+        {
+            updateCommand.Modify(a => a.Set(f => f.Price, announcement.Price));
+        }
+
         await updateCommand.ExecuteAsync();
     }
 }

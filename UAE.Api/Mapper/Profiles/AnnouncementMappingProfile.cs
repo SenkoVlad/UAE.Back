@@ -19,7 +19,9 @@ public static class AnnouncementMappingProfile
             Filters: string.IsNullOrWhiteSpace(model.Filters) 
                 ? new BsonDocument()
                 : BsonDocument.Parse(model.Filters),
-            SortedBy: model.SortedBy ?? nameof(AnnouncementModel.Description)
+            SortedBy: model.SortedBy ?? nameof(AnnouncementModel.Description),
+            CurrencyId: model.CurrencyId,
+            Price: model.Price
         );
     }
     
@@ -35,7 +37,9 @@ public static class AnnouncementMappingProfile
                 : BsonDocument.Parse(model.Fields),
             AddressToTake: model.AddressToTake,
             Address: model.Address,
-            Pictures: model.Pictures
+            Pictures: model.Pictures,
+            CurrencyId: model.CurrencyId,
+            Price: model.Price
         );
     }
     
@@ -74,7 +78,9 @@ public static class AnnouncementMappingProfile
             Title: model.Title,
             Address: model.Address,
             AddressToTake: model.AddressToTake,
-            Pictures: model.Pictures
+            Pictures: model.Pictures,
+            CurrencyId: model.CurrencyId,
+            Price: model.Price
         );
     }
 
@@ -109,7 +115,9 @@ public static class AnnouncementMappingProfile
             Title: model.Title,
             Address: model.Address,
             AddressToTake: model.AddressToTake,
-            CreatedDateTime: model.CreatedDateTime
+            CreatedDateTime: model.CreatedDateTime,
+            CurrencyId: model.CurrencyId,
+            Price: model.Price
         );
     }
 }

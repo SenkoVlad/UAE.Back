@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver.Linq;
-using UAE.Application.Mapper.Profiles;
+﻿using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Category;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;

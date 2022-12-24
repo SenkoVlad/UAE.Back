@@ -1,6 +1,5 @@
 using FluentValidation;
 using JetBrains.Annotations;
-using MongoDB.Bson;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Validation.Interfaces;
 using UAE.Application.Validations.CustomValidators;
