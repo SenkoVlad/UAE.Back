@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using UAE.Core.DataModels;
 using UAE.Core.Entities;
 using UAE.Core.EntityDataParameters;
 using UAE.Core.EntityDataParameters.RealEstate;
@@ -12,9 +13,22 @@ public class _001_seed_init_data : IMigration
 {
     public async Task UpgradeAsync()
     {
+        await AddCurrencies();
         await AddCategoriesAsync();
         await AddUser(); 
         await AddAnnouncementsAsync();
+    }
+
+    private async Task AddCurrencies()
+    {
+        await DB.DeleteAsync<Currency>(_ => true);
+
+        var currency = new Currency
+        {
+            Name = "USD"
+        };
+
+        await currency.SaveAsync();
     }
 
     private async Task AddUser()
@@ -33,6 +47,10 @@ public class _001_seed_init_data : IMigration
     {
         await DB.DeleteAsync<Announcement>(_ => true);
 
+        var currency = await DB.Find<Currency>()
+            .Match(s => s.Name == "USD")
+            .ExecuteSingleAsync();
+        
         var category = await DB.Find<Category>()
             .Match(s => s.Label == "real estate")
             .ExecuteSingleAsync();
@@ -69,7 +87,12 @@ public class _001_seed_init_data : IMigration
             {
                 ID = user.ID
             },
-            CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+            Currency = new One<Currency>()
+            {
+                ID = currency.ID
+            },
+            Price = 100.40m
         };
 
         await announcement.SaveAsync();

@@ -1,6 +1,5 @@
 using UAE.Application.Models.Category;
 using UAE.Application.Models.Picture;
-using UAE.Core.Entities;
 
 namespace UAE.Api.ViewModels.Announcement;
 

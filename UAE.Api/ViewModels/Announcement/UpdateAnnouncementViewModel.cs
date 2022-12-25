@@ -5,6 +5,8 @@ public record UpdateAnnouncementViewModel(
     string Title,
     string Description,
     string CategoryId,
+    string CurrencyId,
+    decimal Price,
     string Fields, 
     string AddressToTake, 
     string Address, 

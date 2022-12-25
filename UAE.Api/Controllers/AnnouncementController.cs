@@ -4,11 +4,9 @@ using UAE.Api.Controllers.Base;
 using UAE.Api.Mapper.Profiles;
 using UAE.Api.ViewModels.Announcement;
 using UAE.Api.ViewModels.Base;
-using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Application.Validations;
-using UAE.Core.Entities;
 using UAE.Shared;
 
 namespace UAE.Api.Controllers;

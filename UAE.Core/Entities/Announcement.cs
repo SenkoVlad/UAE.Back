@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Entities;
+using UAE.Core.DataModels;
 using static System.String;
 
 namespace UAE.Core.Entities;
@@ -15,7 +16,11 @@ public class Announcement : Entity
     public CategoryPath[] CategoryPath { get; set; } = Array.Empty<CategoryPath>();
     
     public long CreatedDateTime { get; set; }
-
+    
+    public decimal Price { get; set; }
+    
+    public One<Currency> Currency { get; set; }
+    
     public long LastUpdateDateTime { get; set; }
 
     public BsonDocument Fields { get; set; } = new();

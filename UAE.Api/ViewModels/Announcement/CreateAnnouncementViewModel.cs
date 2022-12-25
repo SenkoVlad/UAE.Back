@@ -4,6 +4,8 @@ public record CreateAnnouncementViewModel(
     string Description,
     string Title,
     string CategoryId,
+    string CurrencyId,
+    decimal Price,
     string Fields,
     string AddressToTake,
     string Address,
