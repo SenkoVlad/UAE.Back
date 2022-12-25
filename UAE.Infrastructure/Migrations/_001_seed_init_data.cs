@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using MongoDB.Entities;
 using UAE.Core.DataModels;
 using UAE.Core.Entities;
@@ -13,13 +14,13 @@ public class _001_seed_init_data : IMigration
 {
     public async Task UpgradeAsync()
     {
-        await AddCurrencies();
+        await AddCurrenciesAsync();
         await AddCategoriesAsync();
-        await AddUser(); 
+        await AddUserAsync(); 
         await AddAnnouncementsAsync();
     }
 
-    private async Task AddCurrencies()
+    private async Task AddCurrenciesAsync()
     {
         await DB.DeleteAsync<Currency>(_ => true);
 
@@ -31,7 +32,7 @@ public class _001_seed_init_data : IMigration
         await currency.SaveAsync();
     }
 
-    private async Task AddUser()
+    private async Task AddUserAsync()
     {
         await DB.DeleteAsync<User>(_ => true);
 
@@ -51,10 +52,12 @@ public class _001_seed_init_data : IMigration
             .Match(s => s.Name == "USD")
             .ExecuteSingleAsync();
         
-        var category = await DB.Find<Category>()
-            .Match(s => s.Label == "real estate")
+        var parentCategory = await DB.Find<Category>()
+            .Match(s => s.Children.Any(c => c.Label == "Property For Rent"))
             .ExecuteSingleAsync();
 
+        var category = parentCategory.Children.FirstOrDefault(c => c.Label == "Property For Rent");
+        
         var user = await DB.Find<User>()
             .Match(s => s.Email == "vlad@vlad.com")
             .ExecuteSingleAsync();
@@ -63,14 +66,14 @@ public class _001_seed_init_data : IMigration
         {
             Category = new One<Category>()
             {
-                ID = category.ID
+                ID = parentCategory.ID
             },
             CategoryPath = new CategoryPath[]
             {
                 new CategoryPath
                 {
-                    ID = category.ID,
-                    Label = category.Label
+                    ID = parentCategory.ID,
+                    Label = parentCategory.Label
                 }
             },
             Description = "flat 1",
@@ -87,6 +90,8 @@ public class _001_seed_init_data : IMigration
             {
                 ID = user.ID
             },
+            AddressToTake = "address to take",
+            Address = "address",
             CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             Currency = new One<Currency>()
             {
@@ -98,79 +103,111 @@ public class _001_seed_init_data : IMigration
         await announcement.SaveAsync();
     }
 
-    private static async Task AddCategoriesAsync()
+    private async Task AddCategoriesAsync()
     {
         await DB.DeleteAsync<Category>(_ => true);
+        var categories = await GetAllcategoriesFromFileAsync();
+        await categories.SaveAsync();
+    }
 
-        var readEstateCategory = new Category
+    private async Task<List<Category>> GetAllcategoriesFromFileAsync()
+    {
+        var categories = new List<Category>();
+        var parentCategoryNames = new List<string>();
+        
+        await foreach (var line in System.IO.File.ReadLinesAsync(@"..\UAE.Infrastructure\Migrations\categories.txt"))
         {
-            Label = "real estate",
-            Fields = new List<Field>
+            var inputRow = line.Split('@');
+            
+            if (inputRow.Length < 1)
             {
-                new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name)
+                return categories;
             }
-        };
+            
+            var currentCategories = inputRow.First().Split('/');
+            parentCategoryNames.Add(currentCategories.First());
 
-        var flatCategory = new Category
-        {            
-            ID = ObjectId.GenerateNewId().ToString(),
-            Label = "flat",
-            Fields = new List<Field>
-            {
-                new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-            }
-        };
+            FillCategoriesByInputRow(categories, inputRow);
+        }
 
-        var villaCategory = new Category
-        {            
-            ID = ObjectId.GenerateNewId().ToString(),
-            Label = "villa",
-            Fields = new List<Field>
-            {
-                new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name),
-            }
-        };
+        parentCategoryNames = parentCategoryNames
+            .Distinct()
+            .ToList();
 
-        var carCategory = new Category
+        var parentCategories = categories
+            .Where(c => parentCategoryNames.Contains(c.Name))
+            .ToList();
+        
+        return parentCategories;
+    }
+
+    private void FillCategoriesByInputRow( List<Category> categories, string[] inputRow)
+    {
+        var currentCategories = inputRow.First().Split('/');
+
+        for (var index = 0; index < currentCategories.Length; index++)
         {
-            Label = "car",
-            Fields = new List<Field>
+            var currentCategory = currentCategories[index];
+            var currentMainParentCategory = currentCategories.First();
+            var currentLastSubCategory = currentCategories.Last();
+            var labelCurrentCategory = inputRow.Last();
+            var isExist = categories.Any(c => c.Name == currentCategory);
+
+            if (isExist)
             {
-                new Field(ExtraFieldName.Mileage.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.MaxSpeed.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.Brand.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name),
+                continue;
             }
-        };
-
-        var sportCar = new Category
-        {          
-            ID = ObjectId.GenerateNewId().ToString(),
-            Label = "sport car",
-            Fields = new List<Field>
+            else
             {
-                new Field(ExtraFieldName.Mileage.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.MaxSpeed.GetDescription(), typeof(int).Name),
-                new Field(ExtraFieldName.Brand.GetDescription(), typeof(int).Name)
+                var category = new Category
+                {
+                    ID = ObjectId.GenerateNewId().ToString(),
+                    Label = labelCurrentCategory,
+                    Name = currentLastSubCategory
+                };
+
+                FillCategoryFields(category);
+
+                if (index != 0)
+                {
+                    var currentSubParentCategoryName = currentCategories[index - 1];
+                    var currentSubParentCategory = categories.FirstOrDefault(c => c.Name == currentSubParentCategoryName);
+
+                    if (currentSubParentCategory != null)
+                    {
+                        currentSubParentCategory.Children.Add(category);
+                    }
+                }
+
+                categories.Add(category);
             }
-        };
+        }
+    }
 
-        carCategory.Children.Add(sportCar);
-        await carCategory.SaveAsync();
-
-        readEstateCategory.Children.AddRange(new[] {villaCategory, flatCategory});
-        await readEstateCategory.SaveAsync();
+    private static void FillCategoryFields(Category category)
+    {
+        switch (category.Label)
+        {
+            case "Cars & Vehicles":
+                category.Fields = new List<Field>
+                {
+                    new Field(ExtraFieldName.Mileage.GetDescription(), typeof(int).Name),
+                    new Field(ExtraFieldName.MaxSpeed.GetDescription(), typeof(int).Name),
+                    new Field(ExtraFieldName.Brand.GetDescription(), typeof(string).Name),
+                    new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
+                    new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name),
+                };
+                break;
+            case "Property For Rent":
+                category.Fields = new List<Field>
+                {
+                    new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
+                    new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
+                    new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
+                    new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
+                    new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(string).Name)
+                };
+                break;
+        }
     }
 }
