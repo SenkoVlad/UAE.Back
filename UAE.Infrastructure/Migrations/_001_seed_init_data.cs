@@ -47,7 +47,14 @@ public class _001_seed_init_data : IMigration
             {
                 ID = category.ID
             },
-            CategoryPath = new string[] { "real estate", "flat" },
+            CategoryPath = new CategoryPath[]
+            {
+                new CategoryPath
+                {
+                    ID = category.ID,
+                    Label = category.Label
+                }
+            },
             Description = "flat 1",
             Fields = new BsonDocument
             {

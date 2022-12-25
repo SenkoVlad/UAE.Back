@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver.Linq;
+using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Category;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
@@ -13,12 +14,14 @@ class CategoryInMemory : ICategoryInMemory
 
     public List<CategoryFlatModel> CategoryFlatModels { get; } = new();
     
-    public string[] GetCategoryPath(string categoryId)
+    public CategoryPath[] GetCategoryPath(string categoryId)
     {
         var parents = CategoryFlatModels.SingleOrDefault(c => c.Id == categoryId)!
             .ParentCategories;
-
-        return parents ?? Array.Empty<string>();
+        
+        return parents
+            .Select(p => p.ToEntity())
+            .ToArray();
     }
 
     public CategoryInMemory(ICategoryRepository categoryRepository)
@@ -40,26 +43,28 @@ class CategoryInMemory : ICategoryInMemory
     private void FillFlatCategoriesFromCategories()
     {
         var categories = Categories;
-        FillFlatCategories(categories, new List<string>());
+        FillFlatCategories(categories, new List<CategoryPathModel>());
     }
 
-    private void FillFlatCategories(List<Category> categories, List<string> parentLabels)
+    private void FillFlatCategories(List<Category> categories, List<CategoryPathModel> parentCategory)
     {
         foreach (var category in categories)
         {
-            parentLabels.Add(category.Label);
+            var newParentCategory = new CategoryPathModel(category.ID, category.Label); 
+            
+            parentCategory.Add(newParentCategory);
 
             var newCategory = new CategoryFlatModel
             (
-                ParentCategories: parentLabels.ToArray(),
+                ParentCategories: parentCategory.ToArray(),
                 Fields: category.Fields,
                 Id: category.ID,
                 Label: category.Label
             );
 
             CategoryFlatModels.Add(newCategory);
-            FillFlatCategories(category.Children, parentLabels);
-            parentLabels.Remove(category.Label);
+            FillFlatCategories(category.Children, parentCategory);
+            parentCategory.Remove(newParentCategory);
         }
     }
 }

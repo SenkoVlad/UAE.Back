@@ -42,9 +42,9 @@ internal sealed class AnnouncementService : IAnnouncementService
         announcement.User.ID = userId;
         announcement.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         announcement.CategoryPath = _categoryInMemory.GetCategoryPath(createAnnouncementModel.CategoryId);
-        announcement.Photos = announcementPictures is {IsSucceed: true, Result: { }}
+        announcement.Pictures = announcementPictures is {IsSucceed: true, Result: { }}
             ? announcementPictures.Result
-            : new List<Photo>();
+            : Array.Empty<Picture>();
         await _announcementRepository.SaveAsync(announcement);
         
         return new OperationResult<Announcement>(new[] { "Announcement is created"}, IsSucceed: true, Result: announcement);
@@ -76,14 +76,14 @@ internal sealed class AnnouncementService : IAnnouncementService
         if (patchAnnouncementModel.Pictures != null)
         {
             var announcementPictures = await _fileService.SavePictures(patchAnnouncementModel.Pictures);
-            announcement.Photos = announcementPictures.IsSucceed
+            announcement.Pictures = announcementPictures.IsSucceed
                 ? announcementPictures.Result
-                : new List<Photo>();
+                : Array.Empty<Picture>();
         }
 
         if (!string.IsNullOrWhiteSpace(patchAnnouncementModel.CategoryId))
         {
-            announcement.CategoryPath = _categoryInMemory.GetCategoryPath(patchAnnouncementModel.CategoryId);
+            announcement.CategoryPath =  _categoryInMemory.GetCategoryPath(patchAnnouncementModel.CategoryId);
         }
         
         announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

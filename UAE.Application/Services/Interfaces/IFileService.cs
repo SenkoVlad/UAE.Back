@@ -6,5 +6,5 @@ namespace UAE.Application.Services.Interfaces;
 
 public interface IFileService
 {
-    Task<OperationResult<List<Photo>>> SavePictures(List<IFormFile> pictures);
+    Task<OperationResult<Picture[]>> SavePictures(List<IFormFile> pictures);
 }

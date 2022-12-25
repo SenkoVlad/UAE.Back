@@ -17,15 +17,15 @@ sealed class FileService : IFileService
         _settings = settings.Value.FileStorage;
     }
     
-    public async Task<OperationResult<List<Photo>>> SavePictures(List<IFormFile> pictures)
+    public async Task<OperationResult<Picture[]>> SavePictures(List<IFormFile> pictures)
     {
-        var savedPictures = new List<Photo>();
+        var savedPictures = new List<Picture>();
         
         foreach (var picture in pictures)
         {
             if (string.IsNullOrWhiteSpace(picture.FileName))
             {
-                return new OperationResult<List<Photo>>(IsSucceed: false, ResultMessages: new[] {"File not selected"});
+                return new OperationResult<Picture[]>(IsSucceed: false, ResultMessages: new[] {"File not selected"});
             }
 
             var directoryPath = CreatePictureDirectoryIfNotExist();
@@ -35,7 +35,7 @@ sealed class FileService : IFileService
             await using var stream = new FileStream(path, FileMode.Create);
             await picture.CopyToAsync(stream);
             stream.Close();
-            savedPictures.Add(new Photo
+            savedPictures.Add(new Picture
             {
                 ID = ObjectId.GenerateNewId().ToString(),
                 Name = newFileName,
@@ -43,7 +43,7 @@ sealed class FileService : IFileService
             });
         }
 
-        return new OperationResult<List<Photo>>(IsSucceed: true, ResultMessages: new[] {"Pictures are saved"}, Result: savedPictures);
+        return new OperationResult<Picture[]>(IsSucceed: true, ResultMessages: new[] {"Pictures are saved"}, Result: savedPictures.ToArray());
     }
 
     private string CreatePictureDirectoryIfNotExist()

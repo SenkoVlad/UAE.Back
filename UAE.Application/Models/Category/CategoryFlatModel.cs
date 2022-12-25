@@ -5,4 +5,4 @@ namespace UAE.Application.Models.Category;
 public sealed record CategoryFlatModel(string Id,
     string Label,
     List<Field> Fields,
-    string[]? ParentCategories = null);
+    CategoryPathModel[] ParentCategories = null);

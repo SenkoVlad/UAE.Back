@@ -11,5 +11,5 @@ public interface ICategoryInMemory
     
     List<CategoryFlatModel> CategoryFlatModels { get; }
     
-    string[] GetCategoryPath(string categoryId);
+    CategoryPath[] GetCategoryPath(string categoryId);
 }
