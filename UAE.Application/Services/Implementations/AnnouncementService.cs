@@ -2,6 +2,8 @@ using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
+using UAE.Application.Services.Interfaces.Base;
+using UAE.Core.DataModels;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
 using UAE.Shared;
@@ -15,36 +17,47 @@ internal sealed class AnnouncementService : IAnnouncementService
     private readonly IPagedQueryBuilderService<Announcement> _searchPagedQueryBuilder;
     private readonly IFileService _fileService;
     private readonly ICategoryInMemory _categoryInMemory;
+    private readonly IInMemoryService<Currency> _currencyInMemory;
     
     public AnnouncementService(IAnnouncementRepository announcementRepository, 
         IUserService userService, 
         IPagedQueryBuilderService<Announcement> searchPagedQueryBuilder,
-        IFileService fileService, ICategoryInMemory categoryInMemory)
+        IFileService fileService, ICategoryInMemory categoryInMemory, 
+        IInMemoryService<Currency> currencyInMemory)
     {
         _announcementRepository = announcementRepository;
         _userService = userService;
         _searchPagedQueryBuilder = searchPagedQueryBuilder;
         _fileService = fileService;
         _categoryInMemory = categoryInMemory;
+        _currencyInMemory = currencyInMemory;
     }
 
     public async Task<OperationResult<Announcement>> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel)
     {
         var userId = _userService.GetCurrentUserId();
-
         if (string.IsNullOrWhiteSpace(userId))
         {
             return new OperationResult<Announcement>(new[] {"UserId is not set in cookies"}, IsSucceed: true);
         }
+        
+        var currency = _currencyInMemory.Data.FirstOrDefault(c => c.Code == createAnnouncementModel.CurrencyCode);
+        if (currency == null)
+        {
+            return new OperationResult<Announcement>(new[] { "Announcement is not created. Currency is not correct"}, IsSucceed: false);
+        }
 
         var announcementPictures = await _fileService.SavePictures(createAnnouncementModel.Pictures);
+        
         var announcement = createAnnouncementModel.ToEntity();
-        announcement.User.ID = userId;
-        announcement.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        announcement.CategoryPath = _categoryInMemory.GetCategoryPath(createAnnouncementModel.CategoryId);
         announcement.Pictures = announcementPictures is {IsSucceed: true, Result: { }}
             ? announcementPictures.Result
             : Array.Empty<Picture>();
+        announcement.Currency = currency;
+        announcement.User.ID = userId;
+        announcement.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        announcement.CategoryPath = _categoryInMemory.GetCategoryPath(createAnnouncementModel.CategoryId);
+
         await _announcementRepository.SaveAsync(announcement);
         
         return new OperationResult<Announcement>(new[] { "Announcement is created"}, IsSucceed: true, Result: announcement);
@@ -53,25 +66,49 @@ internal sealed class AnnouncementService : IAnnouncementService
     public async Task<OperationResult<Announcement>> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel)
     {
         var userId = _userService.GetCurrentUserId();
-
         if (string.IsNullOrWhiteSpace(userId))
         {
             return new OperationResult<Announcement>(new[] {"userId is not set in cookies"}, IsSucceed: true);
         }
         
+        var currency = _currencyInMemory.Data.FirstOrDefault(c => c.Code == updateAnnouncementModel.CurrencyCode);
+        if (currency == null)
+        {
+            return new OperationResult<Announcement>(new[] { "Announcement is not updated. Currency is not correct"}, IsSucceed: false);
+        }
+        
         var announcement = updateAnnouncementModel.ToEntity();
+
+        if (updateAnnouncementModel.Pictures is {Count: > 0})
+        {
+            var announcementPictures = await _fileService.SavePictures(updateAnnouncementModel.Pictures);
+            announcement.Pictures = announcementPictures.IsSucceed
+                ? announcementPictures.Result
+                : Array.Empty<Picture>();
+        }
+        
         announcement.User.ID = userId;
+        announcement.Currency = currency;
         announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         announcement.CategoryPath = _categoryInMemory.GetCategoryPath(updateAnnouncementModel.CategoryId);
         
         await _announcementRepository.UpdateAsync(announcement);
 
-        return new OperationResult<Announcement>(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true);
+        return new OperationResult<Announcement>(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true, Result: announcement);
     }
 
     public async Task<OperationResult<Announcement>> PatchAnnouncementAsync(PatchAnnouncementModel patchAnnouncementModel)
     {
         var announcement = patchAnnouncementModel.ToEntity();
+
+        if (!string.IsNullOrWhiteSpace(announcement.Currency.Code))
+        {
+            var currency = _currencyInMemory.Data.FirstOrDefault(c => c.Code == patchAnnouncementModel.CurrencyCode);
+            if (currency == null)
+            {
+                return new OperationResult<Announcement>(new[] { "Announcement is not patched. Currency is not correct"}, IsSucceed: false);
+            }
+        }
 
         if (patchAnnouncementModel.Pictures != null)
         {

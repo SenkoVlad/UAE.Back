@@ -7,7 +7,6 @@ public sealed record SearchAnnouncementViewModel(
     FilterParameter<string>? Description,
     string? CategoryId,
     int PageNumber,
-    string CurrencyId,
     FilterParameter<decimal>? Price,
     int PageSize,
     string? Filters,

@@ -57,7 +57,7 @@ public class AnnouncementController : ApiController
         if (validationResult.IsValid)
         {
             var operationResult = await _announcementService.CreateAnnouncement(createAnnouncementModel);
-            var apiResult = operationResult.ToApiResult(() => operationResult.Result?.ToViewModel());
+            var apiResult = operationResult.ToApiResult(() => operationResult.Result.ToViewModel());
 
             return Ok(apiResult);
         }
@@ -66,7 +66,7 @@ public class AnnouncementController : ApiController
     }
 
     [HttpPut(nameof(Update))]
-    public async Task<IActionResult> Update([FromBody] UpdateAnnouncementViewModel announcementViewModel)
+    public async Task<IActionResult> Update([FromForm] UpdateAnnouncementViewModel announcementViewModel)
     {
         var updateAnnouncementModel = announcementViewModel.ToBusinessModel();
         var validator = _validationFactory.GetValidator<UpdateAnnouncementModel>();
