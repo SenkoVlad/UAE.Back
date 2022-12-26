@@ -8,7 +8,7 @@ using UAE.Shared.Settings;
 
 namespace UAE.Application.Services.Implementations;
 
-sealed class FileService : IFileService
+internal sealed class FileService : IFileService
 {
     private readonly FileStorageSettings _settings;
 

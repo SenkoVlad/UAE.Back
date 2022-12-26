@@ -12,7 +12,7 @@ using UAE.Shared.Settings;
 
 namespace UAE.Application.Services.Implementations;
 
-public class TokenService : ITokenService
+internal sealed class TokenService : ITokenService
 {
     private readonly IOptions<Settings> _settings;
     private readonly IHttpContextAccessor _httpContextAccessor;

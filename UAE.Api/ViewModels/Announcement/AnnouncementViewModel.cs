@@ -8,6 +8,8 @@ public sealed record AnnouncementViewModel(
     string Title,
     string? Description,
     string CategoryId,
+    string CurrencyCode,
+    decimal Price,
     CategoryPathModel[] CategoryPath,
     long CreatedDateTime,
     long LastUpdateDateTime,

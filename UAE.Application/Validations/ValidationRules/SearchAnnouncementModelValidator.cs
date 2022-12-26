@@ -40,7 +40,8 @@ public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnounce
 
     private void SortedByValidator(ICategoryFieldsValidationService categoryFieldsValidationService)
     {
-        When(model => !string.IsNullOrWhiteSpace(model.CategoryId), () =>
+        When(model => !string.IsNullOrWhiteSpace(model.CategoryId) 
+                          && !string.IsNullOrWhiteSpace(model.SortedBy), () =>
         {
             RuleFor(p => new AnnouncementFieldParameter
                 {

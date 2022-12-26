@@ -26,7 +26,7 @@ public class _001_seed_init_data : IMigration
 
         var currency = new Currency
         {
-            Name = "USD"
+            Code = "USD"
         };
 
         await currency.SaveAsync();
@@ -49,14 +49,14 @@ public class _001_seed_init_data : IMigration
         await DB.DeleteAsync<Announcement>(_ => true);
 
         var currency = await DB.Find<Currency>()
-            .Match(s => s.Name == "USD")
+            .Match(s => s.Code == "USD")
             .ExecuteSingleAsync();
         
         var parentCategory = await DB.Find<Category>()
             .Match(s => s.Children.Any(c => c.Label == "Property For Rent"))
             .ExecuteSingleAsync();
 
-        var category = parentCategory.Children.FirstOrDefault(c => c.Label == "Property For Rent");
+        var category = parentCategory.Children.First(c => c.Label == "Property For Rent");
         
         var user = await DB.Find<User>()
             .Match(s => s.Email == "vlad@vlad.com")
@@ -66,14 +66,20 @@ public class _001_seed_init_data : IMigration
         {
             Category = new One<Category>()
             {
-                ID = parentCategory.ID
+                ID = category!.ID
             },
             CategoryPath = new CategoryPath[]
             {
+
                 new CategoryPath
                 {
                     ID = parentCategory.ID,
                     Label = parentCategory.Label
+                },
+                new CategoryPath
+                {
+                    ID = category.ID,
+                    Label = category.Label
                 }
             },
             Description = "flat 1",
@@ -93,9 +99,10 @@ public class _001_seed_init_data : IMigration
             AddressToTake = "address to take",
             Address = "address",
             CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-            Currency = new One<Currency>()
+            Currency = new Currency
             {
-                ID = currency.ID
+                ID = currency.ID,
+                Code = "USD"
             },
             Price = 100.40m
         };
@@ -125,6 +132,12 @@ public class _001_seed_init_data : IMigration
             }
             
             var currentCategories = inputRow.First().Split('/');
+
+            if (currentCategories.Length > 3)
+            {
+                continue;
+            }
+            
             parentCategoryNames.Add(currentCategories.First());
 
             FillCategoriesByInputRow(categories, inputRow);

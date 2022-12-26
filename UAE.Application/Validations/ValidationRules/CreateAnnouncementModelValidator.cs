@@ -10,22 +10,8 @@ public class CreateAnnouncementModelValidator : AbstractValidator<CreateAnnounce
 {
     public CreateAnnouncementModelValidator(CategoryFieldsValidationService categoryFieldsValidationService)
     {
-        RuleFor(c => c.Title)
-            .NotEmpty();
-        
-        RuleFor(c => c.Description)
-            .NotEmpty();
-        
-        RuleFor(c => c.Address)
-            .NotEmpty();
-        
-        RuleFor(c => c.CategoryId)
-            .NotEmpty();
-        
-        RuleFor(c => c.Fields)
-            .NotEmpty();
-        
         RuleFor(p => new { p.Fields, p.CategoryId} )
-            .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId));
+            .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId))
+            .WithMessage("Fields have incorrect format");
     }
 }

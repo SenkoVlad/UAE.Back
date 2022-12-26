@@ -20,7 +20,6 @@ public static class AnnouncementMappingProfile
                 ? new BsonDocument()
                 : BsonDocument.Parse(model.Filters),
             SortedBy: model.SortedBy ?? nameof(AnnouncementModel.Description),
-            CurrencyId: model.CurrencyId,
             Price: model.Price
         );
     }
@@ -38,7 +37,7 @@ public static class AnnouncementMappingProfile
             AddressToTake: model.AddressToTake,
             Address: model.Address,
             Pictures: model.Pictures,
-            CurrencyId: model.CurrencyId,
+            CurrencyCode: model.CurrencyCode,
             Price: model.Price
         );
     }
@@ -61,7 +60,9 @@ public static class AnnouncementMappingProfile
                 .ToArray(),
             Pictures: model.Pictures
                 .Select(p => p.ToBusinessModel())
-                .ToArray()
+                .ToArray(),
+            Price: model.Price,
+            CurrencyCode: model.Currency.Code
         );
     }
     
@@ -79,7 +80,7 @@ public static class AnnouncementMappingProfile
             Address: model.Address,
             AddressToTake: model.AddressToTake,
             Pictures: model.Pictures,
-            CurrencyId: model.CurrencyId,
+            CurrencyCode: model.CurrencyCode,
             Price: model.Price
         );
     }
@@ -98,7 +99,9 @@ public static class AnnouncementMappingProfile
             CreatedDateTime: model.CreatedDateTime,
             LastUpdateDateTime: model.LastUpdateDateTime,
             CategoryPath: model.CategoryPath,
-            Pictures: model.Pictures
+            Pictures: model.Pictures,
+            CurrencyCode: model.CurrencyCode,
+            Price: model.Price
         );
     }
     
@@ -116,8 +119,9 @@ public static class AnnouncementMappingProfile
             Address: model.Address,
             AddressToTake: model.AddressToTake,
             CreatedDateTime: model.CreatedDateTime,
-            CurrencyId: model.CurrencyId,
-            Price: model.Price
+            CurrencyCode: model.CurrencyCode,
+            Price: model.Price,
+            Pictures: model.Pictures ?? new List<IFormFile>()
         );
     }
 }

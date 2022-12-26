@@ -7,7 +7,7 @@ using UAE.Shared.Enum;
 
 namespace UAE.Application.Services.Implementations;
 
-public class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where T : Announcement, IEntity
+internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where T : Announcement, IEntity
 {
     private readonly PagedSearch<T> _query;
     
@@ -38,11 +38,6 @@ public class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where T 
         if (searchAnnouncementModel.Price != null)
         {
             BuildSearchQueryForDoubleField(searchAnnouncementModel);
-        }
-
-        if (searchAnnouncementModel.CurrencyId != null)
-        {
-            _query.Match(a => a.Currency.ID == searchAnnouncementModel.CurrencyId);
         }
 
         _query.Sort(a => a.Ascending(searchAnnouncementModel.SortedBy));

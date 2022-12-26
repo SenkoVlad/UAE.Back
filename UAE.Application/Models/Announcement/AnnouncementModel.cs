@@ -9,7 +9,7 @@ public sealed record AnnouncementModel(
     string Title,
     string? Description,
     string CategoryId,
-    string CurrencyId,
+    string CurrencyCode,
     decimal Price,
     CategoryPathModel[] CategoryPath,
     long CreatedDateTime,

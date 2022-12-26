@@ -4,7 +4,7 @@ public record PatchAnnouncementViewModel(
     string Id,
     string? Title,
     string? Description,
-    string? CurrencyId,
+    string? CurrencyCode,
     decimal? Price,
     string? CategoryId,
     string? Fields, 

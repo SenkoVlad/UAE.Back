@@ -10,7 +10,7 @@ using UAE.Core.Repositories;
 
 namespace UAE.Application.Services.Implementations;
 
-public class UserService : IUserService
+internal sealed class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;

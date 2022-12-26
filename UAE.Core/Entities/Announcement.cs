@@ -19,7 +19,7 @@ public class Announcement : Entity
     
     public decimal Price { get; set; }
     
-    public One<Currency> Currency { get; set; }
+    public Currency Currency { get; set; }
     
     public long LastUpdateDateTime { get; set; }
 

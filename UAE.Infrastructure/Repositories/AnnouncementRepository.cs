@@ -57,10 +57,10 @@ public class AnnouncementRepository :  RepositoryBase<Announcement>, IAnnounceme
 
         if (!string.IsNullOrWhiteSpace(announcement.Currency.ID))
         {
-            updateCommand.Modify(a => a.Set(an => an.Currency, announcement.Currency.ID));
+            updateCommand.Modify(a => a.Set(an => an.Currency, announcement.Currency));
         }
 
-        if (announcement.Price != null)
+        if (announcement.Price != default)
         {
             updateCommand.Modify(a => a.Set(f => f.Price, announcement.Price));
         }

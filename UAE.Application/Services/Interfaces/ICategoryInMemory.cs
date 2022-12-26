@@ -1,15 +1,12 @@
-﻿using UAE.Application.Models.Category;
+using UAE.Application.Models.Category;
+using UAE.Application.Services.Interfaces.Base;
 using UAE.Core.Entities;
 
 namespace UAE.Application.Services.Interfaces;
 
-public interface ICategoryInMemory
+public interface ICategoryInMemory : IInMemoryService<Category>
 {
-    Task InitAsync();
-    
-    List<Category> Categories { get; }
-    
-    List<CategoryFlatModel> CategoryFlatModels { get; }
-    
     CategoryPath[] GetCategoryPath(string categoryId);
+
+    List<CategoryFlatModel> CategoryFlatModels { get; }
 }

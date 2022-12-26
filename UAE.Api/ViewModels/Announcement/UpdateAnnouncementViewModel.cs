@@ -5,9 +5,11 @@ public record UpdateAnnouncementViewModel(
     string Title,
     string Description,
     string CategoryId,
-    string CurrencyId,
+    string CurrencyCode,
     decimal Price,
     string Fields, 
     string AddressToTake, 
     string Address, 
-    long CreatedDateTime);
+    long CreatedDateTime,
+    List<IFormFile>? Pictures
+);

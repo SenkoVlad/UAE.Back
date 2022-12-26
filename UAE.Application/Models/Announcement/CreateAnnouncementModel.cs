@@ -7,7 +7,7 @@ public sealed record CreateAnnouncementModel(
     string Description,
     string Title,
     string CategoryId,
-    string CurrencyId,
+    string CurrencyCode,
     decimal Price,
     BsonDocument Fields,
     string AddressToTake,

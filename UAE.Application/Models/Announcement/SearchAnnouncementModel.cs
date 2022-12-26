@@ -7,7 +7,6 @@ namespace UAE.Application.Models.Announcement;
 public sealed record SearchAnnouncementModel(
         FilterParameter<string>? Description,
         string? CategoryId,
-        string? CurrencyId,
         FilterParameter<decimal>? Price,
         int PageNumber,
         int PageSize,

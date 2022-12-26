@@ -1,4 +1,6 @@
-﻿using UAE.Application.Models.Announcement;
+﻿using MongoDB.Bson;
+using UAE.Application.Models.Announcement;
+using UAE.Core.DataModels;
 using UAE.Core.Entities;
 
 namespace UAE.Application.Mapper.Profiles;
@@ -16,7 +18,10 @@ public static class AnnouncementMappingProfile
             Fields = model.Fields,
             Title = model.Title,
             Price = model.Price,
-            Currency = model.CurrencyId
+            Currency = new Currency
+            {
+                Code = model.CurrencyCode
+            }
         };
     }
     
@@ -37,12 +42,17 @@ public static class AnnouncementMappingProfile
                 : model.Description,
             Fields = model.Fields != null 
                 ? model.Fields 
-                : null!,
+                : new BsonDocument(),
             Title = string.IsNullOrWhiteSpace(model.Title)
                 ? null! 
                 : model.Title,
             Price = model.Price ?? default,
-            Currency = model.CurrencyId
+            Currency = string.IsNullOrWhiteSpace(model.CurrencyCode)
+                ? new Currency
+                {
+                    Code = model.CurrencyCode!
+                }
+                : new Currency()
         };
     }
 
@@ -64,7 +74,7 @@ public static class AnnouncementMappingProfile
             Pictures: model.Pictures
                 .Select(p => p.ToBusinessModel())
                 .ToArray(),
-            CurrencyId: model.Currency.ID,
+            CurrencyCode: model.Currency.Code,
             Price: model.Price);
     }
 
@@ -81,7 +91,10 @@ public static class AnnouncementMappingProfile
             CreatedDateTime = model.CreatedDateTime,
             AddressToTake = model.AddressToTake,
             Price = model.Price,
-            Currency = model.CurrencyId
+            Currency = new Currency
+            {
+                Code = model.CurrencyCode
+            }
         };
     }
 }
