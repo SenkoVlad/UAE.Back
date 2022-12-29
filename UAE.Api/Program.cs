@@ -38,7 +38,7 @@ await app.InitCurrenciesInMemory();
 
 app.UseCustomException();
 app.UseSession();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

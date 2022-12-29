@@ -29,11 +29,11 @@ public class AnnouncementController : ApiController
     public async Task<IActionResult> Search([FromQuery] SearchAnnouncementViewModel searchAnnouncementViewModelModel)
     {
         var searchAnnouncementModel = searchAnnouncementViewModelModel.ToBusinessModel();
-        var validator = _validationFactory.GetValidator<SearchAnnouncementModel>();
+        /*var validator = _validationFactory.GetValidator<SearchAnnouncementModel>();
         var validationResult = await validator.ValidateAsync(searchAnnouncementModel);
 
         if (validationResult.IsValid)
-        {
+        {*/
             var pagedResponse = await _announcementService.SearchAnnouncement(searchAnnouncementModel);
             var pagedViewModelResponse = new PagedResponse<AnnouncementViewModel>(
                 pagedResponse.TotalCount,
@@ -42,9 +42,9 @@ public class AnnouncementController : ApiController
             var apiResult = ApiResult<PagedResponse<AnnouncementViewModel>>.Success(result: pagedViewModelResponse, resultMessage: new []{ "Success" });
 
             return Ok(apiResult);
-        }
+        /*}
 
-        return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
+        return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));*/
     }
 
     [HttpPost(nameof(Create))]
