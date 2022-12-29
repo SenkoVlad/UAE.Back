@@ -24,12 +24,9 @@ public class _001_seed_init_data : IMigration
     {
         await DB.DeleteAsync<Currency>(_ => true);
 
-        var currency = new Currency
-        {
-            Code = "USD"
-        };
+        var currencies = new List<Currency> { new Currency { Code = "USD" }, new Currency { Code = "AED" } };
 
-        await currency.SaveAsync();
+        await currencies.SaveAsync();
     }
 
     private async Task AddUserAsync()
@@ -48,21 +45,21 @@ public class _001_seed_init_data : IMigration
     {
         await DB.DeleteAsync<Announcement>(_ => true);
 
-        var currency = await DB.Find<Currency>()
+        var firstCurrency = await DB.Find<Currency>()
             .Match(s => s.Code == "USD")
             .ExecuteSingleAsync();
         
-        var parentCategory = await DB.Find<Category>()
+        var firstParentCategory = await DB.Find<Category>()
             .Match(s => s.Children.Any(c => c.Label == "Property For Rent"))
             .ExecuteSingleAsync();
 
-        var category = parentCategory.Children.First(c => c.Label == "Property For Rent");
+        var firstCategory = firstParentCategory.Children.First(c => c.Label == "Property For Rent");
         
-        var user = await DB.Find<User>()
+        var firstUser = await DB.Find<User>()
             .Match(s => s.Email == "vlad@vlad.com")
             .ExecuteSingleAsync();
         
-        var announcement = new Announcement
+        var firstAnnouncement = new Announcement
         {
             Category = new One<Category>()
             {
@@ -107,7 +104,66 @@ public class _001_seed_init_data : IMigration
             Price = 100.40m
         };
 
-        await announcement.SaveAsync();
+        var secondCurrency = await DB.Find<Currency>()
+            .Match(s => s.Code == "AED")
+            .ExecuteSingleAsync();
+
+        var secondParentCategory = await DB.Find<Category>()
+            .Match(s => s.Children.Any(c => c.Label == "Property For Rent"))
+            .ExecuteSingleAsync();
+
+        var secondCategory = secondParentCategory.Children.First(c => c.Label == "Property For Rent");
+
+        var user = await DB.Find<User>()
+            .Match(s => s.Email == "vlad@vlad.com")
+            .ExecuteSingleAsync();
+
+        var secondAnnouncement = new Announcement
+        {
+            Category = new One<Category>()
+            {
+                ID = secondCategory!.ID
+            },
+            CategoryPath = new CategoryPath[]
+            {
+
+                new CategoryPath
+                {
+                    ID = secondParentCategory.ID,
+                    Label = secondParentCategory.Label
+                },
+                new CategoryPath
+                {
+                    ID = secondCategory.ID,
+                    Label = secondCategory.Label
+                }
+            },
+            Description = "Maecenas vel sapien ac dui facilisis ultricies ac nec libero. Sed semper efficitur facilisis. Duis sed suscipit ante. Fusce quis rutrum nunc. Aliquam iaculis dolor ac est venenatis, id commodo sapien eleifend. Donec lectus massa, molestie vitae metus at, ullamcorper facilisis eros. Aliquam gravida congue neque, sit amet convallis nibh consectetur sed. In nisi nunc, mollis id sollicitudin ut, consectetur vel turpis. Cras nisl nibh, consectetur vitae arcu at, dapibus bibendum risus. Integer pulvinar neque ac purus egestas, non vestibulum erat tristique. Maecenas pulvinar eros eget lacus dignissim, in imperdiet ex condimentum. Quisque vulputate lacus a mi ultrices accumsan. Mauris sit amet velit ut metus sagittis mollis. Sed a gravida lacus, eu imperdiet odio. Nullam mattis sed diam quis ultrices. Morbi ultrices diam ut eros cursus, eu maximus sem faucibus. Donec cursus nisl quis dapibus facilisis. Integer faucibus eu risus consectetur malesuada. Donec ac gravida magna. Nunc tortor leo, bibendum id tristique et, scelerisque cursus lorem. Duis molestie leo purus, nec iaculis eros pellentesque et. Nullam faucibus lacus quis libero dictum pellentesque. Vestibulum eget fringilla massa. Praesent ac pulvinar erat. Nullam sapien metus, aliquet id aliquet tempor, euismod nec lectus. Proin at metus auctor, vestibulum nisl vitae, venenatis nibh. Cras fringilla justo non sagittis suscipit. Curabitur posuere, risus eget rhoncus imperdiet, dui justo feugiat quam, eu aliquam sapien leo vel orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce hendrerit neque eros, sagittis imperdiet nulla consequat euismod. In tincidunt enim sed leo feugiat pellentesque. Pellentesque massa est, ultrices nec suscipit ut, semper ac urna. Quisque eu tortor enim. Proin fringilla diam ut feugiat tincidunt. Vestibulum convallis quam mattis augue euismod malesuada. Integer varius ligula lectus, in maximus dolor posuere eget. Sed dictum erat feugiat efficitur",
+            Fields = new BsonDocument
+            {
+                {ExtraFieldName.Floor.GetDescription(), 2},
+                {ExtraFieldName.NumberOfBedrooms.GetDescription(), 2},
+                {ExtraFieldName.Number.GetDescription(), 23},
+                {ExtraFieldName.BathroomType.GetDescription(), "shower"},
+                {ExtraFieldName.YearOfBuilding.GetDescription(), 2012}
+            },
+            Title = "Quisque condimentum, elit vel vestibulum luctus, nisl arcu erat curae.",
+            User = new One<User>()
+            {
+                ID = user.ID
+            },
+            AddressToTake = "address to take",
+            Address = "address",
+            CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+            Currency = new Currency
+            {
+                ID = secondCurrency.ID,
+                Code = "AED"
+            },
+            Price = 7654.32m
+        };
+
+        await new List<Announcement> { firstAnnouncement, secondAnnouncement }.SaveAsync();
     }
 
     private async Task AddCategoriesAsync()
