@@ -55,7 +55,7 @@ public class _001_seed_init_data : IMigration
 
         var firstCategory = firstParentCategory.Children.First(c => c.Label == "Property For Rent");
         
-        var firstUser = await DB.Find<User>()
+        var user = await DB.Find<User>()
             .Match(s => s.Email == "vlad@vlad.com")
             .ExecuteSingleAsync();
         
@@ -63,20 +63,20 @@ public class _001_seed_init_data : IMigration
         {
             Category = new One<Category>()
             {
-                ID = category!.ID
+                ID = firstCategory!.ID
             },
             CategoryPath = new CategoryPath[]
             {
 
                 new CategoryPath
                 {
-                    ID = parentCategory.ID,
-                    Label = parentCategory.Label
+                    ID = firstParentCategory.ID,
+                    Label = firstParentCategory.Label
                 },
                 new CategoryPath
                 {
-                    ID = category.ID,
-                    Label = category.Label
+                    ID = firstCategory.ID,
+                    Label = firstCategory.Label
                 }
             },
             Description = "flat 1",
@@ -98,7 +98,7 @@ public class _001_seed_init_data : IMigration
             CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             Currency = new Currency
             {
-                ID = currency.ID,
+                ID = firstCurrency.ID,
                 Code = "USD"
             },
             Price = 100.40m
@@ -113,10 +113,6 @@ public class _001_seed_init_data : IMigration
             .ExecuteSingleAsync();
 
         var secondCategory = secondParentCategory.Children.First(c => c.Label == "Property For Rent");
-
-        var user = await DB.Find<User>()
-            .Match(s => s.Email == "vlad@vlad.com")
-            .ExecuteSingleAsync();
 
         var secondAnnouncement = new Announcement
         {
