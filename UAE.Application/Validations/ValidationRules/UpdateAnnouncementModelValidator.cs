@@ -11,6 +11,6 @@ public class UpdateAnnouncementModelValidator : AbstractValidator<UpdateAnnounce
     public UpdateAnnouncementModelValidator(CategoryFieldsValidationService categoryFieldsValidationService)
     {
         RuleFor(p => new { p.Fields, p.CategoryId} )
-            .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId));
+            .Must(x => categoryFieldsValidationService.DoesFieldExistInAllCategories(x.Fields.Names.ToArray(), new []{ x.CategoryId } ));
     }
 }

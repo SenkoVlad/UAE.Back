@@ -139,6 +139,12 @@ internal sealed class AnnouncementService : IAnnouncementService
     public async Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(
         SearchAnnouncementModel searchAnnouncementModel)
     {
+        if (searchAnnouncementModel.CategoryIds.Any())
+        {
+            var categoryChildren = _categoryInMemory.GetChildrenCategories(searchAnnouncementModel.CategoryIds);
+            searchAnnouncementModel.CategoryIds.AddRange(categoryChildren);
+        }
+
         _searchPagedQueryBuilder.BuildSearchQuery(searchAnnouncementModel);
         var query = _searchPagedQueryBuilder.GetQuery();
         var announcements = await query.ExecuteAsync();

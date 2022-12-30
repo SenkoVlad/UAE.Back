@@ -35,7 +35,7 @@ public class CategoryController : ApiController
     [HttpPost(nameof(ValidateFields))]
     public IActionResult ValidateFields([FromBody] string[] fields, [FromQuery] string categoryId)
     {
-        var result = _categoryFieldsValidationService.ValidateByCategory(fields, categoryId);
+        var result = _categoryFieldsValidationService.DoesFieldExistInAllCategories(fields,  new []{ categoryId });
         return Ok(result);
     }
 }

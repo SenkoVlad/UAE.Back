@@ -5,7 +5,7 @@ namespace UAE.Application.Mapper.Profiles;
 
 public static class CategoryPathMappingProfile
 {
-    public static CategoryPath ToEntity(this CategoryPathModel model)
+    public static CategoryPath ToEntity(this CategoryShortModel model)
     {
         return new CategoryPath
         {
@@ -14,8 +14,8 @@ public static class CategoryPathMappingProfile
         };
     }
     
-    public static CategoryPathModel ToBusinessModel(this CategoryPath entity)
+    public static CategoryShortModel ToBusinessModel(this CategoryPath entity)
     {
-        return new CategoryPathModel(entity.ID, entity.Label);
+        return new CategoryShortModel(entity.ID, entity.Label);
     }
 }

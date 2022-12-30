@@ -15,7 +15,7 @@ public class PatchAnnouncementModelValidator : AbstractValidator<PatchAnnounceme
                       && !string.IsNullOrWhiteSpace(model.CategoryId), () =>
         {
             RuleFor(p => new { p.Fields, p.CategoryId} )
-                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId))
+                .Must(x => categoryFieldsValidationService.DoesFieldExistInAllCategories(x.Fields.Names.ToArray(), new []{ x.CategoryId }))
                 .WithMessage("Some incorrect fields or category");
         });
     }

@@ -10,7 +10,7 @@ public sealed record AnnouncementViewModel(
     string CategoryId,
     string CurrencyCode,
     decimal Price,
-    CategoryPathModel[] CategoryPath,
+    CategoryShortModel[] CategoryPath,
     long CreatedDateTime,
     long LastUpdateDateTime,
     PictureModel[] Pictures, 
