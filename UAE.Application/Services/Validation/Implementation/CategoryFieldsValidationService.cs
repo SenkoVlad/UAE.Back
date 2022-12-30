@@ -10,16 +10,16 @@ public class CategoryFieldsValidationService : ICategoryFieldsValidationService
     public CategoryFieldsValidationService(ICategoryInMemory categoryInMemory) => 
         _categoryInMemory = categoryInMemory;
 
-    public bool ValidateByCategory(string[] fields, string categoryId)
+    public bool DoesFieldExistInAllCategories(string[] fields, string[] categoryIds)
     {
-        return string.IsNullOrWhiteSpace(categoryId) 
+        return  !categoryIds.Any() 
             ? ValidateFieldsAmongAllCategories(fields)
-            : ValidateFieldsAmongParticularCategory(fields, categoryId);
+            : ValidateFieldsAmongParticularCategories(fields, categoryIds);
     }
 
     private bool ValidateFieldsAmongAllCategories(string[] fields)
     {
-        var categoryFlatModel = _categoryInMemory.CategoryFlatModels
+        var categoryFlatModel = _categoryInMemory.CategoryWithParentPathModels.Select(c => c.Category)
             .FirstOrDefault(c => c.Fields
                 .Select(a => a.Name)
                 .Any(f => fields.Contains(
@@ -29,10 +29,10 @@ public class CategoryFieldsValidationService : ICategoryFieldsValidationService
         return categoryFlatModel != null;
     }
 
-    private bool ValidateFieldsAmongParticularCategory(string[] fields, string categoryId)
+    private bool ValidateFieldsAmongParticularCategories(string[] fields, string[] categoryIds)
     {
-        var categoryFlatModel = _categoryInMemory.CategoryFlatModels
-            .SingleOrDefault(c => c.Id == categoryId && c.Fields
+        var categoryFlatModel = _categoryInMemory.CategoryWithParentPathModels.Select(c => c.Category)
+            .SingleOrDefault(c => categoryIds.Contains(c.ID) && c.Fields
                 .Select(a => a.Name)
                 .Any(f => fields.Contains(
                     f.ToString(),

@@ -20,9 +20,9 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
 
     public void BuildSearchQuery(SearchAnnouncementModel searchAnnouncementModel)
     {
-        if (!string.IsNullOrWhiteSpace(searchAnnouncementModel.CategoryId))
+        if (searchAnnouncementModel.CategoryIds != null && searchAnnouncementModel.CategoryIds.Any())
         {
-            _query.Match(a => a.Category.ID == searchAnnouncementModel.CategoryId);
+            _query.Match(a => searchAnnouncementModel.CategoryIds.Contains(a.Category.ID));
         }
 
         foreach (var field in searchAnnouncementModel.Filters)

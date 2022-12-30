@@ -28,8 +28,8 @@ public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnounce
     {
         When(model => model.Filters.Elements.Any(), () =>
         {
-            RuleFor(p => new {FieldNames = p.Filters.Names.ToArray(), p.CategoryId})
-                .Must(x => categoryFieldsValidationService.ValidateByCategory(x.FieldNames, x.CategoryId))
+            RuleFor(p => new {FieldNames = p.Filters.Names.ToArray(), CategoryId = p.CategoryIds})
+                .Must(x => categoryFieldsValidationService.DoesFieldExistInAllCategories(x.FieldNames, x.CategoryId.ToArray()))
                 .WithMessage("Name of filter field is not valid");
 
             RuleFor(p => p.Filters.Values)
@@ -40,12 +40,12 @@ public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnounce
 
     private void SortedByValidator(ICategoryFieldsValidationService categoryFieldsValidationService)
     {
-        When(model => !string.IsNullOrWhiteSpace(model.CategoryId) 
+        When(model => model.CategoryIds.Any() 
                           && !string.IsNullOrWhiteSpace(model.SortedBy), () =>
         {
             RuleFor(p => new AnnouncementFieldParameter
                 {
-                    CategoryId = p.CategoryId!,
+                    CategoryIds = p.CategoryIds.ToArray(),
                     FieldName = p.SortedBy!
                 })
                 .SetValidator(

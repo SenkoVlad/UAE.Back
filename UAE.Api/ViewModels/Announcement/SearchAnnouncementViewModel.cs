@@ -5,7 +5,7 @@ namespace UAE.Api.ViewModels.Announcement;
 
 public sealed record SearchAnnouncementViewModel(
     FilterParameter<string>? Description,
-    string? CategoryId,
+    string[]? CategoryIds,
     int PageNumber,
     FilterParameter<decimal>? Price,
     int PageSize,

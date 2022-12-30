@@ -7,6 +7,8 @@ namespace UAE.Application.Services.Interfaces;
 public interface ICategoryInMemory : IInMemoryService<Category>
 {
     CategoryPath[] GetCategoryPath(string categoryId);
+    
+    List<CategoryWithParentPathModel> CategoryWithParentPathModels { get; }
 
-    List<CategoryFlatModel> CategoryFlatModels { get; }
+    List<string> GetChildrenCategories(List<string> categoryIds);
 }

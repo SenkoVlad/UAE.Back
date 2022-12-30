@@ -4,5 +4,5 @@ public class AnnouncementFieldParameter
 {
     public string FieldName { get; set; }
 
-    public string CategoryId { get; set; }
+    public string[] CategoryIds { get; set; }
 }

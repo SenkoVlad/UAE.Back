@@ -171,16 +171,19 @@ public class _001_seed_init_data : IMigration
 
     private async Task<List<Category>> GetAllcategoriesFromFileAsync()
     {
-        var categories = new List<Category>();
-        var parentCategoryNames = new List<string>();
-        
+        var categories = new List<CategoryForMigration>();
+        var parentCategoryLabels = new List<string>();
+        var rootParentCategoryLabel = String.Empty;
+        var rootParentCategoryName = String.Empty;
         await foreach (var line in System.IO.File.ReadLinesAsync(@"..\UAE.Infrastructure\Migrations\categories.txt"))
         {
             var inputRow = line.Split('@');
             
             if (inputRow.Length < 1)
             {
-                return categories;
+                return categories
+                    .Select(c => c.ToEntity())
+                    .ToList();
             }
             
             var currentCategories = inputRow.First().Split('/');
@@ -190,55 +193,61 @@ public class _001_seed_init_data : IMigration
                 continue;
             }
             
-            parentCategoryNames.Add(currentCategories.First());
+            if (currentCategories.Length == 1)
+            {
+                rootParentCategoryName = currentCategories.First();
+                rootParentCategoryLabel = inputRow.Last();
+                parentCategoryLabels.Add(rootParentCategoryLabel);
+            }
 
-            FillCategoriesByInputRow(categories, inputRow);
+            FillCategoriesByInputRow(categories, inputRow, rootParentCategoryName);
         }
 
-        parentCategoryNames = parentCategoryNames
+        parentCategoryLabels = parentCategoryLabels
             .Distinct()
             .ToList();
 
         var parentCategories = categories
-            .Where(c => parentCategoryNames.Contains(c.Name))
+            .Where(c => parentCategoryLabels.Contains(c.Label))
             .ToList();
-        
-        return parentCategories;
+
+        return parentCategories
+            .Select(c => c.ToEntity())
+            .ToList();
     }
 
-    private void FillCategoriesByInputRow( List<Category> categories, string[] inputRow)
+    private void FillCategoriesByInputRow(List<CategoryForMigration> categories, string[] inputRow, string rootParentName)
     {
         var currentCategories = inputRow.First().Split('/');
+        var currenctCategoryLabel = inputRow.Last();
 
         for (var index = 0; index < currentCategories.Length; index++)
         {
-            var currentCategory = currentCategories[index];
-            var currentMainParentCategory = currentCategories.First();
-            var currentLastSubCategory = currentCategories.Last();
-            var labelCurrentCategory = inputRow.Last();
-            var isExist = categories.Any(c => c.Name == currentCategory);
-
-            if (isExist)
+            var currentCategoryName = currentCategories[index];
+            var isCategoryExist = categories.Any(c => string.Equals(c.Name, currentCategoryName, StringComparison.OrdinalIgnoreCase)
+                                                      && c.RootParentName == rootParentName);
+            
+            if (isCategoryExist)
             {
                 continue;
             }
             else
             {
-                var category = new Category
+                var category = new CategoryForMigration
                 {
                     ID = ObjectId.GenerateNewId().ToString(),
-                    Label = labelCurrentCategory,
-                    Name = currentLastSubCategory
+                    Label = currenctCategoryLabel,
+                    Name = currentCategoryName,
+                    RootParentName = rootParentName
                 };
 
                 FillCategoryFields(category);
 
                 if (index != 0)
                 {
-                    var currentSubParentCategoryName = currentCategories[index - 1];
-                    var currentSubParentCategory = categories.FirstOrDefault(c => c.Name == currentSubParentCategoryName);
+                    var currentSubParentCategory = GetCurrentSubParentCategory(categories, rootParentName, index, currentCategories);
 
-                    if (currentSubParentCategory != null)
+                    if (!string.IsNullOrWhiteSpace(currentSubParentCategory?.ID))
                     {
                         currentSubParentCategory.Children.Add(category);
                     }
@@ -249,7 +258,22 @@ public class _001_seed_init_data : IMigration
         }
     }
 
-    private static void FillCategoryFields(Category category)
+    private static CategoryForMigration? GetCurrentSubParentCategory(List<CategoryForMigration> categories, string rootParentName, int index,
+        string[] currentCategories)
+    {
+        var currentSubParentCategory = new CategoryForMigration();
+
+        if (currentCategories.Length > 1)
+        {
+            currentSubParentCategory = categories.FirstOrDefault(c =>
+                string.Equals(c.Name, currentCategories[index - 1], StringComparison.OrdinalIgnoreCase)
+                && c.RootParentName == rootParentName);
+        }
+
+        return currentSubParentCategory;
+    }
+
+    private static void FillCategoryFields(CategoryForMigration category)
     {
         switch (category.Label)
         {
@@ -274,5 +298,33 @@ public class _001_seed_init_data : IMigration
                 };
                 break;
         }
+    }
+}
+
+internal class CategoryForMigration
+{
+    public string ID { get; set; }
+    public string Label { get; set; }
+
+    public string Name { get; set; }
+
+    public string RootParentName { get; set; }
+    
+    public List<CategoryForMigration> Children { get; set; } = new();
+
+    public List<Field> Fields { get; set; } = new();
+
+    public Category ToEntity()
+    {
+        return new Category()
+        {
+            ID = ID,
+            Label = Label,
+            Children = Children
+                .Select(ch => ch.ToEntity())
+                .ToList(),
+            Fields = Fields,
+            Name = Name
+        };
     }
 }
