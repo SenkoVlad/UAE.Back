@@ -20,7 +20,9 @@ internal sealed class CategoryInMemory : ICategoryInMemory
         var childrenList = new List<string>();
 
         var children = CategoryWithParentPathModels.Where(c => categoryIds.Contains(c.Category.ID))
-            .Select(c => c.Category.ID)
+            .SelectMany(c => c.ChildrenCategories) 
+            .Select(c => c.Id)
+            .Distinct()
             .ToList();
 
         if (children.Any())

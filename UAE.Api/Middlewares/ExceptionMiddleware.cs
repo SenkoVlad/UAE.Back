@@ -1,6 +1,8 @@
 using System.Net;
+using Newtonsoft.Json;
 using UAE.Api.Logging;
 using UAE.Api.ViewModels.Base;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace UAE.Api.Middlewares;
 
@@ -31,7 +33,7 @@ internal sealed class ExceptionMiddleware  : IMiddleware
         httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         httpContext.Response.ContentType = "application/json";
         var response = GetResponse(exception);
-        await httpContext.Response.WriteAsync(response.ToString() ?? string.Empty);
+        await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 
     private static ApiResult<string> GetResponse(Exception exception)

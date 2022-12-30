@@ -223,8 +223,6 @@ public class _001_seed_init_data : IMigration
 
         for (var index = 0; index < currentCategories.Length; index++)
         {
-            // var currentSubParentCategoryName = currentCategories.First();
-            
             var currentCategoryName = currentCategories[index];
             var isCategoryExist = categories.Any(c => string.Equals(c.Name, currentCategoryName, StringComparison.OrdinalIgnoreCase)
                                                       && c.RootParentName == rootParentName);

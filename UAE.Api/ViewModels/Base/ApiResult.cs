@@ -32,4 +32,19 @@ public sealed class ApiResult<T>
         
         return new(false, default, errorMessages, resultMessage: default);
     }
+
+    public override string ToString()
+    {
+        if (Errors.Any())
+        {
+            return string.Join(", ", Errors);
+        }
+
+        if (ResultMessage != null && ResultMessage.Any())
+        {
+            return string.Join(", ", ResultMessage);
+        }
+
+        return string.Empty;
+    }
 }
