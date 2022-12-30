@@ -34,7 +34,7 @@ public class AnnouncementFieldsValidator<T, TProperty> : PropertyValidator<T, TP
         var extraField = IsItExtraField(field.FieldName);
 
         return !string.IsNullOrWhiteSpace(extraField) &&
-               _categoryFieldsValidationService.ValidateByCategory(new[] {extraField}, field.CategoryId);
+               _categoryFieldsValidationService.DoesFieldExistInAllCategories(new[] {extraField}, field.CategoryIds);
     }
 
     private string IsItExtraField(string sortedBy)

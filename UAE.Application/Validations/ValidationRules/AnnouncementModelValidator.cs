@@ -10,7 +10,11 @@ public class AnnouncementModelValidator : AbstractValidator<AnnouncementModel>
 {
     public AnnouncementModelValidator(CategoryFieldsValidationService categoryFieldsValidationService)
     {
-        RuleFor(p => new { p.Fields, p.CategoryId} )
-            .Must(x => categoryFieldsValidationService.ValidateByCategory(x.Fields.Names.ToArray(), x.CategoryId));
+        When(x => x.Fields != null, () =>
+        {
+            RuleFor(p => new {p.Fields, p.CategoryId})
+                .Must(x => categoryFieldsValidationService.DoesFieldExistInAllCategories(x.Fields.Names.ToArray(),
+                    new[] {x.CategoryId}));
+        });
     }
 }

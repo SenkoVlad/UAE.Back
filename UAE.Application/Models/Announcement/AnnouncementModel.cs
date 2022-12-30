@@ -7,11 +7,11 @@ namespace UAE.Application.Models.Announcement;
 public sealed record AnnouncementModel(
     string Id,
     string Title,
-    string? Description,
+    string Description,
     string CategoryId,
     string CurrencyCode,
     decimal Price,
-    CategoryPathModel[] CategoryPath,
+    CategoryShortModel[] CategoryPath,
     long CreatedDateTime,
     long LastUpdateDateTime,
     BsonDocument? Fields, 

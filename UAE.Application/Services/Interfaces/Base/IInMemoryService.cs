@@ -4,7 +4,7 @@ public interface IInMemoryService<out T> where T : class
 {
     Task InitAsync();
 
-    bool IsInitialized { get; }
+    public bool IsInitialized { get; }
     
     T[] Data { get; }
 }

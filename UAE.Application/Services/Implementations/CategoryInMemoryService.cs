@@ -1,7 +1,6 @@
 ﻿using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Category;
 using UAE.Application.Services.Interfaces;
-using UAE.Application.Services.Interfaces.Base;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
 
@@ -12,11 +11,30 @@ internal sealed class CategoryInMemory : ICategoryInMemory
     private readonly ICategoryRepository _categoryRepository;
     public Category[] Data { get; private set; } = Array.Empty<Category>();
 
-    public List<CategoryFlatModel> CategoryFlatModels { get; } = new();
-    
+    public List<CategoryWithParentPathModel> CategoryWithParentPathModels { get; } = new();
+
+    public bool IsInitialized { get; private set; }
+
+    public List<string> GetChildrenCategories(List<string> categoryIds)
+    {
+        var childrenList = new List<string>();
+
+        var children = CategoryWithParentPathModels.Where(c => categoryIds.Contains(c.Category.ID))
+            .Select(c => c.Category.ID)
+            .ToList();
+
+        if (children.Any())
+        {
+            childrenList.AddRange(children);   
+            return childrenList;
+        }
+
+        return categoryIds;
+    }
+
     public CategoryPath[] GetCategoryPath(string categoryId)
     {
-        var parents = CategoryFlatModels.SingleOrDefault(c => c.Id == categoryId)!
+        var parents = CategoryWithParentPathModels.SingleOrDefault(c => c.Category.ID == categoryId)!
             .ParentCategories;
         
         return parents
@@ -32,42 +50,55 @@ internal sealed class CategoryInMemory : ICategoryInMemory
     public async Task InitAsync()
     {
         await LoadCategoryAsync();
-        FillFlatCategoriesFromCategories();
+        FillCategoriesFlatWithParentsAndChildren();
+        IsInitialized = true;
+    }
+    
+    static IEnumerable<Category> GetTreeNodes(Category rootNode)
+    {
+        yield return rootNode;
+        foreach (var child in rootNode.Children.SelectMany(GetTreeNodes))
+        {
+            yield return child;
+        }
+    }
+    
+    private void FillCategoriesFlatWithParentsAndChildren()
+    {
+        var categories = Data;
+        Fill(categories, new List<CategoryShortModel>());
     }
 
-    public bool IsInitialized { get; }
+    private void Fill(Category[] categories, List<CategoryShortModel> parentCategory)
+    {
+        foreach (var category in categories)
+        {
+            var newParentCategory = new CategoryShortModel(category.ID, category.Label); 
+            
+            parentCategory.Add(newParentCategory);
+
+            var children = GetTreeNodes(category)
+                .Select(c => new CategoryShortModel(
+                    Id: c.ID,
+                    Label: c.Label))
+                .ToArray();
+            
+            var newCategory = new CategoryWithParentPathModel(
+                ParentCategories: parentCategory.ToArray(),
+                ChildrenCategories: children,
+                Fields: category.Fields,
+                Category: category
+            );
+
+            CategoryWithParentPathModels.Add(newCategory);
+            Fill(category.Children.ToArray(), parentCategory);
+            parentCategory.Remove(newParentCategory);
+        }
+    }
 
     private async Task LoadCategoryAsync()
     {
         Data = (await _categoryRepository.GetAllAsync())
             .ToArray();
-    }
-
-    private void FillFlatCategoriesFromCategories()
-    {
-        var categories = Data;
-        FillFlatCategories(categories, new List<CategoryPathModel>());
-    }
-
-    private void FillFlatCategories(Category[] categories, List<CategoryPathModel> parentCategory)
-    {
-        foreach (var category in categories)
-        {
-            var newParentCategory = new CategoryPathModel(category.ID, category.Label); 
-            
-            parentCategory.Add(newParentCategory);
-
-            var newCategory = new CategoryFlatModel
-            (
-                ParentCategories: parentCategory.ToArray(),
-                Fields: category.Fields,
-                Id: category.ID,
-                Label: category.Label
-            );
-
-            CategoryFlatModels.Add(newCategory);
-            FillFlatCategories(category.Children.ToArray(), parentCategory);
-            parentCategory.Remove(newParentCategory);
-        }
     }
 }

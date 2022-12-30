@@ -13,7 +13,9 @@ public static class AnnouncementMappingProfile
         return new SearchAnnouncementModel
         (
             Description: model.Description,
-            CategoryId: model.CategoryId,
+            CategoryIds: model.CategoryIds != null && model.CategoryIds.Any()
+                ? model.CategoryIds.ToList()
+                : new List<string>(),
             PageNumber: model.PageNumber,
             PageSize: model.PageSize,
             Filters: string.IsNullOrWhiteSpace(model.Filters) 
