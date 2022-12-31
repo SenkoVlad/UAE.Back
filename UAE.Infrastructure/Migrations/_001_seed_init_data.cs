@@ -188,7 +188,7 @@ public class _001_seed_init_data : IMigration
             
             var currentCategories = inputRow.First().Split('/');
 
-            if (currentCategories.Length > 3)
+            if (currentCategories.Length > 2)
             {
                 continue;
             }
