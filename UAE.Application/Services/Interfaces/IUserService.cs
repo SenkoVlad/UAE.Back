@@ -15,4 +15,6 @@ public interface IUserService
     Task<OperationResult<string>> LikeAnnouncementAsync(string announcementId);
     
     Task<OperationResult<string>> UnLikeAnnouncementAsync(string announcementId);
+    
+    Task<OperationResult<UserWithLikedAnnouncementsModel>> GetWithLikes();
 }

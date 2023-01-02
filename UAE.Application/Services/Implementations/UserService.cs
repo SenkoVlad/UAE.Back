@@ -132,6 +132,33 @@ internal sealed class UserService : IUserService
         return new OperationResult<string>(IsSucceed: result);
     }
 
+    public async Task<OperationResult<UserWithLikedAnnouncementsModel>> GetWithLikes()
+    {
+        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("X-UserId", out var userId);
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return new OperationResult<UserWithLikedAnnouncementsModel>(IsSucceed: false, ResultMessages: new[] {"there is not userId in cookies"});
+        }
+
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+        {
+            return new OperationResult<UserWithLikedAnnouncementsModel>(IsSucceed: false, ResultMessages: new[] {"user is not found"});
+        }
+        
+        var userLikedAnnouncements = await _announcementRepository.GetByIdsAsync(user.Likes);
+        var userWithLikedAnnouncements = new UserWithLikedAnnouncementsModel(
+            Email: user.Email,
+            LastLoginDateTime: DateTime.FromFileTimeUtc(user.LastLoginDateTime),
+            LikedAnnouncements: userLikedAnnouncements
+        );
+
+        return new OperationResult<UserWithLikedAnnouncementsModel>(
+            IsSucceed: true,
+            Result: userWithLikedAnnouncements);
+    }
+
     private bool IsPasswordCorrect(User user, string password)
     {
         var correctPasswordSalt = Convert.FromBase64String(user.PasswordSalt);

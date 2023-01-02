@@ -21,7 +21,7 @@ public class UserController : ApiController
         _userService = userService;
         _validationFactory = validationFactory;
     }
-
+    
     [AllowAnonymous]
     [HttpPost(nameof(Register))]
     public async Task<IActionResult> Register([FromBody] CreateUserModel createUserModel)
@@ -64,6 +64,15 @@ public class UserController : ApiController
     {
         var operationResult = await _userService.UnLikeAnnouncementAsync(announcementId);
         var apiResult = operationResult.ToApiResult(() => operationResult.Result);
+
+        return Ok(apiResult);
+    }
+
+    [HttpGet(nameof(GetWithLikes))]
+    public async Task<IActionResult> GetWithLikes()
+    {
+        var operationResult = await _userService.GetWithLikes();
+        var apiResult = operationResult.ToApiResult(() => operationResult.Result.ToViewModel());
 
         return Ok(apiResult);
     }
