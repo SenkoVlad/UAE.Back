@@ -6,6 +6,8 @@ public interface IRepositoryBase<T> where T : class
 {
     Task AddAsync(T entity);
 
+    Task<bool> IsExists(string id);
+
     Task DeleteByIdAsync(string id);
 
      Task UpdateAsync(T entity);

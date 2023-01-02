@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UAE.Api.Controllers.Base;
+using UAE.Api.Mapper.Profiles;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
@@ -21,12 +22,6 @@ public class UserController : ApiController
         _validationFactory = validationFactory;
     }
 
-    [HttpGet]
-    public IActionResult Get()
-    {
-        return NotFound();
-    }
-
     [AllowAnonymous]
     [HttpPost(nameof(Register))]
     public async Task<IActionResult> Register([FromBody] CreateUserModel createUserModel)
@@ -37,7 +32,9 @@ public class UserController : ApiController
         if (validationResult.IsValid)
         {
             var registerUserResult = await _userService.RegisterAsync(createUserModel);
-            return Ok(ApiResult<string>.Failure(registerUserResult.ResultMessages));
+            
+            var apiResult = registerUserResult.ToApiResult(() => registerUserResult.Result);
+            return Ok(apiResult);
         }
 
         return Ok(ApiResult<string>.ValidationFailure(validationResult.Errors));
@@ -48,12 +45,26 @@ public class UserController : ApiController
     public async Task<IActionResult> Login([FromBody] LoginUserModel loginUserModel)
     {
         var loginResult = await _userService.LoginAsync(loginUserModel);
+        var apiResult = loginResult.ToApiResult(() => loginResult.Result);
 
-        if (loginResult.IsSucceed)
-        {
-            return Ok(ApiResult<LoginUserResult>.Success(resultMessage: new []{loginResult.Result}, loginResult));
-        }
+        return Ok(apiResult);
+    }
 
-        return Ok(ApiResult<LoginUserResult>.Failure(new[] {loginResult.Message}));
+    [HttpPost(nameof(LikeAnnouncement))]
+    public async Task<IActionResult> LikeAnnouncement([FromBody] string announcementId)
+    {
+        var operationResult = await _userService.LikeAnnouncementAsync(announcementId);
+        var apiResult = operationResult.ToApiResult(() => operationResult.Result);
+
+        return Ok(apiResult);
+    }
+    
+    [HttpPost(nameof(UnLikeAnnouncement))]
+    public async Task<IActionResult> UnLikeAnnouncement([FromBody] string announcementId)
+    {
+        var operationResult = await _userService.UnLikeAnnouncementAsync(announcementId);
+        var apiResult = operationResult.ToApiResult(() => operationResult.Result);
+
+        return Ok(apiResult);
     }
 }

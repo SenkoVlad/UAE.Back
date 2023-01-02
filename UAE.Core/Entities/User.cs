@@ -16,5 +16,7 @@ public class User : Entity
 
     public Many<Announcement> Announcements { get; set; }
 
+    public string[] Likes { get; set; } = Array.Empty<string>();
+
     public string RefreshToken { get; set; }
 }

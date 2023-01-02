@@ -33,14 +33,14 @@ internal sealed class TokenService : ITokenService
 
         if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(refreshToken))
         {
-            return new OperationResult<string>(new[] {"User Email cookie or refresh token are missing"}, IsSucceed: false); 
+            return new OperationResult<string>(IsSucceed: false, ResultMessages: new[] {"User Email cookie or refresh token are missing"}); 
         }
 
         var user = await _userRepository.GetByQuery(u => u.Email == userEmail && u.RefreshToken == refreshToken);
 
         if (user == null)
         {
-            return new OperationResult<string>(new[] { "User Email cookie or refresh token are incorrect"}, IsSucceed: false); 
+            return new OperationResult<string>(IsSucceed: false, ResultMessages: new[] { "User Email cookie or refresh token are incorrect"}); 
         }
 
         var token = CreateToken(user);
@@ -49,7 +49,7 @@ internal sealed class TokenService : ITokenService
         
         await _userRepository.SaveAsync(user);
         
-        return new OperationResult<string>(new[] {"Token and refresh tokens are updated"}, IsSucceed: true, Result: token);
+        return new OperationResult<string>(IsSucceed: true, Result: token, ResultMessages: new[] {"Token and refresh tokens are updated"});
     }
 
     public string CreateToken(User user)
