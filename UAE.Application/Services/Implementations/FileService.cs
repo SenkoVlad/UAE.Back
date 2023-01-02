@@ -43,7 +43,7 @@ internal sealed class FileService : IFileService
             });
         }
 
-        return new OperationResult<Picture[]>(IsSucceed: true, ResultMessages: new[] {"Pictures are saved"}, Result: savedPictures.ToArray());
+        return new OperationResult<Picture[]>(IsSucceed: true, Result: savedPictures.ToArray(), ResultMessages: new[] {"Pictures are saved"});
     }
 
     private string CreatePictureDirectoryIfNotExist()

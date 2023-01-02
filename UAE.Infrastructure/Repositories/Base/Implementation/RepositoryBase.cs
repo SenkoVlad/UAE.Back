@@ -7,19 +7,22 @@ namespace UAE.Infrastructure.Repositories.Base.Implementation;
 
 public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
 {
-    public Task AddAsync(T entity) => 
-        entity.SaveAsync();
+    public async Task AddAsync(T entity) => 
+        await entity.SaveAsync();
+
+    public async Task<bool> IsExists(string id) => 
+        await DB.Queryable<T>().AnyAsync(c => c.ID == id);
 
     public async Task DeleteByIdAsync(string id) => 
         await DB.DeleteAsync<T>(id);
 
-    public Task<T> GetByIdAsync(string id) =>
-        DB.Find<T>()
+    public async Task<T> GetByIdAsync(string id) =>
+        await DB.Find<T>()
             .Match(b => b.ID == id)
             .ExecuteSingleAsync();
 
-    public Task<List<T>> GetAllAsync() =>
-        DB.Find<T>()
+    public async Task<List<T>> GetAllAsync() =>
+        await DB.Find<T>()
             .Match(_ => true)
             .ExecuteAsync();
 

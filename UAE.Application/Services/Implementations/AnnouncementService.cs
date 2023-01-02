@@ -38,13 +38,13 @@ internal sealed class AnnouncementService : IAnnouncementService
         var userId = _userService.GetCurrentUserId();
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return new OperationResult<Announcement>(new[] {"UserId is not set in cookies"}, IsSucceed: true);
+            return new OperationResult<Announcement>(IsSucceed: true, ResultMessages: new[] {"UserId is not set in cookies"});
         }
         
         var currency = _currencyInMemory.Data.FirstOrDefault(c => c.Code == createAnnouncementModel.CurrencyCode);
         if (currency == null)
         {
-            return new OperationResult<Announcement>(new[] { "Announcement is not created. Currency is not correct"}, IsSucceed: false);
+            return new OperationResult<Announcement>(IsSucceed: false, ResultMessages: new[] { "Announcement is not created. Currency is not correct"});
         }
 
         var announcementPictures = await _fileService.SavePictures(createAnnouncementModel.Pictures);
@@ -60,7 +60,7 @@ internal sealed class AnnouncementService : IAnnouncementService
 
         await _announcementRepository.SaveAsync(announcement);
         
-        return new OperationResult<Announcement>(new[] { "Announcement is created"}, IsSucceed: true, Result: announcement);
+        return new OperationResult<Announcement>(IsSucceed: true, Result: announcement, ResultMessages: new[] { "Announcement is created"});
     }
 
     public async Task<OperationResult<Announcement>> UpdateAnnouncementAsync(UpdateAnnouncementModel updateAnnouncementModel)
@@ -68,13 +68,13 @@ internal sealed class AnnouncementService : IAnnouncementService
         var userId = _userService.GetCurrentUserId();
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return new OperationResult<Announcement>(new[] {"userId is not set in cookies"}, IsSucceed: true);
+            return new OperationResult<Announcement>(IsSucceed: true, ResultMessages: new[] {"userId is not set in cookies"});
         }
         
         var currency = _currencyInMemory.Data.FirstOrDefault(c => c.Code == updateAnnouncementModel.CurrencyCode);
         if (currency == null)
         {
-            return new OperationResult<Announcement>(new[] { "Announcement is not updated. Currency is not correct"}, IsSucceed: false);
+            return new OperationResult<Announcement>(IsSucceed: false, ResultMessages: new[] { "Announcement is not updated. Currency is not correct"});
         }
         
         var announcement = updateAnnouncementModel.ToEntity();
@@ -94,7 +94,7 @@ internal sealed class AnnouncementService : IAnnouncementService
         
         await _announcementRepository.UpdateAsync(announcement);
 
-        return new OperationResult<Announcement>(ResultMessages: new[] {"Announcement is updated"}, IsSucceed: true, Result: announcement);
+        return new OperationResult<Announcement>(IsSucceed: true, Result: announcement, ResultMessages: new[] {"Announcement is updated"});
     }
 
     public async Task<OperationResult<Announcement>> PatchAnnouncementAsync(PatchAnnouncementModel patchAnnouncementModel)
@@ -106,7 +106,7 @@ internal sealed class AnnouncementService : IAnnouncementService
             var currency = _currencyInMemory.Data.FirstOrDefault(c => c.Code == patchAnnouncementModel.CurrencyCode);
             if (currency == null)
             {
-                return new OperationResult<Announcement>(new[] { "Announcement is not patched. Currency is not correct"}, IsSucceed: false);
+                return new OperationResult<Announcement>(IsSucceed: false, ResultMessages: new[] { "Announcement is not patched. Currency is not correct"});
             }
         }
 
@@ -126,14 +126,14 @@ internal sealed class AnnouncementService : IAnnouncementService
         announcement.LastUpdateDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         await _announcementRepository.UpdateFieldsAsync(announcement);
 
-        return new OperationResult<Announcement>(ResultMessages: new[] {"Success"}, IsSucceed: true, Result: announcement);
+        return new OperationResult<Announcement>(IsSucceed: true, Result: announcement, ResultMessages: new[] {"Success"});
     }
 
     public async Task<OperationResult<string>> DeleteAnnouncementAsync(string id)
     {
         await _announcementRepository.DeleteByIdAsync(id);
 
-        return new OperationResult<string>(ResultMessages: new[] {"Success"}, IsSucceed: true);
+        return new OperationResult<string>(IsSucceed: true, ResultMessages: new[] {"Success"});
     }
 
     public async Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(
