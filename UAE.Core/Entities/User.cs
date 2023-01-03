@@ -1,4 +1,5 @@
 ﻿using MongoDB.Entities;
+using UAE.Core.DataModels;
 
 namespace UAE.Core.Entities;
 
@@ -17,6 +18,8 @@ public class User : Entity
     public Many<Announcement> Announcements { get; set; }
 
     public string[] Likes { get; set; } = Array.Empty<string>();
+    
+    public AnnouncementBrowsingHistory[] BrowsingHistories { get; set; } = Array.Empty<AnnouncementBrowsingHistory>();
 
     public string RefreshToken { get; set; }
 }

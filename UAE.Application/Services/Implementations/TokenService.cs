@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using UAE.Application.Models;
 using UAE.Application.Services.Interfaces;
-using UAE.Core.Entities;
 using UAE.Core.Repositories;
 using UAE.Shared.Settings;
 
@@ -52,7 +51,7 @@ internal sealed class TokenService : ITokenService
         return new OperationResult<string>(IsSucceed: true, Result: token, ResultMessages: new[] {"Token and refresh tokens are updated"});
     }
 
-    public string CreateToken(User user)
+    public string CreateToken(Core.Entities.User user)
     {
         var claims = new List<Claim>
         {
@@ -76,7 +75,7 @@ internal sealed class TokenService : ITokenService
         return jwt;
     }
 
-    public void AddTokenCookiesToResponse(string token, User user)
+    public void AddTokenCookiesToResponse(string token, Core.Entities.User user)
     {
         _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Access-Token", token,
             new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});

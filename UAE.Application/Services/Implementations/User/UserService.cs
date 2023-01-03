@@ -5,10 +5,10 @@ using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
-using UAE.Core.Entities;
+using UAE.Application.Services.Interfaces.User;
 using UAE.Core.Repositories;
 
-namespace UAE.Application.Services.Implementations;
+namespace UAE.Application.Services.Implementations.User;
 
 internal sealed class UserService : IUserService
 {
@@ -28,13 +28,13 @@ internal sealed class UserService : IUserService
         _announcementRepository = announcementRepository;
     }
 
-    public async Task<OperationResult<User>> RegisterAsync(CreateUserModel createUserModel)
+    public async Task<OperationResult<Core.Entities.User>> RegisterAsync(CreateUserModel createUserModel)
     {
         var userWithTheSameEmail = await _userRepository.GetByEmailAsync(createUserModel.Email);
 
         if (userWithTheSameEmail != null)
         {
-            return new OperationResult<User>(IsSucceed: false, ResultMessages: new[] {"User is already exists"});
+            return new OperationResult<Core.Entities.User>(IsSucceed: false, ResultMessages: new[] {"User is already exists"});
         }
         
         var (hash, salt) = CreateHashAndSalt(createUserModel.Password);
@@ -44,7 +44,7 @@ internal sealed class UserService : IUserService
         user.CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         await _userRepository.AddAsync(user);
 
-        return new OperationResult<User>(IsSucceed: true, ResultMessages: new[] {"User is registered"});
+        return new OperationResult<Core.Entities.User>(IsSucceed: true, ResultMessages: new[] {"User is registered"});
     }
 
     public async Task<OperationResult<string>> LoginAsync(LoginUserModel loginUserModel)
@@ -88,8 +88,8 @@ internal sealed class UserService : IUserService
 
     public async Task<OperationResult<string>> LikeAnnouncementAsync(string announcementId)
     {
-        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("X-UserId", out var userId);
-
+        var userId = GetCurrentUserId();
+        
         if (string.IsNullOrWhiteSpace(userId))
         {
             return new OperationResult<string>(IsSucceed: false, ResultMessages: new[] {"there is not userId in cookies"});
@@ -101,12 +101,6 @@ internal sealed class UserService : IUserService
             return new OperationResult<string>(IsSucceed: false, ResultMessages: new[] {"announcement with id is not exists"});
         }
 
-        var isAlreadyLiked = await _userRepository.IsAnnouncementAlreadyLiked(userId, announcementId);
-        if (isAlreadyLiked)
-        {
-            return new OperationResult<string>(IsSucceed: false, ResultMessages: new[] {"announcement is already liked"});
-        }
-        
         var result = await _userRepository.LikeAnnouncementAsync(userId, announcementId);
 
         return new OperationResult<string>(IsSucceed: result);
@@ -114,7 +108,7 @@ internal sealed class UserService : IUserService
 
     public async Task<OperationResult<string>> UnLikeAnnouncementAsync(string announcementId)
     {
-        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("X-UserId", out var userId);
+        var userId = GetCurrentUserId();
 
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -127,14 +121,14 @@ internal sealed class UserService : IUserService
             return new OperationResult<string>(IsSucceed: false, ResultMessages: new[] {"announcement with id is not exists"});
         }
         
-        var result = await _userRepository.UnLikeAnnouncement(userId, announcementId);
+        var result = await _userRepository.UnLikeAnnouncementAsync(userId, announcementId);
 
         return new OperationResult<string>(IsSucceed: result);
     }
 
     public async Task<OperationResult<UserWithLikedAnnouncementsModel>> GetWithLikes()
     {
-        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("X-UserId", out var userId);
+        var userId = GetCurrentUserId();
 
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -159,7 +153,7 @@ internal sealed class UserService : IUserService
             Result: userWithLikedAnnouncements);
     }
 
-    private bool IsPasswordCorrect(User user, string password)
+    private bool IsPasswordCorrect(Core.Entities.User user, string password)
     {
         var correctPasswordSalt = Convert.FromBase64String(user.PasswordSalt);
        

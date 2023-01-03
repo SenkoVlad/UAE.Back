@@ -15,5 +15,7 @@ public interface IAnnouncementService
     
     Task<OperationResult<string>> DeleteAnnouncementAsync(string id);
     
-    Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(SearchAnnouncementModel searchAnnouncementModel);
+    Task<PagedResponse<Announcement>> SearchAnnouncement(SearchAnnouncementModel searchAnnouncementModel);
+    
+    Task<OperationResult<Announcement>> GetByIdAsync(string announcementId);
 }

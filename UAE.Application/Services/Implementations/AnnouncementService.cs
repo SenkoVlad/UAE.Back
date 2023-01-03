@@ -1,8 +1,10 @@
+using UAE.Application.Exceptions;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Application.Services.Interfaces.Base;
+using UAE.Application.Services.Interfaces.User;
 using UAE.Core.DataModels;
 using UAE.Core.Entities;
 using UAE.Core.Repositories;
@@ -18,12 +20,14 @@ internal sealed class AnnouncementService : IAnnouncementService
     private readonly IFileService _fileService;
     private readonly ICategoryInMemory _categoryInMemory;
     private readonly IInMemoryService<Currency> _currencyInMemory;
+    private readonly IUserBrowsingHistoryService _userBrowsingHistoryService;
     
     public AnnouncementService(IAnnouncementRepository announcementRepository, 
         IUserService userService, 
         IPagedQueryBuilderService<Announcement> searchPagedQueryBuilder,
         IFileService fileService, ICategoryInMemory categoryInMemory, 
-        IInMemoryService<Currency> currencyInMemory)
+        IInMemoryService<Currency> currencyInMemory,
+        IUserBrowsingHistoryService userBrowsingHistoryService)
     {
         _announcementRepository = announcementRepository;
         _userService = userService;
@@ -31,6 +35,7 @@ internal sealed class AnnouncementService : IAnnouncementService
         _fileService = fileService;
         _categoryInMemory = categoryInMemory;
         _currencyInMemory = currencyInMemory;
+        _userBrowsingHistoryService = userBrowsingHistoryService;
     }
 
     public async Task<OperationResult<Announcement>> CreateAnnouncement(CreateAnnouncementModel createAnnouncementModel)
@@ -136,7 +141,7 @@ internal sealed class AnnouncementService : IAnnouncementService
         return new OperationResult<string>(IsSucceed: true, ResultMessages: new[] {"Success"});
     }
 
-    public async Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(
+    public async Task<PagedResponse<Announcement>> SearchAnnouncement(
         SearchAnnouncementModel searchAnnouncementModel)
     {
         if (searchAnnouncementModel.CategoryIds != null && searchAnnouncementModel.CategoryIds.Any())
@@ -149,14 +154,27 @@ internal sealed class AnnouncementService : IAnnouncementService
         var query = _searchPagedQueryBuilder.GetQuery();
         var announcements = await query.ExecuteAsync();
         
-        var result = (IReadOnlyList<AnnouncementModel>)announcements.Results
-            .Select(c => c.ToBusinessModel())
-            .ToList();
-
-        return new PagedResponse<AnnouncementModel>(
+        return new PagedResponse<Announcement>(
             announcements.TotalCount,
             announcements.PageCount,
-            result
+            announcements.Results
         );
+    }
+
+    public async Task<OperationResult<Announcement>> GetByIdAsync(string announcementId)
+    {
+        var announcement = await _announcementRepository.GetByIdAsync(announcementId);
+
+        if (announcement == null)
+        {
+            throw new NotFoundException($"Announcement with id {announcementId} is not found");
+        }
+
+        var addHistoryResult = await _userBrowsingHistoryService.AddAnnouncementBrowsingHistory(announcementId);
+        
+        return new OperationResult<Announcement>(
+            IsSucceed: true,
+            announcement,
+            ResultMessages: addHistoryResult.ResultMessages);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using UAE.Application.Models;
-using UAE.Core.Entities;
 
 namespace UAE.Application.Services.Interfaces;
 
@@ -7,7 +6,7 @@ public interface ITokenService
 {
     public Task<OperationResult<string>> RefreshAsync();
 
-    string CreateToken(User user);
+    string CreateToken(Core.Entities.User user);
 
-    void AddTokenCookiesToResponse(string token, User user);
+    void AddTokenCookiesToResponse(string token, Core.Entities.User user);
 }

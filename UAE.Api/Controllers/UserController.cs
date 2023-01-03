@@ -4,7 +4,7 @@ using UAE.Api.Controllers.Base;
 using UAE.Api.Mapper.Profiles;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Models.User;
-using UAE.Application.Services.Interfaces;
+using UAE.Application.Services.Interfaces.User;
 using UAE.Application.Validations;
 
 namespace UAE.Api.Controllers;
@@ -50,26 +50,8 @@ public class UserController : ApiController
         return Ok(apiResult);
     }
 
-    [HttpPost(nameof(LikeAnnouncement))]
-    public async Task<IActionResult> LikeAnnouncement([FromBody] string announcementId)
-    {
-        var operationResult = await _userService.LikeAnnouncementAsync(announcementId);
-        var apiResult = operationResult.ToApiResult(() => operationResult.Result);
-
-        return Ok(apiResult);
-    }
-    
-    [HttpPost(nameof(UnLikeAnnouncement))]
-    public async Task<IActionResult> UnLikeAnnouncement([FromBody] string announcementId)
-    {
-        var operationResult = await _userService.UnLikeAnnouncementAsync(announcementId);
-        var apiResult = operationResult.ToApiResult(() => operationResult.Result);
-
-        return Ok(apiResult);
-    }
-
-    [HttpGet(nameof(GetWithLikes))]
-    public async Task<IActionResult> GetWithLikes()
+    [HttpGet(nameof(Get))]
+    public async Task<IActionResult> Get()
     {
         var operationResult = await _userService.GetWithLikes();
         var apiResult = operationResult.ToApiResult(() => operationResult.Result.ToViewModel());
