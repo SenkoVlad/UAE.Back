@@ -16,10 +16,10 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
     public async Task DeleteByIdAsync(string id) => 
         await DB.DeleteAsync<T>(id);
 
-    public async Task<T> GetByIdAsync(string id) =>
+    public async Task<T?> GetByIdAsync(string id) =>
         await DB.Find<T>()
             .Match(b => b.ID == id)
-            .ExecuteSingleAsync();
+            .ExecuteFirstAsync();
 
     public async Task<List<T>> GetAllAsync() =>
         await DB.Find<T>()
