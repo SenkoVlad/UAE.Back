@@ -139,7 +139,7 @@ internal sealed class AnnouncementService : IAnnouncementService
     public async Task<PagedResponse<AnnouncementModel>> SearchAnnouncement(
         SearchAnnouncementModel searchAnnouncementModel)
     {
-        if (searchAnnouncementModel.CategoryIds.Any())
+        if (searchAnnouncementModel.CategoryIds != null && searchAnnouncementModel.CategoryIds.Any())
         {
             var categoryChildren = _categoryInMemory.GetChildrenCategories(searchAnnouncementModel.CategoryIds);
             searchAnnouncementModel.CategoryIds.AddRange(categoryChildren);
