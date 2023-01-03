@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "d374bbd5-904b-4661-b3f4-06252e1655ca",
+		"name": "UAE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search announcements",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5190/api/v1/Announcement/Search?Description.FieldValue=flat 1&Description.FieldCriteria=1&Price[0].FieldValue=100&Price[0].FieldCriteria=4&Price[1].FieldValue=105&Price[1].FieldCriteria=5&Filters={'Bathroom type' : {'fieldValue' : 'shower', 'fieldCriteria' : 0}, 'Year of building' : {'fieldValue' : 2000, 'fieldCriteria' : 4}}&PageNumber=1&PageSize=10&CategoryIds[0]=63af1eba943c2cad686d1d80&SortedBy=Description",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5190",
+					"path": [
+						"api",
+						"v1",
+						"Announcement",
+						"Search"
+					],
+					"query": [
+						{
+							"key": "Description.FieldValue",
+							"value": "flat 1"
+						},
+						{
+							"key": "Description.FieldCriteria",
+							"value": "1"
+						},
+						{
+							"key": "Price[0].FieldValue",
+							"value": "100"
+						},
+						{
+							"key": "Price[0].FieldCriteria",
+							"value": "4"
+						},
+						{
+							"key": "Price[1].FieldValue",
+							"value": "105"
+						},
+						{
+							"key": "Price[1].FieldCriteria",
+							"value": "5"
+						},
+						{
+							"key": "Filters",
+							"value": "{'Bathroom type' : {'fieldValue' : 'shower', 'fieldCriteria' : 0}, 'Year of building' : {'fieldValue' : 2000, 'fieldCriteria' : 4}}"
+						},
+						{
+							"key": "PageNumber",
+							"value": "1"
+						},
+						{
+							"key": "PageSize",
+							"value": "10"
+						},
+						{
+							"key": "CategoryIds[0]",
+							"value": "63af1eba943c2cad686d1d80"
+						},
+						{
+							"key": "SortedBy",
+							"value": "Description"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
