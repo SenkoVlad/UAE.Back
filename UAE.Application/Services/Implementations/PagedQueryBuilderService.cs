@@ -22,7 +22,8 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
     {
         if (searchAnnouncementModel.CategoryIds != null && searchAnnouncementModel.CategoryIds.Any())
         {
-            _query.Match(a => searchAnnouncementModel.CategoryIds.Contains(a.Category.ID));
+            var categoryIds = searchAnnouncementModel.CategoryIds.Distinct();
+            _query.Match(a => categoryIds.Contains(a.Category.ID));
         }
 
         foreach (var field in searchAnnouncementModel.Filters)
@@ -48,27 +49,27 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
 
     private void BuildSearchQueryForDoubleField(SearchAnnouncementModel searchAnnouncementModel)
     {
-        switch (searchAnnouncementModel.Price!.FilterCriteria)
+        foreach (var priceFilterParameter in searchAnnouncementModel.Price!)
         {
-            case FilterCriteria.Equals:
-                _query.Match( a=> a.Price.Equals(searchAnnouncementModel.Price!.FieldValue));
-                break;
-            case FilterCriteria.MoreAndEquals:
-                _query.Match( a=> a.Price >= searchAnnouncementModel.Price!.FieldValue);
-                break;
-            case FilterCriteria.LessAndEquals:
-                _query.Match( a=> a.Price <= searchAnnouncementModel.Price!.FieldValue);
-                break;
-            case FilterCriteria.More:
-                _query.Match( a=> a.Price > searchAnnouncementModel.Price!.FieldValue);
-                break;
-            case FilterCriteria.Less:
-                _query.Match( a=> a.Price < searchAnnouncementModel.Price!.FieldValue);
-                break;
-            default:
-                _query.Match( a=> a.Description.Equals(searchAnnouncementModel.Description.FieldValue));
-                break;
-        }
+            switch (priceFilterParameter.FieldCriteria)
+            {
+                case FilterCriteria.Equals:
+                    _query.Match( a=> a.Price.Equals(priceFilterParameter.FieldValue));
+                    break;
+                case FilterCriteria.MoreAndEquals:
+                    _query.Match( a=> a.Price >= priceFilterParameter.FieldValue);
+                    break;
+                case FilterCriteria.LessAndEquals:
+                    _query.Match( a=> a.Price <= priceFilterParameter.FieldValue);
+                    break;
+                case FilterCriteria.More:
+                    _query.Match( a=> a.Price > priceFilterParameter.FieldValue);
+                    break;
+                case FilterCriteria.Less:
+                    _query.Match( a=> a.Price < priceFilterParameter.FieldValue);
+                    break;
+            }
+        } 
     }
 
     private void BuildSearchQueryForField(BsonElement searchAnnouncementModel)
@@ -82,6 +83,9 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
         
         switch (criteria)
         {
+            case FilterCriteria.Equals:
+                _query.Match(a => a.Fields[searchAnnouncementModel.Name] == value);
+                break;
             case FilterCriteria.More:
                 _query.Match(a => a.Fields[searchAnnouncementModel.Name] > value);
                 break;
@@ -119,7 +123,7 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
 
     private void BuildSearchQueryForStringField(SearchAnnouncementModel searchAnnouncementModel)
     {
-        switch (searchAnnouncementModel.Description!.FilterCriteria)
+        switch (searchAnnouncementModel.Description!.FieldCriteria)
         {
             case FilterCriteria.Equals:
                 _query.Match( a=> a.Description.Equals(searchAnnouncementModel.Description.FieldValue));

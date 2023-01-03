@@ -8,7 +8,13 @@ public interface IUserService
 {
     Task<OperationResult<User>> RegisterAsync(CreateUserModel createUserModel);
 
-    Task<LoginUserResult> LoginAsync(LoginUserModel loginUserModel);
+    Task<OperationResult<string>> LoginAsync(LoginUserModel loginUserModel);
     
     string GetCurrentUserId();
+    
+    Task<OperationResult<string>> LikeAnnouncementAsync(string announcementId);
+    
+    Task<OperationResult<string>> UnLikeAnnouncementAsync(string announcementId);
+    
+    Task<OperationResult<UserWithLikedAnnouncementsModel>> GetWithLikes();
 }

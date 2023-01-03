@@ -10,6 +10,6 @@ public static class OperationResultMappingProfile
     {
         return operationResult.IsSucceed
             ? ApiResult<TDest>.Success(operationResult.ResultMessages, mapperResultToApiResultFunc.Invoke())
-            : ApiResult<TDest>.Failure(errors: operationResult.ResultMessages);
+            : ApiResult<TDest>.Failure(errors: operationResult.ResultMessages ?? new []{ string.Empty });
     }
 }

@@ -7,7 +7,7 @@ public sealed record SearchAnnouncementViewModel(
     FilterParameter<string>? Description,
     string[]? CategoryIds,
     int PageNumber,
-    FilterParameter<decimal>? Price,
+    FilterParameter<decimal>[] Price,
     int PageSize,
     string? Filters,
     string? SortedBy) : PagedRequest(PageNumber, PageSize, SortedBy);

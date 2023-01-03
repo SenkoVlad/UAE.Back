@@ -6,4 +6,6 @@ namespace UAE.Core.Repositories;
 public interface IAnnouncementRepository : IRepositoryBase<Announcement>
 {
     Task UpdateFieldsAsync(Announcement announcement);
+
+    Task<List<Announcement>> GetByIdsAsync(string[] announcementIds);
 }

@@ -67,4 +67,13 @@ public class AnnouncementRepository :  RepositoryBase<Announcement>, IAnnounceme
 
         await updateCommand.ExecuteAsync();
     }
+
+    public async Task<List<Announcement>> GetByIdsAsync(string[] announcementIds)
+    {
+        var result = await DB.Find<Announcement>()
+            .Match(a => announcementIds.Contains(a.ID))
+            .ExecuteAsync();
+
+        return result;
+    }
 }

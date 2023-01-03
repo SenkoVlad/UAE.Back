@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using UAE.Api.Controllers.Base;
 using UAE.Api.Mapper.Profiles;
 using UAE.Api.ViewModels.Announcement;
@@ -8,6 +9,9 @@ using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Application.Validations;
 using UAE.Shared;
+using UAE.Shared.Enum;
+using UAE.Shared.Filtering.Announcement;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace UAE.Api.Controllers;
 
