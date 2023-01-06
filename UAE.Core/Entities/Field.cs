@@ -1,10 +1,12 @@
 using MongoDB.Bson;
+using UAE.Core.EntityDataParameters;
+using UAE.Shared.Enum;
 
 namespace UAE.Core.Entities;
 
 public sealed record Field(
     string Name,
-    string FieldType,
+    FieldType Type,
     string ValueType,
-    string Criteria,
+    FilterCriteria Criteria,
     BsonValue[]? PossibleValues = null);
