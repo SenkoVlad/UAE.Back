@@ -14,7 +14,5 @@ public class InitTempAnnouncementsService
     public async Task InitAsync()
     {
         var categories = _categoryInMemory.CategoryWithParentPathModels;
-        
-        
     }
 }
