@@ -14,7 +14,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor]=[1, 10]&PageNumber=1&PageSize=10&CategoryIds[0]=63b7f07dd2170ffcdcf0552b&Filters[Bathroom type]=['shower']",
+							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor][0]=1&Filters[Floor][1]=10&PageNumber=1&PageSize=10&CategoryIds[0]=63b8abdfdd7f7fa4a1383aa9&Filters[Bathroom type][0]=shower",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -40,8 +40,12 @@
 									"value": "7654.32"
 								},
 								{
-									"key": "Filters[Floor]",
-									"value": "[1, 10]"
+									"key": "Filters[Floor][0]",
+									"value": "1"
+								},
+								{
+									"key": "Filters[Floor][1]",
+									"value": "10"
 								},
 								{
 									"key": "PageNumber",
@@ -53,11 +57,11 @@
 								},
 								{
 									"key": "CategoryIds[0]",
-									"value": "63b7f07dd2170ffcdcf0552b"
+									"value": "63b8abdfdd7f7fa4a1383aa9"
 								},
 								{
-									"key": "Filters[Bathroom type]",
-									"value": "['shower']"
+									"key": "Filters[Bathroom type][0]",
+									"value": "shower"
 								}
 							]
 						}
