@@ -249,7 +249,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCqVyBF8HBExLrcUe2Qp5EAyhhXzH_hzbo&place_id=ChIJG-9zedbP20YRiRVq1C6YweI",
+							"raw": "https://maps.googleapis.com/maps/api/geocode/json?key=YOUR_KEY&place_id=ChIJG-9zedbP20YRiRVq1C6YweI",
 							"protocol": "https",
 							"host": [
 								"maps",
@@ -265,7 +265,7 @@
 							"query": [
 								{
 									"key": "key",
-									"value": "AIzaSyCqVyBF8HBExLrcUe2Qp5EAyhhXzH_hzbo"
+									"value": "YOUR_KEY"
 								},
 								{
 									"key": "place_id",
