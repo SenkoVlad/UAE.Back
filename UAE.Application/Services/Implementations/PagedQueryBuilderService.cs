@@ -89,22 +89,22 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
             {
                 case FilterCriteria.Contains:
                     var valuesToFilter = searchAnnouncementModel.Filters[fieldName]
-                        .Select(c => c.GetBsonValueByTypeName(field.ValueType));
+                        .Select(c => c.ToBsonValueByTypeName(field.ValueType));
                     
                     _query.Match(a => valuesToFilter.Contains(a.Fields[fieldName]));
                     break;
                 case FilterCriteria.Equals:
                     var valuesToCompare = searchAnnouncementModel.Filters[fieldName]
-                        .Select(c => c.GetBsonValueByTypeName(field.ValueType))
+                        .Select(c => c.ToBsonValueByTypeName(field.ValueType))
                         .FirstOrDefault();
                     
                     _query.Match(a => a.Fields[fieldName] == valuesToCompare);
                     break;
                 case FilterCriteria.InRange:
                     var fromValue = searchAnnouncementModel.Filters[fieldName][0]
-                        .GetBsonValueByTypeName(field.ValueType);
+                        .ToBsonValueByTypeName(field.ValueType);
                     var toValue = searchAnnouncementModel.Filters[fieldName][1]
-                        .GetBsonValueByTypeName(field.ValueType);
+                        .ToBsonValueByTypeName(field.ValueType);
 
                     if (fromValue != null)
                     {

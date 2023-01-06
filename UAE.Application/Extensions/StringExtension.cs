@@ -4,7 +4,7 @@ namespace UAE.Application.Extensions;
 
 public static class StringExtension
 {
-    public static BsonValue GetBsonValueByTypeName(this string value, string typeName)
+    public static BsonValue ToBsonValueByTypeName(this string value, string typeName)
     {
         switch (typeName)
         {
