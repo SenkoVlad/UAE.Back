@@ -1,4 +1,5 @@
-﻿using UAE.Application.Services.Interfaces;
+﻿using MongoDB.Driver.Linq;
+using UAE.Application.Services.Interfaces;
 using UAE.Application.Services.Validation.Interfaces;
 
 namespace UAE.Application.Services.Validation.Implementation;
@@ -12,12 +13,12 @@ public class CategoryFieldsValidationService : ICategoryFieldsValidationService
 
     public bool DoesFieldExistInAllCategories(string[] fields, string[] categoryIds)
     {
-        return  !categoryIds.Any() 
-            ? ValidateFieldsAmongAllCategories(fields)
-            : ValidateFieldsAmongParticularCategories(fields, categoryIds);
+        return categoryIds.Any() 
+            ? ValidateFieldsAmongParticularCategories(fields, categoryIds)
+            : ValidateFieldsAmongAnyCategories(fields);
     }
 
-    private bool ValidateFieldsAmongAllCategories(string[] fields)
+    private bool ValidateFieldsAmongAnyCategories(string[] fields)
     {
         var categoryFlatModel = _categoryInMemory.CategoryWithParentPathModels.Select(c => c.Category)
             .FirstOrDefault(c => c.Fields

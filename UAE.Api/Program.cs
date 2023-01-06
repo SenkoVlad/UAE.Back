@@ -35,6 +35,7 @@ if (!app.Environment.IsProduction())
 
 await app.InitCategoriesInMemory();
 await app.InitCurrenciesInMemory();
+// await app.InitTempAnnouncements();
 
 app.UseCustomException();
 app.UseSession();

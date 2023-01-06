@@ -3,6 +3,7 @@ using UAE.Api.Controllers.Base;
 using UAE.Api.ViewModels.Base;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Category;
+using UAE.Application.Services.Interfaces;
 using UAE.Application.Services.Validation.Implementation;
 using UAE.Core.Repositories;
 
@@ -10,20 +11,21 @@ namespace UAE.Api.Controllers;
 
 public class CategoryController : ApiController
 {
-    private readonly ICategoryRepository _categoryRepository;
     private readonly CategoryFieldsValidationService _categoryFieldsValidationService;
+    private readonly ICategoryInMemory _categoryInMemory;
     
-    public CategoryController(ICategoryRepository categoryRepository,
-        CategoryFieldsValidationService categoryFieldsValidationService)
+    public CategoryController(
+        CategoryFieldsValidationService categoryFieldsValidationService,
+        ICategoryInMemory categoryInMemory)
     {
-        _categoryRepository = categoryRepository;
         _categoryFieldsValidationService = categoryFieldsValidationService;
+        _categoryInMemory = categoryInMemory;
     }
 
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll()
+    public IActionResult GetAll()
     {
-        var categories = await _categoryRepository.GetAllAsync();
+        var categories = _categoryInMemory.Data;
         var categoryModels = categories
             .Select(c => c.ToBusinessModel())
             .ToList();

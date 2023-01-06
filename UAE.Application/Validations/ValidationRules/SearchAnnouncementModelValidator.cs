@@ -10,31 +10,25 @@ namespace UAE.Application.Validations.ValidationRules;
 [UsedImplicitly]
 public class SearchAnnouncementModelValidator : AbstractValidator<SearchAnnouncementModel>
 {
-    public SearchAnnouncementModelValidator(ICategoryFieldsValidationService categoryFieldsValidationService,
-        IFilterFieldsValidationService filterFieldsValidationService)
+    public SearchAnnouncementModelValidator(ICategoryFieldsValidationService categoryFieldsValidationService)
     {
-        When(model => model.Description?.FieldValue != null, () =>
+        When(model => model.Description != null, () =>
         {
-            RuleFor(p => p.Description!.FieldValue)
-                .MaximumLength(200);
+            RuleFor(p => p.Description)
+                .MaximumLength(20);
         });
 
         SortedByValidator(categoryFieldsValidationService);
-        ExtraFieldsValidator(categoryFieldsValidationService, filterFieldsValidationService);
+        ExtraFieldsValidator(categoryFieldsValidationService);
     }
 
-    private void ExtraFieldsValidator(ICategoryFieldsValidationService categoryFieldsValidationService,
-        IFilterFieldsValidationService filterFieldsValidationService)
+    private void ExtraFieldsValidator(ICategoryFieldsValidationService categoryFieldsValidationService)
     {
-        When(model => model.Filters.Elements.Any(), () =>
+        When(model => model.Filters.Keys.Any(), () =>
         {
-            RuleFor(p => new {FieldNames = p.Filters.Names.ToArray(), CategoryId = p.CategoryIds})
+            RuleFor(p => new {FieldNames = p.Filters.Keys.ToArray(), CategoryId = p.CategoryIds})
                 .Must(x => categoryFieldsValidationService.DoesFieldExistInAllCategories(x.FieldNames, x.CategoryId.ToArray()))
                 .WithMessage("Name of filter field is not valid");
-
-            RuleFor(p => p.Filters.Values)
-                .Must(filterFieldsValidationService.ValidateFilterField)
-                .WithMessage("Filters are not valid");
         });
     }
 

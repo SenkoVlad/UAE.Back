@@ -14,7 +14,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description.FieldValue=flat 1&Description.FieldCriteria=1&Price[0].FieldValue=100&Price[0].FieldCriteria=4&Price[1].FieldValue=105&Price[1].FieldCriteria=5&Filters={'Bathroom type' : {'fieldValue' : 'shower', 'fieldCriteria' : 0}, 'Year of building' : {'fieldValue' : 2000, 'fieldCriteria' : 4}}&PageNumber=1&PageSize=10&CategoryIds[0]=63af1eba943c2cad686d1d80&SortedBy=Description",
+							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor]=[1, 10]&PageNumber=1&PageSize=10&CategoryIds[0]=63b7f07dd2170ffcdcf0552b&Filters[Bathroom type]=['shower']",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -28,32 +28,20 @@
 							],
 							"query": [
 								{
-									"key": "Description.FieldValue",
-									"value": "flat 1"
+									"key": "Description",
+									"value": "vel"
 								},
 								{
-									"key": "Description.FieldCriteria",
-									"value": "1"
+									"key": "Price[0]",
+									"value": "346"
 								},
 								{
-									"key": "Price[0].FieldValue",
-									"value": "100"
+									"key": "Price[1]",
+									"value": "7654.32"
 								},
 								{
-									"key": "Price[0].FieldCriteria",
-									"value": "4"
-								},
-								{
-									"key": "Price[1].FieldValue",
-									"value": "105"
-								},
-								{
-									"key": "Price[1].FieldCriteria",
-									"value": "5"
-								},
-								{
-									"key": "Filters",
-									"value": "{'Bathroom type' : {'fieldValue' : 'shower', 'fieldCriteria' : 0}, 'Year of building' : {'fieldValue' : 2000, 'fieldCriteria' : 4}}"
+									"key": "Filters[Floor]",
+									"value": "[1, 10]"
 								},
 								{
 									"key": "PageNumber",
@@ -65,11 +53,11 @@
 								},
 								{
 									"key": "CategoryIds[0]",
-									"value": "63af1eba943c2cad686d1d80"
+									"value": "63b7f07dd2170ffcdcf0552b"
 								},
 								{
-									"key": "SortedBy",
-									"value": "Description"
+									"key": "Filters[Bathroom type]",
+									"value": "['shower']"
 								}
 							]
 						}
@@ -247,6 +235,106 @@
 								"Dislike"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Google api",
+			"item": [
+				{
+					"name": "Get full info  by place id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCqVyBF8HBExLrcUe2Qp5EAyhhXzH_hzbo&place_id=ChIJG-9zedbP20YRiRVq1C6YweI",
+							"protocol": "https",
+							"host": [
+								"maps",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"maps",
+								"api",
+								"geocode",
+								"json"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "AIzaSyCqVyBF8HBExLrcUe2Qp5EAyhhXzH_hzbo"
+								},
+								{
+									"key": "place_id",
+									"value": "ChIJG-9zedbP20YRiRVq1C6YweI"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get predictions by input",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=amoeba&radius=500&key=YOUR_API_KEY",
+							"protocol": "https",
+							"host": [
+								"maps",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"maps",
+								"api",
+								"place",
+								"autocomplete",
+								"json"
+							],
+							"query": [
+								{
+									"key": "input",
+									"value": "amoeba"
+								},
+								{
+									"key": "types",
+									"value": "establishment",
+									"disabled": true
+								},
+								{
+									"key": "location",
+									"value": "37.76999%2C-122.44696",
+									"disabled": true
+								},
+								{
+									"key": "radius",
+									"value": "500"
+								},
+								{
+									"key": "key",
+									"value": "YOUR_API_KEY"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
 					},
 					"response": []
 				}
