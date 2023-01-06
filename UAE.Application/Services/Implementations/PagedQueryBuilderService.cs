@@ -82,10 +82,7 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
                 continue;
             }
             
-            Enum.TryParse(typeof(FilterCriteria), value: field.Criteria, true, out object? criteria);
-            switch (criteria is FilterCriteria result
-                        ? result 
-                        : FilterCriteria.Equals)
+            switch (field.Criteria)
             {
                 case FilterCriteria.Contains:
                     var valuesToFilter = searchAnnouncementModel.Filters[fieldName]
