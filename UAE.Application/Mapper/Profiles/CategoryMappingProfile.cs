@@ -5,28 +5,24 @@ namespace UAE.Application.Mapper.Profiles;
 
 public static class CategoryMappingProfile
 {
-    public static Category ToEntity(this CategoryModel model)
-    {
-        return new Category
-        {
-            Children = model.Children.Select(c => c.ToEntity())
-                .ToList(),
-            Fields = model.Fields.Select(f => f.ToEntity())
-                .ToList(),
-            Label = model.Label,
-            ID = model.Id
-        };
-    }
-    
     public static CategoryModel ToBusinessModel(this Category entity)
     {
-        return new CategoryModel(
-            Children : entity.Children.Select(c => c.ToBusinessModel())
-                .ToList(),
-            Fields : entity.Fields.Select(f => f.ToBusinessModel())
-                .ToList(),
-            Label : entity.Label,
-            Id : entity.ID
-        );
+        try
+        {
+            return new CategoryModel(
+                Children : entity.Children.Select(c => c.ToBusinessModel())
+                    .ToList(),
+                Fields : entity.Fields.Select(f => f.ToBusinessModel())
+                    .ToList(),
+                Label : entity.Label,
+                Id : entity.ID
+            );
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
     }
 }

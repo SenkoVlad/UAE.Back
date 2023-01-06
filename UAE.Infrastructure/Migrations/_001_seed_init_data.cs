@@ -6,6 +6,7 @@ using UAE.Core.DataModels;
 using UAE.Core.Entities;
 using UAE.Core.EntityDataParameters;
 using UAE.Core.EntityDataParameters.RealEstate;
+using UAE.Shared.Enum;
 using UAE.Shared.Extensions;
 
 namespace UAE.Infrastructure.Data.Init;
@@ -84,7 +85,6 @@ public class _001_seed_init_data : IMigration
             {
                 {ExtraFieldName.Floor.GetDescription(), 2},
                 {ExtraFieldName.NumberOfBedrooms.GetDescription(), 2},
-                {ExtraFieldName.Number.GetDescription(), 23},
                 {ExtraFieldName.BathroomType.GetDescription(), "shower"},
                 {ExtraFieldName.YearOfBuilding.GetDescription(), 2012}
             },
@@ -139,7 +139,6 @@ public class _001_seed_init_data : IMigration
             {
                 {ExtraFieldName.Floor.GetDescription(), 2},
                 {ExtraFieldName.NumberOfBedrooms.GetDescription(), 2},
-                {ExtraFieldName.Number.GetDescription(), 23},
                 {ExtraFieldName.BathroomType.GetDescription(), "shower"},
                 {ExtraFieldName.YearOfBuilding.GetDescription(), 2012}
             },
@@ -278,23 +277,63 @@ public class _001_seed_init_data : IMigration
         switch (category.Label)
         {
             case "Cars & Vehicles":
+            case "Cars":
                 category.Fields = new List<Field>
                 {
-                    new Field(ExtraFieldName.Mileage.GetDescription(), typeof(int).Name),
-                    new Field(ExtraFieldName.MaxSpeed.GetDescription(), typeof(int).Name),
-                    new Field(ExtraFieldName.Brand.GetDescription(), typeof(string).Name),
-                    new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                    new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(int).Name),
+                    new Field(
+                        ExtraFieldName.Mileage.GetDescription(),
+                        FieldType.Range.GetDescription(),
+                        typeof(int).Name,
+                        FilterCriteria.InRange.GetDescription(),
+                        new []{ new BsonInt32(100)}),
+                    new Field(
+                        ExtraFieldName.MaxSpeed.GetDescription(), 
+                        FieldType.Range.GetDescription(),
+                        typeof(int).Name,
+                        FilterCriteria.InRange.GetDescription(),
+                        new []{ new BsonInt32(10)}),
+                    new Field(
+                        ExtraFieldName.Brand.GetDescription(),
+                        FieldType.Multiselect.GetDescription(),
+                        typeof(string).Name,
+                        FilterCriteria.Contains.GetDescription(),
+                        new [] {new BsonString("Audi"), new BsonString("Mers"), new BsonString("VW")}),
+                    new Field(
+                        ExtraFieldName.YearOfBuilding.GetDescription(),
+                        FieldType.Range.GetDescription(),
+                typeof(int).Name,
+                        FilterCriteria.InRange.GetDescription(),
+                        new [] {new BsonInt32(1999), new BsonInt32(2019)})
                 };
                 break;
             case "Property For Rent":
+            case "Housing":
                 category.Fields = new List<Field>
                 {
-                    new Field(ExtraFieldName.Floor.GetDescription(), typeof(int).Name),
-                    new Field(ExtraFieldName.NumberOfBedrooms.GetDescription(), typeof(int).Name),
-                    new Field(ExtraFieldName.Number.GetDescription(), typeof(int).Name),
-                    new Field(ExtraFieldName.YearOfBuilding.GetDescription(), typeof(int).Name),
-                    new Field(ExtraFieldName.BathroomType.GetDescription(), typeof(string).Name)
+                    new Field(
+                        ExtraFieldName.Floor.GetDescription(),
+                        FieldType.Range.GetDescription(),
+                        typeof(int).Name,
+                        FilterCriteria.InRange.GetDescription(), 
+                        new []{ new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
+                    new Field(
+                        ExtraFieldName.NumberOfBedrooms.GetDescription(), 
+                        FieldType.Multiselect.GetDescription(),
+                        typeof(int).Name,
+                        FilterCriteria.Contains.GetDescription(), 
+                        new []{ new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
+                    new Field(
+                        ExtraFieldName.YearOfBuilding.GetDescription(),
+                        FieldType.Range.GetDescription(),
+                        typeof(int).Name,
+                        FilterCriteria.InRange.GetDescription(),
+                        new [] {new BsonInt32(1999), new BsonInt32(2019)}),
+                    new Field(
+                        ExtraFieldName.BathroomType.GetDescription(),
+                        FieldType.Multiselect.GetDescription(),
+                        typeof(string).Name,
+                        FilterCriteria.Contains.GetDescription(),           
+                        new [] {new BsonString("shower"), new BsonString("shower 1"), new BsonString("shower 2")}),
                 };
                 break;
         }

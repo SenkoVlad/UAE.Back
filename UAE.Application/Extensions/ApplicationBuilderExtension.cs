@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using UAE.Application.Services.Implementations;
 using UAE.Application.Services.Interfaces;
 using UAE.Application.Services.Interfaces.Base;
 using UAE.Core.DataModels;
@@ -15,7 +16,14 @@ public static class ApplicationBuilderExtension
     
     public static async Task InitCurrenciesInMemory(this IApplicationBuilder applicationBuilder)
     {
-        var categoriesInMemory = (IInMemoryService<Currency>)applicationBuilder.ApplicationServices.GetService(typeof(IInMemoryService<Currency>))!;
-        await categoriesInMemory.InitAsync();
+        var currenciesMemory = (IInMemoryService<Currency>)applicationBuilder.ApplicationServices.GetService(typeof(IInMemoryService<Currency>))!;
+        await currenciesMemory.InitAsync();
     }
+    
+    public static async Task InitTempAnnouncements(this IApplicationBuilder applicationBuilder)
+    {
+        var initTempAnnouncementsService = (InitTempAnnouncementsService)applicationBuilder.ApplicationServices.GetService(typeof(InitTempAnnouncementsService))!;
+        await initTempAnnouncementsService.InitAsync();
+    }
+
 }

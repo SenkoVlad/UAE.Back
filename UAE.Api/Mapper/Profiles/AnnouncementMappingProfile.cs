@@ -1,8 +1,10 @@
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using UAE.Api.ViewModels.Announcement;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Announcement;
 using UAE.Core.Entities;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace UAE.Api.Mapper.Profiles;
 
@@ -18,10 +20,8 @@ public static class AnnouncementMappingProfile
                 : new List<string>(),
             PageNumber: model.PageNumber,
             PageSize: model.PageSize,
-            Filters: string.IsNullOrWhiteSpace(model.Filters) 
-                ? new BsonDocument()
-                : BsonDocument.Parse(model.Filters),
-            SortedBy: model.SortedBy ?? nameof(AnnouncementModel.Description),
+            Filters: model.Filters,
+            SortedBy: model.SortedBy ?? nameof(AnnouncementModel.CreatedDateTime),
             Price: model.Price
         );
     }
