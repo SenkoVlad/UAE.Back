@@ -7,5 +7,6 @@ public enum FilterCriteria
     Less,
     Contains,
     MoreAndEquals,
-    LessAndEquals
+    LessAndEquals,
+    InRange
 }

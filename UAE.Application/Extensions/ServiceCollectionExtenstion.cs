@@ -25,7 +25,6 @@ public static class ServiceCollectionExtenstion
         serviceCollection.AddScoped<IPagedQueryBuilderService<Announcement>, PagedQueryBuilderService<Announcement>>();
         
         serviceCollection.AddSingleton<ICategoryFieldsValidationService, CategoryFieldsValidationService>(); 
-        serviceCollection.AddSingleton<IFilterFieldsValidationService, FilterFieldsValidationService>(); 
         serviceCollection.AddSingleton<CategoryFieldsValidationService>();
         
         serviceCollection.AddSingleton<ICategoryInMemory, CategoryInMemory>();

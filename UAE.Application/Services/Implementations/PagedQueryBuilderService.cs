@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Entities;
+using UAE.Application.Extensions;
 using UAE.Application.Models.Announcement;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Entities;
@@ -10,11 +11,13 @@ namespace UAE.Application.Services.Implementations;
 internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where T : Announcement, IEntity
 {
     private readonly PagedSearch<T> _query;
+    private readonly ICategoryInMemory _categoryInMemory;
     
     public PagedSearch<T> GetQuery() => _query;
 
-    public PagedQueryBuilderService()
+    public PagedQueryBuilderService(ICategoryInMemory categoryInMemory)
     {
+        _categoryInMemory = categoryInMemory;
         _query = DB.PagedSearch<T>();
     }
 
@@ -24,83 +27,96 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
         {
             var categoryIds = searchAnnouncementModel.CategoryIds.Distinct();
             _query.Match(a => categoryIds.Contains(a.Category.ID));
+            BuildSearchQueryForField(searchAnnouncementModel);
         }
 
-        foreach (var field in searchAnnouncementModel.Filters)
+        if (!string.IsNullOrWhiteSpace(searchAnnouncementModel.Description))
         {
-            BuildSearchQueryForField(field);
-        }
-
-        if (searchAnnouncementModel.Description != null)
-        {
-            BuildSearchQueryForStringField(searchAnnouncementModel);
+            _query.Match(a => a.Description.Contains(searchAnnouncementModel.Description));
         }
 
         if (searchAnnouncementModel.Price != null)
         {
-            BuildSearchQueryForDoubleField(searchAnnouncementModel);
+            BuildQueryForPriceField(searchAnnouncementModel.Price);
         }
 
         _query.Sort(a => a.Ascending(searchAnnouncementModel.SortedBy));
-
         _query.PageSize(searchAnnouncementModel.PageSize)
             .PageNumber(searchAnnouncementModel.PageNumber);
     }
 
-    private void BuildSearchQueryForDoubleField(SearchAnnouncementModel searchAnnouncementModel)
+    private void BuildQueryForPriceField(decimal?[] prices)
     {
-        foreach (var priceFilterParameter in searchAnnouncementModel.Price!)
+        var priceFrom = prices[0];
+        var priceTo = prices[1];
+        
+        if (priceFrom != null)
         {
-            switch (priceFilterParameter.FieldCriteria)
-            {
-                case FilterCriteria.Equals:
-                    _query.Match( a=> a.Price.Equals(priceFilterParameter.FieldValue));
-                    break;
-                case FilterCriteria.MoreAndEquals:
-                    _query.Match( a=> a.Price >= priceFilterParameter.FieldValue);
-                    break;
-                case FilterCriteria.LessAndEquals:
-                    _query.Match( a=> a.Price <= priceFilterParameter.FieldValue);
-                    break;
-                case FilterCriteria.More:
-                    _query.Match( a=> a.Price > priceFilterParameter.FieldValue);
-                    break;
-                case FilterCriteria.Less:
-                    _query.Match( a=> a.Price < priceFilterParameter.FieldValue);
-                    break;
-            }
-        } 
+            _query.Match( a=> a.Price >= priceFrom);
+        }
+
+        if (priceTo != null)
+        {
+            _query.Match( a=> a.Price <= priceTo);
+        }
     }
 
-    private void BuildSearchQueryForField(BsonElement searchAnnouncementModel)
+    private void BuildSearchQueryForField(SearchAnnouncementModel searchAnnouncementModel)
     {
-        (BsonValue? value, FilterCriteria? criteria) = GetValueAndCriteria(searchAnnouncementModel);
-
-        if (value == null || criteria == null)
+        if (searchAnnouncementModel.Filters == null)
         {
             return;
         }
         
-        switch (criteria)
+        foreach (var fieldName in searchAnnouncementModel.Filters.Keys)
         {
-            case FilterCriteria.Equals:
-                _query.Match(a => a.Fields[searchAnnouncementModel.Name] == value);
-                break;
-            case FilterCriteria.More:
-                _query.Match(a => a.Fields[searchAnnouncementModel.Name] > value);
-                break;
-            case FilterCriteria.Less:
-                _query.Match(a => a.Fields[searchAnnouncementModel.Name] < value);
-                break;
-            case FilterCriteria.LessAndEquals:
-                _query.Match(a => a.Fields[searchAnnouncementModel.Name] <= value);
-                break;
-            case FilterCriteria.MoreAndEquals:
-                _query.Match(a => a.Fields[searchAnnouncementModel.Name] >= value);
-                break;
-            case FilterCriteria.Contains:
-                _query.Match(a => a.Fields[searchAnnouncementModel.Name].AsString.Contains(value.AsString));
-                break;
+            var searchCategoryId = searchAnnouncementModel.CategoryIds!.First();
+            var categoryField = _categoryInMemory.CategoryWithParentPathModels
+                .FirstOrDefault(c => c.Category.Fields.Any(f => f.Name == fieldName)
+                                     && c.Category.ID == searchCategoryId);
+
+            var field = categoryField?.Fields.FirstOrDefault(f => f.Name == fieldName);
+
+            if (field == null)
+            {
+                continue;
+            }
+            
+            Enum.TryParse(typeof(FilterCriteria), value: field.Criteria, true, out object? criteria);
+            switch (criteria is FilterCriteria result
+                        ? result 
+                        : FilterCriteria.Equals)
+            {
+                case FilterCriteria.Contains:
+                    var valuesToFilter = searchAnnouncementModel.Filters[fieldName]
+                        .Select(c => c.ToBsonValueByTypeName(field.ValueType));
+                    
+                    _query.Match(a => valuesToFilter.Contains(a.Fields[fieldName]));
+                    break;
+                case FilterCriteria.Equals:
+                    var valuesToCompare = searchAnnouncementModel.Filters[fieldName]
+                        .Select(c => c.ToBsonValueByTypeName(field.ValueType))
+                        .FirstOrDefault();
+                    
+                    _query.Match(a => a.Fields[fieldName] == valuesToCompare);
+                    break;
+                case FilterCriteria.InRange:
+                    var fromValue = searchAnnouncementModel.Filters[fieldName][0]
+                        .ToBsonValueByTypeName(field.ValueType);
+                    var toValue = searchAnnouncementModel.Filters[fieldName][1]
+                        .ToBsonValueByTypeName(field.ValueType);
+
+                    if (fromValue != null)
+                    {
+                        _query.Match(a => a.Fields[fieldName] >= fromValue);
+                    }
+
+                    if (toValue != null)
+                    {
+                        _query.Match(a => a.Fields[fieldName] <= toValue);
+                    }
+                    break;
+            }
         }
     }
 
@@ -119,21 +135,5 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
         var criteria = (FilterCriteria) filter[filterCriteriaName].ToInt32();
 
         return (value, criteria);
-    }
-
-    private void BuildSearchQueryForStringField(SearchAnnouncementModel searchAnnouncementModel)
-    {
-        switch (searchAnnouncementModel.Description!.FieldCriteria)
-        {
-            case FilterCriteria.Equals:
-                _query.Match( a=> a.Description.Equals(searchAnnouncementModel.Description.FieldValue));
-                break;
-            case FilterCriteria.Contains:
-                _query.Match( a=> a.Description.Contains(searchAnnouncementModel.Description.FieldValue));
-                break;
-            default:
-                _query.Match( a=> a.Description.Equals(searchAnnouncementModel.Description.FieldValue));
-                break;
-        }
     }
 }
