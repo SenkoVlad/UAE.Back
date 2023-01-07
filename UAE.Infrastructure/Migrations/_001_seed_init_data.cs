@@ -233,25 +233,25 @@ public class _001_seed_init_data : IMigration
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
+                    new[] { "1",  "2",  "3"}),
                 new Field(
                     "Way to do",
                     FieldType.Multiselect,
                     typeof(int).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
+                    new[] { "1",  "2",  "3"}),
                 new Field(
                     "Age",
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(1999), new BsonInt32(2009), new BsonInt32(2019)}),
+                    new[] { "1999",  "2009",  "2019"}),
                 new Field(
                     "Ops to join",
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonString("online"), new BsonString("offline"), new BsonString("both")}),
+                    new[] { "online",  "offline",  "both"}),
             },
             new List<Field>
             {
@@ -260,25 +260,25 @@ public class _001_seed_init_data : IMigration
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
+                    new[] { "1",  "2",  "3"}),
                 new Field(
                     ExtraFieldName.NumberOfBedrooms.GetDescription(),
                     FieldType.Multiselect,
                     typeof(int).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
+                    new[] { "1",  "2",  "3"}),
                 new Field(
                     ExtraFieldName.YearOfBuilding.GetDescription(),
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(1999), new BsonInt32(2019)}),
+                    new[] { "1999",  "2019"}),
                 new Field(
                     ExtraFieldName.BathroomType.GetDescription(),
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonString("shower"), new BsonString("shower 1"), new BsonString("shower 2")}),
+                    new[] { "shower",  "shower 1",  "shower 2"}),
             },
             new List<Field>
             {
@@ -287,25 +287,25 @@ public class _001_seed_init_data : IMigration
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(100), new BsonInt32(1000), new BsonInt32(10000)}),
+                    new[] { "100",  "1000",  "10000"}),
                 new Field(
                     "Seen count",
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(10), new BsonInt32(15), new BsonInt32(20)}),
+                    new[] { "10",  "15",  "20"}),
                 new Field(
                     "Region",
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonString("EU"), new BsonString("USA"), new BsonString("UK")}),
+                    new[] { "EU",  "USA",  "UK"}),
                 new Field(
                     "Company created year",
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(2022), new BsonInt32(2023), new BsonInt32(2021)})
+                    new[] { "2022",  "2023",  "2021"})
             },
             new List<Field>
             {
@@ -314,25 +314,25 @@ public class _001_seed_init_data : IMigration
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(100), new BsonInt32(1000), new BsonInt32(10000)}),
+                    new[] { "100",  "1000",  "10000"}),
                 new Field(
                     "Age of partner",
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(10), new BsonInt32(15), new BsonInt32(20)}),
+                    new[] { "10",  "15",  "20"}),
                 new Field(
                     "Region",
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonString("EU"), new BsonString("USA"), new BsonString("UK")}),
+                    new[] { "EU",  "USA",  "UK"}),
                 new Field(
                     "Profile created at",
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(2022), new BsonInt32(2023), new BsonInt32(2021)})
+                    new[] { "2022",  "2023",  "2021"})
             },
             new List<Field>
             {
@@ -341,19 +341,19 @@ public class _001_seed_init_data : IMigration
                     FieldType.Multiselect,
                     typeof(int).Name,
                     FilterCriteria.Contains,
-                    new []{ new BsonBoolean(false), new BsonBoolean(true)}),
+                    new []{ "Yes",  "No"}),
                 new Field(
                     "Estimate",
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(1), new BsonInt32(2), new BsonInt32(3), new BsonInt32(4), new BsonInt32(5)}),
+                    new[] { "1",  "2",  "3",  "4",  "5"}),
                 new Field(
                     "Delivery to",
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonString("Africa"), new BsonString("USA"), new BsonString("Europe")})
+                    new[] { "Africa",  "USA",  "Europe"})
             },
             new List<Field>
             {
@@ -362,25 +362,25 @@ public class _001_seed_init_data : IMigration
                     FieldType.Multiselect,
                     typeof(int).Name,
                     FilterCriteria.Contains,
-                    new []{ new BsonBoolean(false), new BsonBoolean(true)}),
+                    new []{  "Yes",  "No"}),
                 new Field(
                     "Payment",
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(100), new BsonInt32(200), new BsonInt32(300), new BsonInt32(400), new BsonInt32(500)}),
+                    new[] { "100",  "200",  "300",  "400",  "500"}),
                 new Field(
                     "Shipping to",
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonString("City"), new BsonString("USA"), new BsonString("Europe")}),
+                    new[] {"City", "USA", "Europe"}),
                 new Field(
                     "Home visits price",
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonInt32(345), new BsonInt32(453), new BsonInt32(767), new BsonInt32(875)}),
+                    new[] {"345", "453", "767", "875"}),
             },
             new List<Field>
             {
@@ -389,25 +389,25 @@ public class _001_seed_init_data : IMigration
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(100)}),
+                    new[] { "100"}),
                 new Field(
                     ExtraFieldName.MaxSpeed.GetDescription(),
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(10)}),
+                    new[] { "10"}),
                 new Field(
                     ExtraFieldName.Brand.GetDescription(),
                     FieldType.Multiselect,
                     typeof(string).Name,
                     FilterCriteria.Contains,
-                    new[] {new BsonString("Audi"), new BsonString("Mers"), new BsonString("VW")}),
+                    new[] { "Audi",  "Mers",  "VW"}),
                 new Field(
                     ExtraFieldName.YearOfBuilding.GetDescription(),
                     FieldType.Range,
                     typeof(int).Name,
                     FilterCriteria.InRange,
-                    new[] {new BsonInt32(1999), new BsonInt32(2019)})
+                    new[] { "1999",  "2019"})
             }
         };
     }
@@ -439,8 +439,6 @@ public class _001_seed_init_data : IMigration
                     Fields = currentFields
                 };
 
-                FillCategoryFields(category);
-
                 if (index != 0)
                 {
                     var currentSubParentCategory = GetCurrentSubParentCategory(categories, rootParentName, index, currentCategories);
@@ -469,73 +467,6 @@ public class _001_seed_init_data : IMigration
         }
 
         return currentSubParentCategory;
-    }
-
-    private static void FillCategoryFields(CategoryForMigration category)
-    {
-        switch (category.Label)
-        {
-            case "Cars & Vehicles":
-            case "Cars":
-                category.Fields = new List<Field>
-                {
-                    new Field(
-                        ExtraFieldName.Mileage.GetDescription(),
-                        FieldType.Range,
-                        typeof(int).Name,
-                        FilterCriteria.InRange,
-                        new []{ new BsonInt32(100)}),
-                    new Field(
-                        ExtraFieldName.MaxSpeed.GetDescription(), 
-                        FieldType.Range,
-                        typeof(int).Name,
-                        FilterCriteria.InRange,
-                        new []{ new BsonInt32(10)}),
-                    new Field(
-                        ExtraFieldName.Brand.GetDescription(),
-                        FieldType.Multiselect,
-                        typeof(string).Name,
-                        FilterCriteria.Contains,
-                        new [] {new BsonString("Audi"), new BsonString("Mers"), new BsonString("VW")}),
-                    new Field(
-                        ExtraFieldName.YearOfBuilding.GetDescription(),
-                        FieldType.Range,
-                typeof(int).Name,
-                        FilterCriteria.InRange,
-                        new [] {new BsonInt32(1999), new BsonInt32(2019)})
-                };
-                break;
-            case "Property For Rent":
-            case "Housing":
-                category.Fields = new List<Field>
-                {
-                    new Field(
-                        ExtraFieldName.Floor.GetDescription(),
-                        FieldType.Range,
-                        typeof(int).Name,
-                        FilterCriteria.InRange, 
-                        new []{ new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
-                    new Field(
-                        ExtraFieldName.NumberOfBedrooms.GetDescription(), 
-                        FieldType.Multiselect,
-                        typeof(int).Name,
-                        FilterCriteria.Contains, 
-                        new []{ new BsonInt32(1), new BsonInt32(2), new BsonInt32(3)}),
-                    new Field(
-                        ExtraFieldName.YearOfBuilding.GetDescription(),
-                        FieldType.Range,
-                        typeof(int).Name,
-                        FilterCriteria.InRange,
-                        new [] {new BsonInt32(1999), new BsonInt32(2019)}),
-                    new Field(
-                        ExtraFieldName.BathroomType.GetDescription(),
-                        FieldType.Multiselect,
-                        typeof(string).Name,
-                        FilterCriteria.Contains,           
-                        new [] {new BsonString("shower"), new BsonString("shower 1"), new BsonString("shower 2")}),
-                };
-                break;
-        }
     }
 }
 

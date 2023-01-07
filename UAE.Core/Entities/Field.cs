@@ -1,4 +1,3 @@
-using MongoDB.Bson;
 using UAE.Core.EntityDataParameters;
 using UAE.Shared.Enum;
 
@@ -9,4 +8,4 @@ public sealed record Field(
     FieldType Type,
     string ValueType,
     FilterCriteria Criteria,
-    BsonValue[]? PossibleValues = null);
+    string[]? PossibleValues = null);
