@@ -10,8 +10,8 @@ public static class FieldMappingProfile
 {
     public static FieldModel ToBusinessModel(this Field field) =>
         new(field.Name,
-            field.Type.GetDescription(),
+            (int)field.Type,
             field.PossibleValues != null
-                ? JsonSerializer.Deserialize<object[]>(field.PossibleValues?.ToJson())
-                : Array.Empty<object>());
+                ? JsonSerializer.Deserialize<object[]>(field.PossibleValues?.ToJson()).Select(x => x.ToString()).ToArray()
+                : Array.Empty<string>());
 }
