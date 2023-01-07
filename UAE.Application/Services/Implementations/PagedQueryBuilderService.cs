@@ -81,27 +81,21 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
             {
                 continue;
             }
-            
+
+            var filterFieldValues = searchAnnouncementModel.Filters[fieldName]
+                .Select(c => c.ToBsonValueByTypeName(field.ValueType))
+                .ToArray();
             switch (field.Criteria)
             {
                 case FilterCriteria.Contains:
-                    var valuesToFilter = searchAnnouncementModel.Filters[fieldName]
-                        .Select(c => c.ToBsonValueByTypeName(field.ValueType));
-                    
-                    _query.Match(a => valuesToFilter.Contains(a.Fields[fieldName]));
+                    _query.Match(a => filterFieldValues.Contains(a.Fields[fieldName]));
                     break;
                 case FilterCriteria.Equals:
-                    var valuesToCompare = searchAnnouncementModel.Filters[fieldName]
-                        .Select(c => c.ToBsonValueByTypeName(field.ValueType))
-                        .FirstOrDefault();
-                    
-                    _query.Match(a => a.Fields[fieldName] == valuesToCompare);
+                    _query.Match(a => a.Fields[fieldName] == filterFieldValues[0]);
                     break;
                 case FilterCriteria.InRange:
-                    var fromValue = searchAnnouncementModel.Filters[fieldName][0]
-                        .ToBsonValueByTypeName(field.ValueType);
-                    var toValue = searchAnnouncementModel.Filters[fieldName][1]
-                        .ToBsonValueByTypeName(field.ValueType);
+                    var fromValue = filterFieldValues[0];
+                    var toValue = filterFieldValues[1];
 
                     if (fromValue != null)
                     {
@@ -115,22 +109,5 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
                     break;
             }
         }
-    }
-
-    private static (BsonValue? value, FilterCriteria? criteria) GetValueAndCriteria(BsonElement searchAnnouncementModel)
-    {
-        var filter = searchAnnouncementModel.Value.ToBsonDocument();
-        var filterValueName = filter.Names.FirstOrDefault();
-        var filterCriteriaName = filter.Names.LastOrDefault();
-
-        if (filterCriteriaName == null || filterValueName == null)
-        {
-            return (null, null);
-        }
-        
-        var value = filter[filterValueName].AsBsonValue;
-        var criteria = (FilterCriteria) filter[filterCriteriaName].ToInt32();
-
-        return (value, criteria);
     }
 }

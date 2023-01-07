@@ -10,6 +10,8 @@ public static class StringExtension
         {
             case "Int32":
                 return new BsonInt32(Convert.ToInt32(value));
+            case "Decimal":
+                return new BsonDecimal128(Convert.ToDecimal(value));
             default:
                 return new BsonString(value);
         }

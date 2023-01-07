@@ -14,7 +14,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor][0]=1&Filters[Floor][1]=10&PageNumber=1&PageSize=10&CategoryIds[0]=63b8abdfdd7f7fa4a1383aa9&Filters[Bathroom type][0]=shower",
+							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor][0]=1&Filters[Floor][1]=10&PageNumber=1&PageSize=10&CategoryIds[0]=63b93f57b44a2e1f2acc6adc&Filters[Bathroom type][0]=shower",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -57,7 +57,7 @@
 								},
 								{
 									"key": "CategoryIds[0]",
-									"value": "63b8abdfdd7f7fa4a1383aa9"
+									"value": "63b93f57b44a2e1f2acc6adc"
 								},
 								{
 									"key": "Filters[Bathroom type][0]",
@@ -338,7 +338,47 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "https://localhost:5190/api/v1/category/GetAll",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5190",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Field",
+			"item": [
+				{
+					"name": "Criteria get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5190/api/v1/Criteria/GetAllFieldType",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5190",
+							"path": [
+								"api",
+								"v1",
+								"Criteria",
+								"GetAllFieldType"
+							]
+						}
 					},
 					"response": []
 				}
