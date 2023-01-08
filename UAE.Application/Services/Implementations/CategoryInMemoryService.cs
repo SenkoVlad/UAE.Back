@@ -44,6 +44,16 @@ internal sealed class CategoryInMemory : ICategoryInMemory
             .ToArray();
     }
 
+    public Field? GetField(string categoryId, string fieldName)
+    {
+        var field = CategoryWithParentPathModels
+            .FirstOrDefault(c => c.Category.ID == categoryId
+                                                   && c.Category.Fields.Any(f => f.Name == fieldName))
+            ?.Fields.FirstOrDefault();
+
+        return field;
+    }
+
     public CategoryInMemory(ICategoryRepository categoryRepository)
     {
         _categoryRepository = categoryRepository;

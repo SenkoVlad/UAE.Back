@@ -6,6 +6,11 @@ public static class StringExtension
 {
     public static BsonValue ToBsonValueByTypeName(this string value, string typeName)
     {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return BsonNull.Value;
+        }
+        
         switch (typeName)
         {
             case "Int32":
