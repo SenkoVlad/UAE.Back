@@ -18,7 +18,6 @@ builder.Services.AddCustomExceptionHandler();
 builder.Services.AddLoggerService();
 builder.Services.AddRepositories();
 builder.Services.AddServices();
-builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddJwtAuth(builder.Configuration);
 
@@ -35,10 +34,9 @@ if (!app.Environment.IsProduction())
 
 await app.InitCategoriesInMemory();
 await app.InitCurrenciesInMemory();
-// await app.InitTempAnnouncements();
+await app.InitTempAnnouncements();
 
 app.UseCustomException();
-app.UseSession();
 //app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

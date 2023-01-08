@@ -1,14 +1,14 @@
 using FluentValidation;
 using JetBrains.Annotations;
 using UAE.Application.Models.Announcement;
-using UAE.Application.Services.Validation.Implementation;
+using UAE.Application.Services.Validation.Interfaces;
 
 namespace UAE.Application.Validations.ValidationRules;
 
 [UsedImplicitly]
 public class PatchAnnouncementModelValidator : AbstractValidator<PatchAnnouncementModel>
 {
-    public PatchAnnouncementModelValidator(CategoryFieldsValidationService categoryFieldsValidationService)
+    public PatchAnnouncementModelValidator(ICategoryFieldsValidationService categoryFieldsValidationService)
     {
         When(model => model.Fields != null 
                       && model.Fields.Elements.Any()

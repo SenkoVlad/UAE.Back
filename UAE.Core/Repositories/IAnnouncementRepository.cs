@@ -7,5 +7,5 @@ public interface IAnnouncementRepository : IRepositoryBase<Announcement>
 {
     Task UpdateFieldsAsync(Announcement announcement);
 
-    Task<List<Announcement>> GetByIdsAsync(string[] announcementIds);
+    Task<List<Announcement>> GetByIdsAsync(IEnumerable<string> announcementIds);
 }

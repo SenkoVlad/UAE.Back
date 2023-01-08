@@ -11,10 +11,20 @@
 				{
 					"name": "Search announcements",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor][0]=1&Filters[Floor][1]=10&PageNumber=1&PageSize=10&CategoryIds[0]=63b93f57b44a2e1f2acc6adc&Filters[Bathroom type][0]=shower",
+							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor][0]=1.1&Filters[Floor][1]=10&PageNumber=1&PageSize=10&CategoryIds[0]=63b93f57b44a2e1f2acc6adc&Filters[Bathroom type][0]=shower",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -41,7 +51,7 @@
 								},
 								{
 									"key": "Filters[Floor][0]",
-									"value": "1"
+									"value": "1.1"
 								},
 								{
 									"key": "Filters[Floor][1]",
@@ -71,10 +81,20 @@
 				{
 					"name": "Get announcement",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2bGFkQHZsYWQuY29tIiwiVXNlcklkIjoiNjNiYTgzMTMyZDYwOGM0ZDVlOWY0ZmFiIiwiZXhwIjoxNjc0MDMyMjg4LCJpc3MiOiJVQUUtcmVudCIsImF1ZCI6IlVBRS1yZW50In0.x4hqKE50xp6WBGgiq151G5FGTOTQoy-xb4WhyKY0gNiSFdjlVtfYR5B0Ou37EHLScBNy5xmh9IjV9r8c5MqDAg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5190/api/v1/Announcement/Get?announcementId=63b4abde52175c1939bedf31",
+							"raw": "https://localhost:5190/api/v1/Announcement/Get?announcementId=63b93f57b44a2e1f2acc6b65",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -89,7 +109,7 @@
 							"query": [
 								{
 									"key": "announcementId",
-									"value": "63b4abde52175c1939bedf31"
+									"value": "63b93f57b44a2e1f2acc6b65"
 								}
 							]
 						}
@@ -104,6 +124,9 @@
 				{
 					"name": "Register",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -127,18 +150,6 @@
 								"v1",
 								"User",
 								"Register"
-							],
-							"query": [
-								{
-									"key": "Email",
-									"value": "vlad@vlad.com",
-									"disabled": true
-								},
-								{
-									"key": "Password",
-									"value": "12345678",
-									"disabled": true
-								}
 							]
 						}
 					},
@@ -174,6 +185,38 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2bGFkQHZsYWQuY29tIiwiVXNlcklkIjoiNjNiYTgzMTMyZDYwOGM0ZDVlOWY0ZmFiIiwiZXhwIjoxNjc0MDMyMjg4LCJpc3MiOiJVQUUtcmVudCIsImF1ZCI6IlVBRS1yZW50In0.x4hqKE50xp6WBGgiq151G5FGTOTQoy-xb4WhyKY0gNiSFdjlVtfYR5B0Ou37EHLScBNy5xmh9IjV9r8c5MqDAg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5190/api/v1/User/Get",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5190",
+							"path": [
+								"api",
+								"v1",
+								"User",
+								"Get"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -183,11 +226,21 @@
 				{
 					"name": "Like",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2bGFkQHZsYWQuY29tIiwiVXNlcklkIjoiNjNiYTgzMTMyZDYwOGM0ZDVlOWY0ZmFiIiwiZXhwIjoxNjc0MDMyMjg4LCJpc3MiOiJVQUUtcmVudCIsImF1ZCI6IlVBRS1yZW50In0.x4hqKE50xp6WBGgiq151G5FGTOTQoy-xb4WhyKY0gNiSFdjlVtfYR5B0Ou37EHLScBNy5xmh9IjV9r8c5MqDAg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "\"63b4abde52175c1939bedf31\"\r\n\r\n",
+							"raw": "\"63b93f57b44a2e1f2acc6b65\"",
 							"options": {
 								"raw": {
 									"language": "json"

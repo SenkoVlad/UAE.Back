@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using UAE.Application.Models;
 using UAE.Application.Services.Interfaces;
 using UAE.Core.Repositories;
+using UAE.Shared.Constants;
 using UAE.Shared.Settings;
 
 namespace UAE.Application.Services.Implementations;
@@ -44,7 +45,6 @@ internal sealed class TokenService : ITokenService
 
         var token = CreateToken(user);
         user.RefreshToken = Guid.NewGuid().ToString();
-        AddTokenCookiesToResponse(token, user);
         
         await _userRepository.SaveAsync(user);
         
@@ -56,6 +56,7 @@ internal sealed class TokenService : ITokenService
         var claims = new List<Claim>
         {
             new(ClaimTypes.Email, user.Email),
+            new(AppConstants.UserIdClaimName, user.ID)
         };
         
         var secretKeyBytes = Encoding.UTF8.GetBytes(_settings.Value.Jwt.SecretKey);
@@ -73,18 +74,6 @@ internal sealed class TokenService : ITokenService
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return jwt;
-    }
-
-    public void AddTokenCookiesToResponse(string token, Core.Entities.User user)
-    {
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Access-Token", token,
-            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Username", user.Email,
-            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-UserId", user.ID,
-            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("X-Refresh-Token", user.RefreshToken,
-            new CookieOptions {HttpOnly = true, SameSite = SameSiteMode.Strict});
     }
 
     private (string userEmail, string refreshToken) GetUserEmailAndRefreshTokenFromCookies()

@@ -1,16 +1,22 @@
 using MongoDB.Bson;
+using UAE.Shared.Enum;
 
 namespace UAE.Application.Extensions;
 
 public static class StringExtension
 {
-    public static BsonValue ToBsonValueByTypeName(this string value, string typeName)
+    public static BsonValue ToBsonValueByTypeName(this string value, FieldValueType valueType)
     {
-        switch (typeName)
+        if (string.IsNullOrWhiteSpace(value))
         {
-            case "Int32":
+            return BsonNull.Value;
+        }
+        
+        switch (valueType)
+        {
+            case FieldValueType.Int32:
                 return new BsonInt32(Convert.ToInt32(value));
-            case "Decimal":
+            case FieldValueType.Decimal:
                 return new BsonDecimal128(Convert.ToDecimal(value));
             default:
                 return new BsonString(value);

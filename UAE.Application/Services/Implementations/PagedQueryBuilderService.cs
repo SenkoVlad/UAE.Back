@@ -1,4 +1,5 @@
 using MongoDB.Bson;
+using MongoDB.Driver.Linq;
 using MongoDB.Entities;
 using UAE.Application.Extensions;
 using UAE.Application.Models.Announcement;
@@ -71,12 +72,8 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
         foreach (var fieldName in searchAnnouncementModel.Filters.Keys)
         {
             var searchCategoryId = searchAnnouncementModel.CategoryIds!.First();
-            var categoryField = _categoryInMemory.CategoryWithParentPathModels
-                .FirstOrDefault(c => c.Category.Fields.Any(f => f.Name == fieldName)
-                                     && c.Category.ID == searchCategoryId);
-
-            var field = categoryField?.Fields.FirstOrDefault(f => f.Name == fieldName);
-
+            var field = _categoryInMemory.GetField(searchCategoryId, fieldName);
+    
             if (field == null)
             {
                 continue;
@@ -97,12 +94,12 @@ internal class PagedQueryBuilderService<T> : IPagedQueryBuilderService<T> where 
                     var fromValue = filterFieldValues[0];
                     var toValue = filterFieldValues[1];
 
-                    if (fromValue != null)
+                    if (fromValue != BsonNull.Value)
                     {
                         _query.Match(a => a.Fields[fieldName] >= fromValue);
                     }
 
-                    if (toValue != null)
+                    if (toValue != BsonNull.Value)
                     {
                         _query.Match(a => a.Fields[fieldName] <= toValue);
                     }
