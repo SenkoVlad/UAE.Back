@@ -7,6 +7,7 @@ public static class FieldMappingProfile
 {
     public static FieldModel ToBusinessModel(this Field field) =>
         new(field.Name,
-            (int)field.Type,
-            field.PossibleValues ?? Array.Empty<string>());
+        (int)field.Type,
+        (int)field.ValueType,
+        field.PossibleValues ?? Array.Empty<string>());
 }
