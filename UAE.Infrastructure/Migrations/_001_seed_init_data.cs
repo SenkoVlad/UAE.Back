@@ -1,11 +1,12 @@
-﻿using MongoDB.Bson;
+﻿using System.Security.Cryptography;
+using System.Text;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using MongoDB.Entities;
 using UAE.Core.DataModels;
 using UAE.Core.Entities;
 using UAE.Core.EntityDataParameters;
-using UAE.Core.EntityDataParameters.RealEstate;
 using UAE.Shared.Enum;
 using UAE.Shared.Extensions;
 
@@ -34,9 +35,18 @@ public class _001_seed_init_data : IMigration
     {
         await DB.DeleteAsync<User>(_ => true);
 
+        var hmac = new HMACSHA512();
+        var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes("1111"));
+        var hashString = Convert.ToBase64String(hashBytes);
+        var saltString = Convert.ToBase64String(hmac.Key);
+        
         var user = new User
         {
-            Email = "vlad@vlad.com"
+            ID = ObjectId.GenerateNewId().ToString(),
+            Email = "vlad@vlad.com",
+            PasswordHash = hashString,
+            PasswordSalt = saltString,
+            CreatedDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
         };
 
         await user.SaveAsync();
@@ -231,25 +241,25 @@ public class _001_seed_init_data : IMigration
                 new Field(
                     "Group size",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "1",  "2",  "3"}),
                 new Field(
                     "Way to do",
                     FieldType.Multiselect,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.Contains,
                     new[] { "1",  "2",  "3"}),
                 new Field(
                     "Age",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "1999",  "2009",  "2019"}),
                 new Field(
                     "Ops to join",
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] { "online",  "offline",  "both"}),
             },
@@ -258,25 +268,25 @@ public class _001_seed_init_data : IMigration
                 new Field(
                     ExtraFieldName.Floor.GetDescription(),
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "1",  "2",  "3"}),
                 new Field(
                     ExtraFieldName.NumberOfBedrooms.GetDescription(),
                     FieldType.Multiselect,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.Contains,
                     new[] { "1",  "2",  "3"}),
                 new Field(
                     ExtraFieldName.YearOfBuilding.GetDescription(),
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "1999",  "2019"}),
                 new Field(
                     ExtraFieldName.BathroomType.GetDescription(),
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] { "shower",  "shower 1",  "shower 2"}),
             },
@@ -285,25 +295,25 @@ public class _001_seed_init_data : IMigration
                 new Field(
                     "Salary",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "100",  "1000",  "10000"}),
                 new Field(
                     "Seen count",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "10",  "15",  "20"}),
                 new Field(
                     "Region",
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] { "EU",  "USA",  "UK"}),
                 new Field(
                     "Company created year",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "2022",  "2023",  "2021"})
             },
@@ -312,25 +322,25 @@ public class _001_seed_init_data : IMigration
                 new Field(
                     "Age",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "100",  "1000",  "10000"}),
                 new Field(
                     "Age of partner",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "10",  "15",  "20"}),
                 new Field(
                     "Region",
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] { "EU",  "USA",  "UK"}),
                 new Field(
                     "Profile created at",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "2022",  "2023",  "2021"})
             },
@@ -339,19 +349,19 @@ public class _001_seed_init_data : IMigration
                 new Field(
                     "Was in use",
                     FieldType.Multiselect,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.Contains,
                     new []{ "Yes",  "No"}),
                 new Field(
                     "Estimate",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "1",  "2",  "3",  "4",  "5"}),
                 new Field(
                     "Delivery to",
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] { "Africa",  "USA",  "Europe"})
             },
@@ -360,25 +370,25 @@ public class _001_seed_init_data : IMigration
                 new Field(
                     "Offline",
                     FieldType.Multiselect,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.Contains,
                     new []{  "Yes",  "No"}),
                 new Field(
                     "Payment",
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "100",  "200",  "300",  "400",  "500"}),
                 new Field(
                     "Shipping to",
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] {"City", "USA", "Europe"}),
                 new Field(
                     "Home visits price",
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] {"345", "453", "767", "875"}),
             },
@@ -387,25 +397,25 @@ public class _001_seed_init_data : IMigration
                 new Field(
                     ExtraFieldName.Mileage.GetDescription(),
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "100"}),
                 new Field(
                     ExtraFieldName.MaxSpeed.GetDescription(),
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "10"}),
                 new Field(
                     ExtraFieldName.Brand.GetDescription(),
                     FieldType.Multiselect,
-                    typeof(string).Name,
+                    FieldValueType.String,
                     FilterCriteria.Contains,
                     new[] { "Audi",  "Mers",  "VW"}),
                 new Field(
                     ExtraFieldName.YearOfBuilding.GetDescription(),
                     FieldType.Range,
-                    typeof(int).Name,
+                    FieldValueType.Int32,
                     FilterCriteria.InRange,
                     new[] { "1999",  "2019"})
             }

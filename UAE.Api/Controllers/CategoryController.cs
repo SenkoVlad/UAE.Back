@@ -4,18 +4,17 @@ using UAE.Api.ViewModels.Base;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models.Category;
 using UAE.Application.Services.Interfaces;
-using UAE.Application.Services.Validation.Implementation;
-using UAE.Core.Repositories;
+using UAE.Application.Services.Validation.Interfaces;
 
 namespace UAE.Api.Controllers;
 
 public class CategoryController : ApiController
 {
-    private readonly CategoryFieldsValidationService _categoryFieldsValidationService;
+    private readonly ICategoryFieldsValidationService _categoryFieldsValidationService;
     private readonly ICategoryInMemory _categoryInMemory;
     
     public CategoryController(
-        CategoryFieldsValidationService categoryFieldsValidationService,
+        ICategoryFieldsValidationService categoryFieldsValidationService,
         ICategoryInMemory categoryInMemory)
     {
         _categoryFieldsValidationService = categoryFieldsValidationService;
