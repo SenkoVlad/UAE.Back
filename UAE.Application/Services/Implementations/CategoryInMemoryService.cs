@@ -47,9 +47,9 @@ internal sealed class CategoryInMemory : ICategoryInMemory
     public Field? GetField(string categoryId, string fieldName)
     {
         var field = CategoryWithParentPathModels
-            .FirstOrDefault(c => c.Category.ID == categoryId
-                                                   && c.Category.Fields.Any(f => f.Name == fieldName))
-            ?.Fields.FirstOrDefault();
+            .FirstOrDefault(c => c.Category.ID == categoryId)
+            ?.Fields
+            .FirstOrDefault(f => f.Name == fieldName);
 
         return field;
     }

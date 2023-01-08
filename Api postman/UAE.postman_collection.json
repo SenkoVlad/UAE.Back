@@ -24,7 +24,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=vel&Price[0]=346&Price[1]=7654.32&Filters[Floor][0]=1.1&Filters[Floor][1]=10&PageNumber=1&PageSize=10&CategoryIds[0]=63b93f57b44a2e1f2acc6adc&Filters[Bathroom type][0]=shower",
+							"raw": "https://localhost:5190/api/v1/Announcement/Search?Description=deb&Price[0]=1&Price[1]=1000&PageNumber=1&PageSize=10&CategoryIds[0]=63ba9dde25392a5bafe9e23b&Filters[Ops to join][0]=qui",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -39,23 +39,15 @@
 							"query": [
 								{
 									"key": "Description",
-									"value": "vel"
+									"value": "deb"
 								},
 								{
 									"key": "Price[0]",
-									"value": "346"
+									"value": "1"
 								},
 								{
 									"key": "Price[1]",
-									"value": "7654.32"
-								},
-								{
-									"key": "Filters[Floor][0]",
-									"value": "1.1"
-								},
-								{
-									"key": "Filters[Floor][1]",
-									"value": "10"
+									"value": "1000"
 								},
 								{
 									"key": "PageNumber",
@@ -67,11 +59,16 @@
 								},
 								{
 									"key": "CategoryIds[0]",
-									"value": "63b93f57b44a2e1f2acc6adc"
+									"value": "63ba9dde25392a5bafe9e23b"
 								},
 								{
-									"key": "Filters[Bathroom type][0]",
-									"value": "shower"
+									"key": "Filters[Ops to join][0]",
+									"value": "qui"
+								},
+								{
+									"key": "Filters[Ops to join][1]",
+									"value": "quierg",
+									"disabled": true
 								}
 							]
 						}
@@ -86,7 +83,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2bGFkQHZsYWQuY29tIiwiVXNlcklkIjoiNjNiYTgzMTMyZDYwOGM0ZDVlOWY0ZmFiIiwiZXhwIjoxNjc0MDMyMjg4LCJpc3MiOiJVQUUtcmVudCIsImF1ZCI6IlVBRS1yZW50In0.x4hqKE50xp6WBGgiq151G5FGTOTQoy-xb4WhyKY0gNiSFdjlVtfYR5B0Ou37EHLScBNy5xmh9IjV9r8c5MqDAg",
+									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2bGFkQHZsYWQuY29tIiwiVXNlcklkIjoiNjNiYTlkZGUyNTM5MmE1YmFmZTllMmM4IiwiZXhwIjoxNjc0MDM5MDcxLCJpc3MiOiJVQUUtcmVudCIsImF1ZCI6IlVBRS1yZW50In0.a9MrvjQpGmJimzmIS7CTsM2BFZXiDVREV3AQj5ZeV3-DtP9KQ_FcZ9MB_yexmh2QqfqLUjGb3eizeiqeVAwXcQ",
 									"type": "string"
 								}
 							]
@@ -94,7 +91,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5190/api/v1/Announcement/Get?announcementId=63b93f57b44a2e1f2acc6b65",
+							"raw": "https://localhost:5190/api/v1/Announcement/Get?announcementId=63ba9efef74d06684d975f86",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -109,7 +106,7 @@
 							"query": [
 								{
 									"key": "announcementId",
-									"value": "63b93f57b44a2e1f2acc6b65"
+									"value": "63ba9efef74d06684d975f86"
 								}
 							]
 						}
@@ -162,7 +159,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Email\" : \"vlad@vlad.com\",\r\n    \"Password\" : \"12345678\"\r\n}",
+							"raw": "{\r\n    \"Email\" : \"vlad@vlad.com\",\r\n    \"Password\" : \"1111\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
