@@ -11,4 +11,6 @@ public interface ICategoryInMemory : IInMemoryService<Category>
     List<CategoryWithParentPathModel> CategoryWithParentPathModels { get; }
 
     List<string> GetChildrenCategories(List<string> categoryIds);
+
+    Field? GetField(string categoryId, string fieldName);
 }
