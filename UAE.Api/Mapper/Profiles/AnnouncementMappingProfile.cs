@@ -126,4 +126,12 @@ public static class AnnouncementMappingProfile
             Pictures: model.Pictures ?? new List<IFormFile>()
         );
     }
+
+    public static AnnouncementBrowsingHistoryViewModel ToViewModel(this AnnouncementBrowsingHistoryModel model)
+    {
+        return new AnnouncementBrowsingHistoryViewModel(
+            Announcement: model.Announcement.ToViewModel(),
+            ViewDateTimeUtc: model.ViewDateTimeUtc
+        );
+    }
 }

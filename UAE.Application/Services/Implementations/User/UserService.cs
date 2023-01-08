@@ -3,10 +3,12 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using UAE.Application.Mapper.Profiles;
 using UAE.Application.Models;
+using UAE.Application.Models.Announcement;
 using UAE.Application.Models.User;
 using UAE.Application.Services.Interfaces;
 using UAE.Application.Services.Interfaces.User;
 using UAE.Core.Repositories;
+using UAE.Shared.Constants;
 
 namespace UAE.Application.Services.Implementations.User;
 
@@ -71,18 +73,19 @@ internal sealed class UserService : IUserService
 
         user.RefreshToken = Guid.NewGuid().ToString();
         user.LastLoginDateTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        _tokenService.AddTokenCookiesToResponse(token, user);
         await _userRepository.SaveAsync(user);
                    
         return new OperationResult<string>
-        (IsSucceed: false,
+        (IsSucceed: true,
             Result: token, ResultMessages: new []{ "Success"});
     }
 
-    public string GetCurrentUserId()
+    public string? GetCurrentUserId()
     {
-        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("X-UserId", out var userId);
-
+        var userId = _httpContextAccessor.HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == AppConstants.UserIdClaimName)
+            ?.Value;
+        
         return userId;
     }
 
@@ -126,31 +129,43 @@ internal sealed class UserService : IUserService
         return new OperationResult<string>(IsSucceed: result);
     }
 
-    public async Task<OperationResult<UserWithLikedAnnouncementsModel>> GetWithLikes()
+    public async Task<OperationResult<UserWithAnnouncementsModel>> GetWithLikes()
     {
         var userId = GetCurrentUserId();
 
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return new OperationResult<UserWithLikedAnnouncementsModel>(IsSucceed: false, ResultMessages: new[] {"there is not userId in cookies"});
+            return new OperationResult<UserWithAnnouncementsModel>(IsSucceed: false, ResultMessages: new[] {"there is not userId in cookies"});
         }
 
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
         {
-            return new OperationResult<UserWithLikedAnnouncementsModel>(IsSucceed: false, ResultMessages: new[] {"user is not found"});
+            return new OperationResult<UserWithAnnouncementsModel>(IsSucceed: false, ResultMessages: new[] {"user is not found"});
         }
         
         var userLikedAnnouncements = await _announcementRepository.GetByIdsAsync(user.Likes);
-        var userWithLikedAnnouncements = new UserWithLikedAnnouncementsModel(
+
+        var userViewHistoryIds = user.BrowsingHistories.Select(a => a.AnnouncementId);
+        var userViewedAnnouncements = await _announcementRepository.GetByIdsAsync(userViewHistoryIds);
+
+        var announcementBrowsingHistoryModels = user.BrowsingHistories
+            .Join(userViewedAnnouncements,
+                history => history.AnnouncementId, 
+                a => a.ID, 
+                (history, announcement) => new AnnouncementBrowsingHistoryModel(announcement, history.ViewDateTimeUtc))
+            .ToList();
+        
+        var userWithAnnouncementsModel = new UserWithAnnouncementsModel(
             Email: user.Email,
             LastLoginDateTime: DateTime.FromFileTimeUtc(user.LastLoginDateTime),
-            LikedAnnouncements: userLikedAnnouncements
+            LikedAnnouncements: userLikedAnnouncements,
+            ViewHistory: announcementBrowsingHistoryModels
         );
 
-        return new OperationResult<UserWithLikedAnnouncementsModel>(
+        return new OperationResult<UserWithAnnouncementsModel>(
             IsSucceed: true,
-            Result: userWithLikedAnnouncements);
+            Result: userWithAnnouncementsModel);
     }
 
     private bool IsPasswordCorrect(Core.Entities.User user, string password)

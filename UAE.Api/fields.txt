@@ -1,1 +1,0 @@
-{'Bathroom type' : {'fieldValue' : 'shower', 'fieldCriteria' : 0}, 'Year of building' : {'fieldValue' : 2000, 'fieldCriteria' : 5}}
