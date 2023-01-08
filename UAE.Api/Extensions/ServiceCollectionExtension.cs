@@ -45,24 +45,6 @@ public static class ServiceCollectionExtension
                 };
 
                 options.SaveToken = true;
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        if (context.Request.Cookies.ContainsKey("X-Access-Token"))
-                        {
-                            context.Token = context.Request.Cookies["X-Access-Token"];
-                        }
-                    
-                        return Task.CompletedTask;
-                    }
-                };
-            })
-            .AddCookie(options =>
-            {
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.IsEssential = true;
             });
     }
 

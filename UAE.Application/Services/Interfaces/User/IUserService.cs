@@ -9,11 +9,11 @@ public interface IUserService
 
     Task<OperationResult<string>> LoginAsync(LoginUserModel loginUserModel);
     
-    string GetCurrentUserId();
+    string? GetCurrentUserId();
     
     Task<OperationResult<string>> LikeAnnouncementAsync(string announcementId);
     
     Task<OperationResult<string>> UnLikeAnnouncementAsync(string announcementId);
     
-    Task<OperationResult<UserWithLikedAnnouncementsModel>> GetWithLikes();
+    Task<OperationResult<UserWithAnnouncementsModel>> GetWithLikes();
 }
