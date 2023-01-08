@@ -28,4 +28,15 @@ public class CriteriaController : ApiController
 
         return Ok(fieldTypes);
     }
+    
+    [HttpGet(nameof(GetAllFieldValueType))]
+    public IActionResult GetAllFieldValueType()
+    {
+        var fieldTypes = Enum.GetValues(typeof(FieldValueType))
+            .Cast<FieldValueType>()
+            .Select(f => f.ToString())
+            .ToList();
+
+        return Ok(fieldTypes);
+    }
 }

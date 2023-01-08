@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace UAE.Core.EntityDataParameters;
+namespace UAE.Shared.Enum;
 
 public enum FieldType
 {

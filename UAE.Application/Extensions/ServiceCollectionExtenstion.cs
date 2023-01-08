@@ -25,10 +25,11 @@ public static class ServiceCollectionExtenstion
         serviceCollection.AddScoped<IPagedQueryBuilderService<Announcement>, PagedQueryBuilderService<Announcement>>();
         
         serviceCollection.AddSingleton<ICategoryFieldsValidationService, CategoryFieldsValidationService>(); 
-        serviceCollection.AddSingleton<CategoryFieldsValidationService>();
         
         serviceCollection.AddSingleton<ICategoryInMemory, CategoryInMemory>();
         serviceCollection.AddSingleton<IInMemoryService<Currency>, CurrencyInMemoryService>();
+
+        serviceCollection.AddSingleton<InitTempAnnouncementsService>();
     }
     
     public static void AddFluentValidation(this IServiceCollection services)
